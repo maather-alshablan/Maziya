@@ -1,12 +1,11 @@
 
 import React, { useState } from 'react'
-import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import LoginCheck from '../components/LoginCheck'
+import { Image, Text, TextInput, TouchableOpacity, View , SafeAreaView, StyleSheet} from 'react-native'
+import colors from '../constants/colors'
 
 export default function LoginScreen({navigation}) {
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
+ /*   const [email, setEmail] = useState('')
+const [password, setPassword] = useState('') */
 
     const onFooterLinkPress = () => {
         navigation.navigate('Registration')
@@ -14,9 +13,20 @@ export default function LoginScreen({navigation}) {
 
 
     return (
-        <View style={styles.container}>
-             <Text>hi</Text>
-          {/*  <KeyboardAwareScrollView
+       <View style={styles.container}>
+        <Image 
+        source = {require('../images/logo.png')} 
+        />
+         <TextInput
+                    
+                    placeholder=''
+                    placeholderTextColor="#aaaaaa"
+                    backgroundColor='grey'
+                    underlineColorAndroid="transparent"
+                    autoCapitalize="none"
+                />
+        </View>
+          /* <KeyboardAwareScrollView
                 style={{ flex: 1, width: '100%' }}
                 keyboardShouldPersistTaps="always">
                 <Image
@@ -50,7 +60,23 @@ export default function LoginScreen({navigation}) {
                 <View style={styles.footerView}>
                     <Text style={styles.footerText}>Don't have an account? <Text onPress={onFooterLinkPress} style={styles.footerLink}>Sign up</Text></Text>
                 </View>
-          </KeyboardAwareScrollView>*/}
-        </View>
+          </KeyboardAwareScrollView>*/
+       
     )
 }
+
+
+const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'white'
+    },
+    text: {
+      color: '#101010',
+      fontSize: 24,
+      fontWeight: 'bold'
+    }
+  })
+  

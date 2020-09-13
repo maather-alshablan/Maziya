@@ -1,33 +1,25 @@
 import 'react-native-gesture-handler';
 import React, { useEffect, useState } from 'react'
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import Login  from './assets/screens/LoginScreen'
-import Registration  from './assets/screens/Registration'
+
+import { View , Text, SafeAreaView} from 'react-native';
+import MainStackNavigator from './assets/Navigation/MainStackNavigator'
 
 
 
-export default function App () {
-  
-    const Stack = createStackNavigator();
 
-        const [loading, setLoading] = useState(true)
-        const [user, setUser] = useState(null)
+     function App() {
+
+     /*const [loading, setLoading] = useState(true)
+     const [user, setUser] = useState(null)*/
       
-        return (
-          <NavigationContainer>
-                    
-          <Stack.Navigator >
-              <Stack.Screen name = 'Login' initialRouteName='Login' Component={Login}/>
-              <Stack.Screen name='Registration' Component={Registration} />
-           
-          </Stack.Navigator>
-        </NavigationContainer>
-      );
+     return (<MainStackNavigator />)
+          
+     
     }
+    export default App;
   
 
-  {/*}  <Stack.Navigator>
+  /*}  <Stack.Navigator>
         { user ? (
           <Stack.Screen name="Home">
             {props => <HomeScreen {...props} extraData={user} />}
@@ -41,4 +33,4 @@ export default function App () {
       </Stack.Navigator>
     </NavigationContainer>
   );
-}*/}
+}*/
