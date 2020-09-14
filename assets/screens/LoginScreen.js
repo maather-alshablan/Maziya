@@ -4,17 +4,21 @@ import { Image, Text, TextInput, TouchableOpacity, View , Label, StyleSheet, Dim
 import colors from '../constants/colors'
 import  SignInButton from '../components/SignInButton'
 import  ForgotPasswordLabel from '../components/ForgotPasswordLabel'
+import LoginCheck from '../components/LoginCheck'
 
 
-export default function LoginScreen({navigation}) {
- /*   const [email, setEmail] = useState('')
-const [password, setPassword] = useState('') */
+export default function LoginScreen ({navigation}) {
+ const [email, setEmail] = useState('')
+ const [password, setPassword] = useState('') 
+  var [ isPress, setIsPress ] = React.useState(false);
 
-    const onFooterLinkPress = () => {
-        navigation.navigate('Registration')
-    }
+     
     
-
+    var pressedProps = { 
+    style: isPress ? styles.OptionSelected : styles.OptionUnselected, 
+    onHideUnderlay: () => setIsPress(false),
+    onShowUnderlay: () => setIsPress(true),
+    }
 
     return (
        <View style={styles.container}>
@@ -36,34 +40,55 @@ const [password, setPassword] = useState('') */
             </Text>
         </TouchableOpacity>
         
-        <TouchableOpacity>
-            <Text style={styles.OptionUnselected}>
+        <TouchableOpacity {...pressedProps}>
+            <Text 
+            onPress= {() => navigation.navigate('Registration')}
+            style={styles.OptionUnselected}>
                 سجل الأن
             </Text>
         </TouchableOpacity>
          </View> 
 
 
+
          <View style={styles.fields}>
              <Text>البريد الإلكتروني </Text>
          <TextInput 
          style={styles.TextInput}
-         placeholder='البريد الإلكتروني'/>
+         placeholder='البريد الإلكتروني'
+         onChangeText={(text) => setEmail(text)}
+         value={email}
+         autoCapitalize="none"
+         />
          </View>
 
+         
          <View style={styles.fields}>
-         <Text>كلمة المرور </Text>
+         <Text style={{
+             marginRight:10,
+         }}>كلمة المرور </Text>
         <TextInput 
          style={styles.TextInput}
-         placeholder='كلمة المرور'/>
+         placeholder='كلمة المرور'
+         secureTextEntry
+         onChangeText={(text) => setPassword(text)}
+         value={password}
+         autoCapitalize="none"
+         />
          </View>
 
-         <SignInButton></SignInButton>
-         <ForgotPasswordLabel></ForgotPasswordLabel>
-                  <View >
+         <SignInButton onPress={() => LoginCheck({email,password})}></SignInButton>
+
+
+         <TouchableOpacity onPress = {
+        navigation.navigate('Forgot')}>
+         <ForgotPasswordLabel ></ForgotPasswordLabel>
+         </TouchableOpacity>
+
+                {/* <View >
                     
                     <Text onPress={onFooterLinkPress} >Sign up</Text>
-                </View>
+                </View>*/ }
         </View>
           /* <KeyboardAwareScrollView
                 style={{ flex: 1, width: '100%' }}
@@ -102,7 +127,8 @@ const [password, setPassword] = useState('') */
           </KeyboardAwareScrollView>*/
        
     )
-}
+            }
+
 
 
 const styles = StyleSheet.create({
@@ -120,6 +146,8 @@ const styles = StyleSheet.create({
     fields:{
     flexDirection:'row-reverse',
     margin:15 ,
+    paddingRight:50,
+    
     },
     TextInput:{
         

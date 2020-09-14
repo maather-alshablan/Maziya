@@ -1,5 +1,5 @@
 {/* REFERENCE */}
-const onLoginPress = () => {
+const onLoginPress = ({email, password}) => {
         
     firebase
         .auth()
