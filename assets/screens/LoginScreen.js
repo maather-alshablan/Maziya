@@ -1,7 +1,10 @@
 
 import React, { useState } from 'react'
-import { Image, Text, TextInput, TouchableOpacity, View , SafeAreaView, StyleSheet} from 'react-native'
+import { Image, Text, TextInput, TouchableOpacity, View , Label, StyleSheet, Dimensions , Button} from 'react-native'
 import colors from '../constants/colors'
+import  SignInButton from '../components/SignInButton'
+import  ForgotPasswordLabel from '../components/ForgotPasswordLabel'
+
 
 export default function LoginScreen({navigation}) {
  /*   const [email, setEmail] = useState('')
@@ -10,21 +13,57 @@ const [password, setPassword] = useState('') */
     const onFooterLinkPress = () => {
         navigation.navigate('Registration')
     }
+    
 
 
     return (
        <View style={styles.container}>
+
         <Image 
         source = {require('../images/logo.png')} 
+        style={{
+            width: Dimensions.get('window').height *0.35,
+           
+        }}
+        resizeMode = 'contain'
         />
-         <TextInput
+
+
+        <View style={styles.LoginOptions}>
+        <TouchableOpacity>
+            <Text style={styles.OptionSelected}>
+                تسجيل الدخول
+            </Text>
+        </TouchableOpacity>
+        
+        <TouchableOpacity>
+            <Text style={styles.OptionUnselected}>
+                سجل الأن
+            </Text>
+        </TouchableOpacity>
+         </View> 
+
+
+         <View style={styles.fields}>
+             <Text>البريد الإلكتروني </Text>
+         <TextInput 
+         style={styles.TextInput}
+         placeholder='البريد الإلكتروني'/>
+         </View>
+
+         <View style={styles.fields}>
+         <Text>كلمة المرور </Text>
+        <TextInput 
+         style={styles.TextInput}
+         placeholder='كلمة المرور'/>
+         </View>
+
+         <SignInButton></SignInButton>
+         <ForgotPasswordLabel></ForgotPasswordLabel>
+                  <View >
                     
-                    placeholder=''
-                    placeholderTextColor="#aaaaaa"
-                    backgroundColor='grey'
-                    underlineColorAndroid="transparent"
-                    autoCapitalize="none"
-                />
+                    <Text onPress={onFooterLinkPress} >Sign up</Text>
+                </View>
         </View>
           /* <KeyboardAwareScrollView
                 style={{ flex: 1, width: '100%' }}
@@ -73,10 +112,45 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       backgroundColor: 'white'
     },
-    text: {
-      color: '#101010',
-      fontSize: 24,
-      fontWeight: 'bold'
+
+    logo:{
+        
+    },
+
+    fields:{
+    flexDirection:'row-reverse',
+    margin:15 ,
+    },
+    TextInput:{
+        
+        flexDirection:'row-reverse',
+        height: 30,
+        width: Dimensions.get('window').width *0.5,
+        borderColor: colors.primaryGrey,
+        borderWidth: 1,
+        borderLeftColor: 'white',
+        borderRightColor: 'white',
+        borderTopColor: 'white'
+
+        
+    },
+    LoginOptions:{
+        flexDirection: 'row-reverse',
+        alignItems: 'stretch',
+        
+        
+    },
+    OptionSelected:{
+        marginHorizontal: 15,
+        color: colors.primaryBlue,
+        fontSize: 20,
+        textDecorationLine: 'underline',
+    },
+    OptionUnselected:{
+        marginHorizontal: 15,
+        color: colors.primaryGrey,
+        fontSize: 20
     }
-  })
+    
+  });
   

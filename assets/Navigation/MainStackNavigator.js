@@ -12,7 +12,7 @@ function MainStackNavigator() {
     return (
       <NavigationContainer>
         <Stack.Navigator initialRouteName='Login'>
-          <Stack.Screen name='Login' component={Login}  options={{ title: 'Login' }}/>
+          <Stack.Screen name='Login' component={Login} />
           <Stack.Screen name='Registration' component={Registration} />
         </Stack.Navigator>
       </NavigationContainer>
