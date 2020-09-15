@@ -6,6 +6,7 @@ import Login from '../screens/LoginScreen'
 import Registration from '../screens/Registration'
 import Forgot from '../screens/ForgotPasswordScreen'
 import Homescreen from '../screens/Homescreen'
+import RegistrationServiceProvider from '../screens/RegistrationServiceProvider'
 
 
 
@@ -18,6 +19,8 @@ function MainStackNavigator() {
           <Stack.Screen name='Forgot' component={Forgot} />
           <Stack.Screen name='Homescreen' component={Homescreen} />
           <Stack.Screen name='Registration' component={Registration} />
+          <Stack.Screen name='RegistrationServiceProvider' component={RegistrationServiceProvider} />
+
         </Stack.Navigator>
       </NavigationContainer>
     )

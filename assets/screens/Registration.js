@@ -10,17 +10,11 @@ import firebase from '../config/firebase'
 
  export default class Registration extends Component {
     state = { email: '', password: '', errorMessage: null }
-  
-    handleLogin = () => {
-
-    // validate email with domain @**ksu.edu.sa ** using regular expressions
-
-    const { email, password } = this.state
-      
+    handleSignUp = () => {
       firebase
         .auth()
-        .signInWithEmailAndPassword(email, password)
-        .then(() => this.props.navigation.navigate('Homescreen'))
+        .createUserWithEmailAndPassword(this.state.email, this.state.password)
+        .then(() => this.props.navigation.navigate('Main'))
         .catch(error => this.setState({ errorMessage: error.message }))
     }
 
@@ -32,7 +26,7 @@ import firebase from '../config/firebase'
         <Image 
         source = {require('../images/logo.png')} 
         style={{
-            width: Dimensions.get('window').height *0.35,
+            width: Dimensions.get('window').height *0.25,
            
         }}
         resizeMode = 'contain'

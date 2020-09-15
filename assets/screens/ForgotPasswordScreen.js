@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
         "borderWidth": 1,
         "borderColor": "rgba(247, 247, 247, 255)",
         "backgroundColor": "rgba(1, 132, 189, 255)",
-        textAlign: 'center'
+        
       },
 
 })

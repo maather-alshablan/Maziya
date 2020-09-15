@@ -87,7 +87,7 @@ import firebase from '../config/firebase'
          
          <TouchableOpacity style={styles.forgotPasswordView}>
          <Text style={styles.forgotPassword} 
-                 onPress = {this.props.navigation.navigate('Forgot')}> 
+               onPress = {()=> this.props.navigation.navigate('Forgot')}> 
         نسيت كلمة المرور؟
          </Text>
          </TouchableOpacity>
@@ -170,7 +170,6 @@ const styles = StyleSheet.create({
         "fontFamily": "Bodoni 72 Smallcaps",
         "fontSize": 15,
         "color": "rgba(121, 121, 121, 255)",
-
       },
       forgotPasswordView:{
         marginTop: 10,
