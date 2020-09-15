@@ -4,7 +4,7 @@ import {
   Text
 } from 'react-native';
 
-export default () => {
+export default ({text}) => {
   return (
     <View style = {
       {
@@ -29,9 +29,11 @@ export default () => {
       {
         "fontFamily": "Bodoni 72 Smallcaps",
         "fontSize": 20,
-        "color": "rgba(247, 247, 247, 255)"
+        "color": "rgba(247, 247, 247, 255)",
+        alignSelf:'center'
+      
       }
-    } > تسجيل الدخول </Text>
+    } > {text}</Text>
  
   
     

@@ -61,6 +61,7 @@ import firebase from '../config/firebase'
          <TextInput 
          style={styles.TextInput}
          placeholder='البريد الإلكتروني'
+         
          onChangeText={email => this.setState({ email })}
         value={this.state.email}
          autoCapitalize="none"
@@ -69,7 +70,7 @@ import firebase from '../config/firebase'
 
          
          <View style={styles.fields}>
-         <Text style={styles.fieldLabels}>كلمة المرور </Text>
+         <Text style={styles.fieldLabels} >كلمة المرور </Text>
         <TextInput 
          style={styles.TextInput}
          placeholder='كلمة المرور'
@@ -134,6 +135,7 @@ const styles = StyleSheet.create({
     flexDirection:'row-reverse',
     margin:15 ,
     paddingRight:50,
+    alignItems:'center'
     
     },
     TextInput:{
@@ -145,15 +147,12 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderLeftColor: 'white',
         borderRightColor: 'white',
-        borderTopColor: 'white'
-
-        
+        borderTopColor: 'white',
+        textAlign: 'right'
     },
     Header:{
         flexDirection: 'row-reverse',
         alignItems: 'stretch',
-        
-        
     },
     HeaderText:{
         marginHorizontal: 15,
