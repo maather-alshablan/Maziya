@@ -1,25 +1,32 @@
 
-import React, { useState } from 'react'
+import React, { useState , Component} from 'react'
 import { Image, Text, TextInput, TouchableOpacity, View , Label, StyleSheet, Dimensions , Button} from 'react-native'
 import colors from '../constants/colors'
 import  SignInButton from '../components/SignInButton'
-import  ForgotPasswordLabel from '../components/ForgotPasswordLabel'
-import LoginCheck from '../components/LoginCheck'
+import firebase from '../config/firebase'
+// import firebase auth 
 
 
-export default function LoginScreen ({navigation}) {
- const [email, setEmail] = useState('')
- const [password, setPassword] = useState('') 
-  var [ isPress, setIsPress ] = React.useState(false);
 
-     
-    
-    var pressedProps = { 
-    style: isPress ? styles.OptionSelected : styles.OptionUnselected, 
-    onHideUnderlay: () => setIsPress(false),
-    onShowUnderlay: () => setIsPress(true),
+
+ export default class LoginScreen extends Component {
+    state = { email: '', password: '', errorMessage: null }
+  
+    handleLogin = () => {
+
+    // validate email with domain @**ksu.edu.sa ** using regular expressions
+
+    const { email, password } = this.state
+      
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password)
+        .then(() => this.props.navigation.navigate('Homescreen'))
+        .catch(error => this.setState({ errorMessage: error.message }))
     }
 
+    
+    render(){
     return (
        <View style={styles.container}>
 
@@ -33,101 +40,78 @@ export default function LoginScreen ({navigation}) {
         />
 
 
-        <View style={styles.LoginOptions}>
-        <TouchableOpacity>
-            <Text style={styles.OptionSelected}>
+       <View style={styles.Header}>
+        
+            <Text style={styles.HeaderText}>
                 تسجيل الدخول
             </Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity {...pressedProps}>
-            <Text 
-            onPress= {() => navigation.navigate('Registration')}
-            style={styles.OptionUnselected}>
-                سجل الأن
-            </Text>
-        </TouchableOpacity>
-         </View> 
+  
+    
+
+       </View> 
 
 
+         {this.state.errorMessage &&
+          <Text style={{ color: 'red' }}>
+            {this.state.errorMessage}
+          </Text>}
 
          <View style={styles.fields}>
-             <Text>البريد الإلكتروني </Text>
+             <Text style={styles.fieldLabels} >البريد الإلكتروني </Text>
          <TextInput 
          style={styles.TextInput}
          placeholder='البريد الإلكتروني'
-         onChangeText={(text) => setEmail(text)}
-         value={email}
+         onChangeText={email => this.setState({ email })}
+        value={this.state.email}
          autoCapitalize="none"
          />
          </View>
 
          
          <View style={styles.fields}>
-         <Text style={{
-             marginRight:10,
-         }}>كلمة المرور </Text>
+         <Text style={styles.fieldLabels}>كلمة المرور </Text>
         <TextInput 
          style={styles.TextInput}
          placeholder='كلمة المرور'
          secureTextEntry
-         onChangeText={(text) => setPassword(text)}
-         value={password}
+         onChangeText={password => this.setState({ password })}
+         value={this.state.password}
          autoCapitalize="none"
          />
          </View>
-
-         <SignInButton onPress={() => LoginCheck({email,password})}></SignInButton>
-
-
-         <TouchableOpacity onPress = {
-        navigation.navigate('Forgot')}>
-         <ForgotPasswordLabel ></ForgotPasswordLabel>
+         <TouchableOpacity onPress={this.handleLogin}>
+         <SignInButton text={'تسجيل الدخول'} onPress={this.handleLogin}></SignInButton>
          </TouchableOpacity>
 
-                {/* <View >
-                    
-                    <Text onPress={onFooterLinkPress} >Sign up</Text>
-                </View>*/ }
+         
+         <TouchableOpacity style={styles.forgotPasswordView}>
+         <Text style={styles.forgotPassword} 
+                 onPress = {this.props.navigation.navigate('Forgot')}> 
+        نسيت كلمة المرور؟
+         </Text>
+         </TouchableOpacity>
+         
+
+       <TouchableOpacity >
+            <Text 
+            onPress= {() => this.props.navigation.navigate('Registration')}
+            style={styles.SignUpText}>
+                سجل كمستخدم جديد
+            </Text>
+        </TouchableOpacity>
+         
+
+              
+        
         </View>
-          /* <KeyboardAwareScrollView
-                style={{ flex: 1, width: '100%' }}
-                keyboardShouldPersistTaps="always">
-                <Image
-                    style={styles.logo}
-                    source={require('../images/logo.png')}
-                />
-                <TextInput
-                    style={styles.input}
-                    placeholder='E-mail'
-                    placeholderTextColor="#aaaaaa"
-                    onChangeText={(text) => setEmail(text)}
-                    value={email}
-                    underlineColorAndroid="transparent"
-                    autoCapitalize="none"
-                />
-                <TextInput
-                    style={styles.input}
-                    placeholderTextColor="#aaaaaa"
-                    secureTextEntry
-                    placeholder='Password'
-                    onChangeText={(text) => setPassword(text)}
-                    value={password}
-                    underlineColorAndroid="transparent"
-                    autoCapitalize="none"
-                />
-                <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => {LoginCheck} }>
-                    <Text style={styles.buttonTitle}>Log in</Text>
-                </TouchableOpacity>
-                <View style={styles.footerView}>
-                    <Text style={styles.footerText}>Don't have an account? <Text onPress={onFooterLinkPress} style={styles.footerLink}>Sign up</Text></Text>
-                </View>
-          </KeyboardAwareScrollView>*/
+       
+      
+       
        
     )
-            }
+}
+}
+            
 
 
 
@@ -139,7 +123,10 @@ const styles = StyleSheet.create({
       backgroundColor: 'white'
     },
 
-    logo:{
+    fieldLabels:{
+            marginRight:10,
+            marginTop:13,
+            marginLeft:18,
         
     },
 
@@ -162,23 +149,34 @@ const styles = StyleSheet.create({
 
         
     },
-    LoginOptions:{
+    Header:{
         flexDirection: 'row-reverse',
         alignItems: 'stretch',
         
         
     },
-    OptionSelected:{
+    HeaderText:{
         marginHorizontal: 15,
         color: colors.primaryBlue,
-        fontSize: 20,
-        textDecorationLine: 'underline',
+        fontSize: 25,
+        
     },
-    OptionUnselected:{
+    SignUpText:{
+        marginTop:20 ,
         marginHorizontal: 15,
-        color: colors.primaryGrey,
-        fontSize: 20
-    }
+        color: colors.primaryBlue,
+        fontSize: 15
+    },
+    forgotPassword:{
+        "fontFamily": "Bodoni 72 Smallcaps",
+        "fontSize": 15,
+        "color": "rgba(121, 121, 121, 255)",
+
+      },
+      forgotPasswordView:{
+        marginTop: 10,
+        "alignItems": "flex-start"
+      }
+  
     
   });
-  
