@@ -3,20 +3,38 @@ import { Image, Text, TextInput, TouchableOpacity, View , Label, StyleSheet, Dim
 import colors from '../constants/colors'
 import  SignInButton from '../components/SignInButton'
 import firebase from '../config/firebase'
-// import firebase auth 
+import auth from '@react-native-firebase/auth';
 
 
 
 
  export default class Registration extends Component {
     state = { email: '', password: '', errorMessage: null }
+
     handleSignUp = () => {
       firebase
         .auth()
         .createUserWithEmailAndPassword(this.state.email, this.state.password)
-        .then(() => this.props.navigation.navigate('Main'))
-        .catch(error => this.setState({ errorMessage: error.message }))
+        .then(() => this.props.navigation.navigate('Home'))
+        .catch(
+            error => this.setState({ errorMessage: error.message }))
     }
+
+// validate email 
+// ref: https://stackoverflow.com/questions/43676695/email-validation-react-native-returning-the-result-as-invalid-for-all-the-e
+    validate = (text) => {
+        console.log(text);
+        let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        if (reg.test(text) === false) {
+          console.log("Email is Not Correct");
+          this.setState({ errorMessage: 'Email not within domain' })
+          return false;
+        }
+        else {
+          this.setState({ email: text })
+          console.log("Email is Correct");
+        }
+      }
 
     
     render(){
@@ -26,7 +44,7 @@ import firebase from '../config/firebase'
         <Image 
         source = {require('../images/logo.png')} 
         style={{
-            width: Dimensions.get('window').height *0.25,
+            height: Dimensions.get('window').height *0.25,
            
         }}
         resizeMode = 'contain'
@@ -54,7 +72,7 @@ import firebase from '../config/firebase'
          <TextInput 
          style={styles.TextInput}
          placeholder='البريد الإلكتروني'
-         onChangeText={email => this.setState({ email })}
+         onChangeText={email => this.validate(email)}
         value={this.state.email}
          autoCapitalize="none"
          />
@@ -72,8 +90,8 @@ import firebase from '../config/firebase'
          autoCapitalize="none"
          />
          </View>
-         <TouchableOpacity onPress={this.handleLogin}>
-         <SignInButton text={'إنشاء الحساب'} onPress={this.handleLogin}></SignInButton>
+         <TouchableOpacity onPress={this.handleSignUp}>
+         <SignInButton text={'إنشاء الحساب'} ></SignInButton>
          </TouchableOpacity>
 
          
@@ -128,14 +146,14 @@ const styles = StyleSheet.create({
         
         flexDirection:'row-reverse',
         height: 30,
+        alignSelf:'center',
         width: Dimensions.get('window').width *0.5,
         borderColor: colors.primaryGrey,
         borderWidth: 1,
         borderLeftColor: 'white',
         borderRightColor: 'white',
-        borderTopColor: 'white'
-
-        
+        borderTopColor: 'white',
+        textAlign:'right'   
     },
     Header:{
         flexDirection: 'row-reverse',
