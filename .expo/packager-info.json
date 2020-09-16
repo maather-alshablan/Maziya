@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "devToolsPort": 19002,
   "expoServerPort": null,
@@ -7,4 +8,9 @@
   "expoServerNgrokUrl": null,
   "packagerNgrokUrl": null,
   "ngrokPid": null
+=======
+  "expoServerPort": 19000,
+  "packagerPort": 19005,
+  "packagerPid": 7476
+>>>>>>> 0239cd3ec812068623501d5fb2cf9cbbd1a050c0
 }
