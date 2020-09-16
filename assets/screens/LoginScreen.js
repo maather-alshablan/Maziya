@@ -4,7 +4,7 @@ import { Image, Text, TextInput, TouchableOpacity, View , Label, StyleSheet, Dim
 import colors from '../constants/colors'
 import  SignInButton from '../components/SignInButton'
 import firebase from '../config/firebase'
-// import firebase auth 
+//import auth from '@react-native-firebase/auth';
 
 
 
