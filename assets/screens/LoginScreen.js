@@ -4,7 +4,9 @@ import { Image, Text, TextInput, TouchableOpacity, View , Label, StyleSheet, Dim
 import colors from '../constants/colors'
 import styles from '../constants/styles'
 import  SignInButton from '../components/SignInButton'
+
 import {firebase, auth} from '../config/firebase'
+import { Entypo } from '../constants/icons'
 
 
 
@@ -23,6 +25,11 @@ import {firebase, auth} from '../config/firebase'
          signInWithEmailAndPassword(email, password)
         .then(() => this.props.navigation.navigate('Homescreen'))
         .catch(error => this.setState({ errorMessage: error.message }))
+
+        this.state.email="";
+        this.state.password="";
+        this.state
+
     }
 
     
@@ -57,6 +64,7 @@ import {firebase, auth} from '../config/firebase'
           </Text>}
 
          <View style={styles.fields}>
+             <Entypo name='lock' size='30' />
              <Text style={styles.fieldLabels} >البريد الإلكتروني </Text>
          <TextInput 
          style={styles.TextInput}

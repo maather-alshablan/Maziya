@@ -3,12 +3,15 @@ import { Image, Text, TextInput, TouchableOpacity, View , Label, StyleSheet, Dim
 import colors from '../constants/colors'
 import {Entypo} from '../constants/icons'
 import  SignInButton from '../components/SignInButton'
+
 import {firebase, auth }  from '../config/firebase'
 
 
 
 
+
  export default class Registration extends Component {
+
     state = { email: '', password: '',confirmPassword:'', errorMessage: null }
 
     handleSignUp = () => {
@@ -33,22 +36,25 @@ import {firebase, auth }  from '../config/firebase'
 
 // validate email 
 // ref: https://stackoverflow.com/questions/43676695/email-validation-react-native-returning-the-result-as-invalid-for-all-the-e
+
     validate = ({text}) => {
         console.log({text});
         
         if (!{text}.endsWith('ksu.edu.sa')){
+
           console.log("Email is Not Correct");
           this.setState({ errorMessage: 'Email not within domain' })
           return false;
         }
         else {
+
           this.setState({ email: {text} })
+
           console.log("Email is Correct");
         }
       }
 
 
-    
     render(){
     return (
        <View style={styles.container}>
@@ -56,7 +62,7 @@ import {firebase, auth }  from '../config/firebase'
         <Image 
         source = {require('../images/logo.png')} 
         style={{
-            width: Dimensions.get('window').height *0.25,
+            height: Dimensions.get('window').height *0.25,
            
         }}
         resizeMode = 'contain'
@@ -84,8 +90,10 @@ import {firebase, auth }  from '../config/firebase'
          <TextInput 
          style={styles.TextInput}
          placeholder='البريد الإلكتروني'
+
          onChangeText={email => this.validate(email)} 
          value={this.state.email}
+
          autoCapitalize="none"
          />
          </View>
@@ -102,6 +110,7 @@ import {firebase, auth }  from '../config/firebase'
          autoCapitalize="none"
          />
          </View>
+
          <View style={styles.fields}>
             <Entypo name='lock' size={30}/>
          <Text style={styles.fieldLabels}>تأكيد كلمة المرور </Text>
@@ -116,6 +125,7 @@ import {firebase, auth }  from '../config/firebase'
          </View>
          <TouchableOpacity onPress={this.handleSignUp}>
           <SignInButton text={'إنشاء الحساب'} ></SignInButton>
+
          </TouchableOpacity>
 
          
@@ -170,6 +180,7 @@ const styles = StyleSheet.create({
         
         flexDirection:'row-reverse',
         height: 30,
+        alignSelf:'center',
         width: Dimensions.get('window').width *0.5,
         alignSelf:'center',
         borderColor: colors.primaryGrey,

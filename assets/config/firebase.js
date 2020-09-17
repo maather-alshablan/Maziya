@@ -1,7 +1,7 @@
 import * as firebase from 'firebase';
-//const auth = require('@firebase/auth')
-//import auth from '@firebase/auth'
+
 import '@firebase/firestore';
+
 
 const firebaseConfig = {
   apiKey: 'AIzaSyBMI1SqFrBdq2IS3GNTzA6cuEx6QbCHTls',
