@@ -2,9 +2,10 @@
 import React, { useState , Component} from 'react'
 import { Image, Text, TextInput, TouchableOpacity, View , Label, StyleSheet, Dimensions , Button} from 'react-native'
 import colors from '../constants/colors'
+import styles from '../constants/styles'
 import  SignInButton from '../components/SignInButton'
-import firebase from '../config/firebase'
-// import firebase auth 
+import {firebase, auth} from '../config/firebase'
+
 
 
 
@@ -18,9 +19,8 @@ import firebase from '../config/firebase'
 
     const { email, password } = this.state
       
-      firebase
-        .auth()
-        .signInWithEmailAndPassword(email, password)
+        auth.
+         signInWithEmailAndPassword(email, password)
         .then(() => this.props.navigation.navigate('Homescreen'))
         .catch(error => this.setState({ errorMessage: error.message }))
     }
@@ -100,9 +100,6 @@ import firebase from '../config/firebase'
                 سجل كمستخدم جديد
             </Text>
         </TouchableOpacity>
-         
-
-              
         
         </View>
        
@@ -116,7 +113,7 @@ import firebase from '../config/firebase'
 
 
 
-const styles = StyleSheet.create({
+/*const styles = StyleSheet.create({
     container: {
       flex: 1,
       justifyContent: 'center',
@@ -178,3 +175,4 @@ const styles = StyleSheet.create({
   
     
   });
+*/

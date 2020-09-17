@@ -1,22 +1,52 @@
 import React, { useState , Component} from 'react'
 import { Image, Text, TextInput, TouchableOpacity, View , Label, StyleSheet, Dimensions , Button} from 'react-native'
 import colors from '../constants/colors'
+import {Entypo} from '../constants/icons'
 import  SignInButton from '../components/SignInButton'
-import firebase from '../config/firebase'
-// import firebase auth 
+import {firebase, auth }  from '../config/firebase'
 
 
 
 
  export default class Registration extends Component {
-    state = { email: '', password: '', errorMessage: null }
+    state = { email: '', password: '',confirmPassword:'', errorMessage: null }
+
     handleSignUp = () => {
-      firebase
-        .auth()
-        .createUserWithEmailAndPassword(this.state.email, this.state.password)
-        .then(() => this.props.navigation.navigate('Main'))
-        .catch(error => this.setState({ errorMessage: error.message }))
+
+        
+        if (this.state.password !== this.state.confirmPassword) {
+            alert("Passwords don't match.")
+            return
+        }
+
+        if (!this.validate(this.email))
+        {
+            this.errorMessage = 'wrong email domain'
+            
+        }
+        auth.
+         createUserWithEmailAndPassword(this.state.email, this.state.password)
+        .then(() => this.props.navigation.navigate('Homescreen'))
+        .catch(
+            error => this.setState({ errorMessage: error.message }))
     }
+
+// validate email 
+// ref: https://stackoverflow.com/questions/43676695/email-validation-react-native-returning-the-result-as-invalid-for-all-the-e
+    validate = ({text}) => {
+        console.log({text});
+        
+        if (!{text}.endsWith('ksu.edu.sa')){
+          console.log("Email is Not Correct");
+          this.setState({ errorMessage: 'Email not within domain' })
+          return false;
+        }
+        else {
+          this.setState({ email: {text} })
+          console.log("Email is Correct");
+        }
+      }
+
 
     
     render(){
@@ -54,8 +84,8 @@ import firebase from '../config/firebase'
          <TextInput 
          style={styles.TextInput}
          placeholder='البريد الإلكتروني'
-         onChangeText={email => this.setState({ email })}
-        value={this.state.email}
+         onChangeText={email => this.validate(email)} 
+         value={this.state.email}
          autoCapitalize="none"
          />
          </View>
@@ -72,8 +102,20 @@ import firebase from '../config/firebase'
          autoCapitalize="none"
          />
          </View>
-         <TouchableOpacity onPress={this.handleLogin}>
-         <SignInButton text={'إنشاء الحساب'} onPress={this.handleLogin}></SignInButton>
+         <View style={styles.fields}>
+            <Entypo name='lock' size={30}/>
+         <Text style={styles.fieldLabels}>تأكيد كلمة المرور </Text>
+        <TextInput 
+         style={styles.TextInput}
+         placeholder='تأكيد كلمة المرور '
+         secureTextEntry
+         onChangeText={confirmPassword => this.setState({ confirmPassword })}
+         value={this.state.confirmPassword}
+         autoCapitalize="none"
+         />
+         </View>
+         <TouchableOpacity onPress={this.handleSignUp}>
+          <SignInButton text={'إنشاء الحساب'} ></SignInButton>
          </TouchableOpacity>
 
          
@@ -82,7 +124,7 @@ import firebase from '../config/firebase'
 
        <TouchableOpacity >
             <Text 
-            onPress= {() => this.props.navigation.navigate('RegistrationServiceProvider')}
+            //onPress= {() => this.props.navigation.navigate('RegistrationServiceProvider')}
             style={styles.SignUpText}>
                 تسجيل كمقدم للخدمة
             </Text>
@@ -129,12 +171,13 @@ const styles = StyleSheet.create({
         flexDirection:'row-reverse',
         height: 30,
         width: Dimensions.get('window').width *0.5,
+        alignSelf:'center',
         borderColor: colors.primaryGrey,
         borderWidth: 1,
         borderLeftColor: 'white',
         borderRightColor: 'white',
-        borderTopColor: 'white'
-
+        borderTopColor: 'white',
+        textAlign:'right'   
         
     },
     Header:{

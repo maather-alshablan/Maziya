@@ -1,6 +1,5 @@
 import 'react-native-gesture-handler';
-import React, { useEffect, useState } from 'react'
-
+import React from 'react'
 import MainStackNavigator from './assets/Navigation/MainStackNavigator'
 
 
@@ -8,16 +7,9 @@ import MainStackNavigator from './assets/Navigation/MainStackNavigator'
 
      function App() {
 
-     /*const [loading, setLoading] = useState(true)
-     const [user, setUser] = useState(null)
-     
-     authentication : 
-     https://rnfirebase.io/auth/usage
-     */
-      
-     return (<MainStackNavigator />)
-          
-     
+     return (
+     <MainStackNavigator /> )   
     }
-    export default App;
+ 
   
+    export default App;

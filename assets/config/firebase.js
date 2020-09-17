@@ -1,19 +1,23 @@
 import * as firebase from 'firebase';
-import '@firebase/auth';
+//const auth = require('@firebase/auth')
+//import auth from '@firebase/auth'
 import '@firebase/firestore';
 
 const firebaseConfig = {
-  apiKey: 'YOUR_KEY_HERE_AIzaSyAOWH',
-  authDomain: 'your-auth-domain-b1234.firebaseapp.com',
+  apiKey: 'AIzaSyBMI1SqFrBdq2IS3GNTzA6cuEx6QbCHTls',
+  authDomain: 'maziya.firebaseapp.com',
   databaseURL: 'https://maziya.firebaseio.com',
-  projectId: '146625739252',
-  storageBucket: 'your-project-id-1234.appspot.com',
-  messagingSenderId: '12345-insert-yourse',
-  appId: 'insert yours: 1:1234:web:ee873bd1234c0deb7eba61ce',
+  projectId: 'maziya',
+  storageBucket: 'maziya.appspot.com',
+  messagingSenderId: '146625739252',
+  appId: '1:146625739252:ios:360d88eff21cb85428a1a1',
 };
+
 
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
+var database = firebase.database();
+const auth = firebase.auth();
 
-export { firebase };
+export { firebase  , auth };
