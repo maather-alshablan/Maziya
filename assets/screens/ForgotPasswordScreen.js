@@ -1,32 +1,46 @@
 import React , {Component} from 'react'
-import {Text, View, StyleSheet, Button , TextInput} from 'react-native'
+import {Text, View, StyleSheet,  TextInput,KeyboardAvoidingView, ScrollView, Alert} from 'react-native'
 import colors from '../constants/colors'
-import styles from '../constants/styles'
-import {Entypo} from '../constants/icons'
-import { TouchableOpacity } from 'react-native-gesture-handler'
-import firebase from '../config/firebase'
-import auth from  '@firebase/auth';
+import InputField from '../components/InputField'
+import {auth} from '../config/firebase'
+import NextArrowButton from '../components/NextArrowButton'
 
 
 
 
 export default class ForgotPasswordScreen extends Component  {
-  state = { email: '', errorMessage: null }
+  state = { email: '', errorMessage: null, textInput:'' }
    
+
+  static navigationOptions = ({ navigation }) => ({
+    headerStyle: {
+      borderBottomWidth: 0,
+      elevation: 0
+    },
+    headerTransparent: true,
+    headerTintColor: 'white'
+  });
+
+
   forgotPassword = () => {
-    firebase.auth().sendPasswordResetEmail(Email)
-      .then(function (user) {
+       auth.sendPasswordResetEmail(this.state.email)
+      .then(function () {
         Alert.alert('تم ارسال طلب تعديل كلمة المرور على بريدك الإلكتروني')
-      }).catch(function (e) {
-        console.log(e)
-      })
+        this.props.navigation.navigate("Login");
+      }).catch(function (error) {
+        Alert.alert(error.message);
+      });
   }
 
-    render(){
+  handleEmailChange = email => {
+    this.setState({ email: email });
+  };
+
+   /* render(){
     return (
     <View style={pg.container}>
         <Text style={pg.header}> إستعادة كلمة المرور</Text>
-       <Entypo name="rocket" size={30} color="#900" />
+       <Entypo name='lock' size={30} color="#900" />
 
         <TextInput 
          style={styles.TextInput}
@@ -46,6 +60,36 @@ export default class ForgotPasswordScreen extends Component  {
     </View>
    
     )
+} */ 
+render() {
+  return (
+    <ScrollView style={[ pg.wrapper]}
+      behavior="padding"
+    >
+        <View style={pg.form}>
+          <Text style={pg.ForgotPasswordHeading}>
+                نسيت كلمة المرور؟
+          </Text>
+          <Text style={pg.ForgotPasswordSubHeading}>
+              ادخل بريدك الإلكتروني لأستعادة كلمة المرور
+          </Text>
+          <InputField
+            customStyle={{ marginTop: 100 }}
+            textColor='white'
+            labelText="البريد الإلكتروني"
+            labelTextSize={14}
+            labelColor='white'
+            borderBottomColor='white'
+            inputType="email"
+            textAlign='right'
+            onChangeText={email => this.handleEmailChange(email)}
+          />
+      </View> 
+      <NextArrowButton handelPress={this.forgotPassword} disabled={false} />
+     
+    
+     </ScrollView>
+  );
 }
 }
 
@@ -53,7 +97,7 @@ const pg = StyleSheet.create({
     
     container: {
             flex: 1,
-            backgroundColor: 'white',
+            backgroundColor: colors.primaryBlue,
             alignItems: 'center',
            
     },
@@ -92,7 +136,7 @@ const pg = StyleSheet.create({
       marginTop:20,
       "borderRadius": 22.5,
       "borderWidth": 1,
-      "borderColor": "rgba(247, 247, 247, 255)",
+      "borderColor": "white",
       "backgroundColor": "rgba(1, 132, 189, 255)"
 
       },
@@ -100,7 +144,30 @@ const pg = StyleSheet.create({
 
         "fontFamily": "Bodoni 72 Smallcaps",
         "fontSize": 25,
-        "color": 'rgba(247, 247, 247, 255)',
+        "color": 'white',
+      }, 
+      wrapper: {
+        display: "flex",
+        flex: 1,
+        backgroundColor: colors.primaryBlue
+      },
+      form: {
+        marginTop: 90,
+        paddingLeft: 20,
+        paddingRight: 20,
+        flex: 1,
+      },
+      ForgotPasswordHeading: {
+        fontSize: 28,
+        color: '#FFFFFF',
+        fontWeight: "300",
+        textAlign: 'right'
+      },
+      ForgotPasswordSubHeading: {
+        color: '#FFFFFF',
+        fontWeight: "600",
+        fontSize: 15,
+        textAlign:'right'
       }
 
-    })
+    });

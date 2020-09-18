@@ -1,6 +1,6 @@
 
 import React, { useState , Component} from 'react'
-import { Image, Text, TextInput, TouchableOpacity, View , Label, StyleSheet, Dimensions , Button} from 'react-native'
+import { Image, Text, TextInput, TouchableOpacity, View , Label, StyleSheet, Dimensions , Button, ColorPropType} from 'react-native'
 import colors from '../constants/colors'
 import styles from '../constants/styles'
 import  SignInButton from '../components/SignInButton'
@@ -64,12 +64,11 @@ import { Entypo } from '../constants/icons'
           </Text>}
 
          <View style={styles.fields}>
-             <Entypo name='lock' size='30' />
+           
              <Text style={styles.fieldLabels} >البريد الإلكتروني </Text>
          <TextInput 
          style={styles.TextInput}
          placeholder='البريد الإلكتروني'
-         
          onChangeText={email => this.setState({ email })}
         value={this.state.email}
          autoCapitalize="none"

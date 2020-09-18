@@ -1,10 +1,11 @@
 import React, { useState , Component} from 'react'
-import { Image, Text, TextInput, TouchableOpacity, View , Label, StyleSheet, Dimensions , Button} from 'react-native'
+import { Image, Text, TextInput, TouchableOpacity, View , Label, StyleSheet, Dimensions , Button, KeyboardAvoidingView} from 'react-native'
 import colors from '../constants/colors'
 import {Entypo} from '../constants/icons'
 import  SignInButton from '../components/SignInButton'
-
-import {firebase, auth }  from '../config/firebase'
+import InputField from '../components/InputField'
+import NextArrowButton from '../components/NextArrowButton'
+import {firebase, auth }  from '../config/firebase';
 
 
 
@@ -14,7 +15,17 @@ import {firebase, auth }  from '../config/firebase'
 
     state = { email: '', password: '',confirmPassword:'', errorMessage: null }
 
-    handleSignUp = () => {
+    static navigationOptions = ({ navigation }) => ({
+        headerStyle: {
+          borderBottomWidth: 0,
+          elevation: 0
+        },
+        headerTransparent: true,
+        headerTintColor: 'white'
+      });
+    
+
+     handleSignUp = () => {
 
         
         if (this.state.password !== this.state.confirmPassword) {
@@ -54,171 +65,158 @@ import {firebase, auth }  from '../config/firebase'
         }
       }
 
+      handleEmailChange = email => {
+        this.setState({ email: email });
+      };
+
 
     render(){
-    return (
-       <View style={styles.container}>
+        return (
 
-        <Image 
-        source = {require('../images/logo.png')} 
-        style={{
-            height: Dimensions.get('window').height *0.25,
+        <KeyboardAvoidingView
+        style={[ pg.wrapper]}
+        behavior="padding"
+         ><View style={pg.form}>
+            <Text style={pg.ForgotPasswordHeading}>
+                  إنشاء حساب مستخدم جديد
+            </Text>
            
-        }}
-        resizeMode = 'contain'
+            <InputField
+              customStyle={{ marginTop: 50 }}
+              textColor='white'
+              labelText="البريد الإلكتروني"
+              labelTextSize={14}
+              labelColor='white'
+              borderBottomColor='white'
+              inputType="email"
+              textAlign='right'
+              onChangeText={email => this.handleEmailChange(email)}
+            />
+            <InputField
+            customStyle={{ marginTop: 50 }}
+            textColor='white'
+            labelText="    كلمة المرور    "
+            labelTextSize={14}
+            labelColor='white'
+            borderBottomColor='white'
+            secureTextEntry
+            textAlign='right'
+            onChangeText={password => this.setState({ password })}
+          />
+          <InputField
+          customStyle={{ marginTop: 50 }}
+          textColor='white'
+          labelText="تأكيد كلمة المرور"
+          labelTextSize={14}
+          labelColor='white'
+          borderBottomColor='white'
+          secureTextEntry
+          textAlign='right'
+          onChangeText={confirmPassword => this.setState({ confirmPassword })}
         />
 
 
-       <View style={styles.Header}>
-        
-            <Text style={styles.HeaderText}>
-                إنشاء الحساب
-            </Text>
-  
+        </View> 
+            
+        <TouchableOpacity 
+        //handelPress= {this.props.navigation.navigate('RegistrationServiceProvider')}
+        >
+        <Text style={pg.ForgotPasswordSubHeading} >          
+          تسجيل كمقدم للخدمة           
+             </Text>
+             </TouchableOpacity>
+       
+        <NextArrowButton handelPress={this.handleSignUp} disabled={false} />
+       </KeyboardAvoidingView> 
     
-
-       </View> 
-
-
-         {this.state.errorMessage &&
-          <Text style={{ color: 'red' }}>
-            {this.state.errorMessage}
-          </Text>}
-
-         <View style={styles.fields}>
-             <Text style={styles.fieldLabels} >البريد الإلكتروني </Text>
-         <TextInput 
-         style={styles.TextInput}
-         placeholder='البريد الإلكتروني'
-
-         onChangeText={email => this.validate(email)} 
-         value={this.state.email}
-
-         autoCapitalize="none"
-         />
-         </View>
-
-         
-         <View style={styles.fields}>
-         <Text style={styles.fieldLabels}>كلمة المرور </Text>
-        <TextInput 
-         style={styles.TextInput}
-         placeholder='كلمة المرور'
-         secureTextEntry
-         onChangeText={password => this.setState({ password })}
-         value={this.state.password}
-         autoCapitalize="none"
-         />
-         </View>
-
-         <View style={styles.fields}>
-            <Entypo name='lock' size={30}/>
-         <Text style={styles.fieldLabels}>تأكيد كلمة المرور </Text>
-        <TextInput 
-         style={styles.TextInput}
-         placeholder='تأكيد كلمة المرور '
-         secureTextEntry
-         onChangeText={confirmPassword => this.setState({ confirmPassword })}
-         value={this.state.confirmPassword}
-         autoCapitalize="none"
-         />
-         </View>
-         <TouchableOpacity onPress={this.handleSignUp}>
-          <SignInButton text={'إنشاء الحساب'} ></SignInButton>
-
-         </TouchableOpacity>
-
-         
-         
-         
-
-       <TouchableOpacity >
-            <Text 
-            //onPress= {() => this.props.navigation.navigate('RegistrationServiceProvider')}
-            style={styles.SignUpText}>
-                تسجيل كمقدم للخدمة
-            </Text>
-        </TouchableOpacity>
-         
-
-              
         
-        </View>
+        );
+    }
+}
+        
+        
        
       
-       
-       
-    )
-}
-}
-            
+      const pg = StyleSheet.create({
+          
+          container: {
+                  flex: 1,
+                  backgroundColor: colors.primaryBlue,
+                  alignItems: 'center',
+                 
+          },
+          header:{
+              
+              "fontFamily": "Bradley Hand",
+              "fontWeight": "bold",
+              "fontSize": 35,
+              
+              "color": colors.primaryBlue,
+            //  textDecorationStyle: 'underline',
+              marginTop: 50,
+              marginBottom:100
+              
+          },
+          button: {
+              "flexDirection": "row",
+              "alignItems": "center",
+              alignSelf: "stretch",
+              justifyContent: "center",
+              "borderRadius": 22.5,
+              "borderWidth": 1,
+              "borderColor": "rgba(247, 247, 247, 255)",
+              "backgroundColor": "rgba(1, 132, 189, 255)",
+              
+            }, 
+            buttonStyle:{
+            "flexDirection": "row",
+            "alignItems": "center",
+            "paddingStart": 50,
+            "paddingTop": 4,
+            paddingBottom: 4,
+            "width": 150,
+            "height": 40,
+            margin: 15,
+            marginTop:20,
+            "borderRadius": 22.5,
+            "borderWidth": 1,
+            "borderColor": "white",
+            "backgroundColor": "rgba(1, 132, 189, 255)"
+      
+            },
+            textButton:{
+      
+              "fontFamily": "Bodoni 72 Smallcaps",
+              "fontSize": 25,
+              "color": 'white',
+            }, 
+            wrapper: {
+              display: "flex",
+              flex: 1,
+              backgroundColor: colors.primaryBlue
+            },
+            form: {
+              marginTop: 90,
+              paddingLeft: 20,
+              paddingRight: 20,
+              flex: 1,
+            },
+            ForgotPasswordHeading: {
+              fontSize: 28,
+              color: '#FFFFFF',
+              fontWeight: "300",
+              textAlign: 'right'
+            },
+            ForgotPasswordSubHeading: {
+              color: 'white',
+              fontWeight: "800",
+              fontSize: 15,
+              textAlign:'center',
+              marginRight: 150,
+              marginTop:20
 
+            }
+      
+          });
+ 
 
-
-const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: 'white'
-    },
-
-    fieldLabels:{
-            marginRight:10,
-            marginTop:13,
-            marginLeft:18,
-        
-    },
-
-    fields:{
-    flexDirection:'row-reverse',
-    margin:15 ,
-    paddingRight:50,
-    
-    },
-    TextInput:{
-        
-        flexDirection:'row-reverse',
-        height: 30,
-        alignSelf:'center',
-        width: Dimensions.get('window').width *0.5,
-        alignSelf:'center',
-        borderColor: colors.primaryGrey,
-        borderWidth: 1,
-        borderLeftColor: 'white',
-        borderRightColor: 'white',
-        borderTopColor: 'white',
-        textAlign:'right'   
-        
-    },
-    Header:{
-        flexDirection: 'row-reverse',
-        alignItems: 'stretch',
-        
-        
-    },
-    HeaderText:{
-        marginHorizontal: 15,
-        color: colors.primaryBlue,
-        fontSize: 25,
-        
-    },
-    SignUpText:{
-        marginTop:20 ,
-        marginHorizontal: 15,
-        color: colors.primaryBlue,
-        fontSize: 15
-    },
-    forgotPassword:{
-        "fontFamily": "Bodoni 72 Smallcaps",
-        "fontSize": 15,
-        "color": "rgba(121, 121, 121, 255)",
-
-      },
-      forgotPasswordView:{
-        marginTop: 10,
-        "alignItems": "flex-start"
-      }
-  
-    
-  });
