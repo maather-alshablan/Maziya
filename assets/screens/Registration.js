@@ -43,6 +43,18 @@ import {firebase, auth }  from '../config/firebase';
             Alert.alert(this.errorMessage)
             return
         }
+
+        if ( this.state.password.length < 8 ) { 
+          alert("the password should be 8 charecters or more") 
+          return 
+      }
+
+      if ( islegalpassword (password) ) {
+           alert("the password should contain capital late, small late and number")
+            return 
+      }
+      
+   
         auth.
          createUserWithEmailAndPassword(this.state.email, this.state.password)
         .then(() => this.props.navigation.navigate('Homescreen'))
@@ -75,6 +87,23 @@ import {firebase, auth }  from '../config/firebase';
       handleEmailChange = email => {
         this.setState({ email: email });
       };
+
+      handleEmailChange = email => {
+        this.setState({ email: email });
+      };
+  
+    isLegalPassword =( {text}) =>{
+  
+        if (!text.matches(".*[A-Z].*")) return false;
+   
+        if (!text.matches(".*[a-z].*")) return false;
+   
+        if (!text.matches(".*[0-9]")) return false;
+   
+        return true;
+   }
+  
+  
 
 
     render(){
