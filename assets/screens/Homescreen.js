@@ -1,17 +1,16 @@
 import React from 'react'
-import { Text, View } from 'react-native'
+import { Text, View, Button } from 'react-native'
 import {firebase, auth } from '../config/firebase'
 
-export default function HomeScreen(props) {
-
-const signout  = () => {
-auth
-  .signOut()
-  .then(() => console.log('User signed out!')); } 
-
-    return (
-        <View>
-            <Text>Home Screen</Text>
+const Homescreen =({ navigation}) => {
+    return(
+        <View style={{ flex:1, alignItems: "center", justifyContent: "center"}}>
+            <Text>Home</Text>
+            <Button title="Log out" onPress={() => auth()
+            .signOut()
+        .then(() => console.log(' User signrd out'))}/>
         </View>
-    )
-}
+    );
+};
+
+export default Homescreen;
