@@ -4,6 +4,7 @@ import colors from '../constants/colors'
 import InputField from '../components/InputField'
 import {auth} from '../config/firebase'
 import NextArrowButton from '../components/NextArrowButton'
+import {Entypo} from '../constants/icons'
 
 
 
@@ -36,36 +37,14 @@ export default class ForgotPasswordScreen extends Component  {
     this.setState({ email: email });
   };
 
-   /* render(){
-    return (
-    <View style={pg.container}>
-        <Text style={pg.header}> إستعادة كلمة المرور</Text>
-       <Entypo name='lock' size={30} color="#900" />
-
-        <TextInput 
-         style={styles.TextInput}
-         placeholder='البريد الإلكتروني'
-         onChangeText={email => this.setState({ email })}
-         value={this.state.email}
-         autoCapitalize="none"
-         />
-
-  <TouchableOpacity> 
-    <View style = {pg.buttonStyle}>
-            <Text style = {pg.textButton} > إستعادة</Text>
-    </View>
-  </TouchableOpacity>  
-
-
-    </View>
-   
-    )
-} */ 
+  
 render() {
   return (
-    <ScrollView style={[ pg.wrapper]}
+    <KeyboardAvoidingView style={[ pg.wrapper]}
       behavior="padding"
     >
+             <Entypo name='chevron-left' size={30} color='white'  style={{marginTop:10}} onPress={()=> this.props.navigation.navigate('Login')} />
+
         <View style={pg.form}>
           <Text style={pg.ForgotPasswordHeading}>
                 نسيت كلمة المرور؟
@@ -74,7 +53,7 @@ render() {
               ادخل بريدك الإلكتروني لأستعادة كلمة المرور
           </Text>
           <InputField
-            customStyle={{ marginTop: 100 }}
+            customStyle={{ marginTop: 50 }}
             textColor='white'
             labelText="البريد الإلكتروني"
             labelTextSize={14}
@@ -85,10 +64,14 @@ render() {
             onChangeText={email => this.handleEmailChange(email)}
           />
       </View> 
-      <NextArrowButton handelPress={this.forgotPassword} disabled={false} />
+      
+      <NextArrowButton handelPress={this.forgotPassword} disabled={false} 
+      style={{
+        marginTop:50
+      }}/>
      
     
-     </ScrollView>
+     </KeyboardAvoidingView>
   );
 }
 }

@@ -1,5 +1,5 @@
 import React, { useState , Component} from 'react'
-import { Image, Text, TextInput, TouchableOpacity, View , Label, StyleSheet, Dimensions , Button, KeyboardAvoidingView} from 'react-native'
+import { Image, Text, Alert, TouchableOpacity, View , Label, StyleSheet, Dimensions , Button, KeyboardAvoidingView} from 'react-native'
 import colors from '../constants/colors'
 import {Entypo} from '../constants/icons'
 import  SignInButton from '../components/SignInButton'
@@ -13,7 +13,7 @@ import {firebase, auth }  from '../config/firebase';
 
  export default class Registration extends Component {
 
-    state = { email: '', password: '',confirmPassword:'', errorMessage: null }
+    state = { email: '', password: '',confirmPassword:'', errorMessage: null, isLoading: false }
 
     static navigationOptions = ({ navigation }) => ({
         headerStyle: {
@@ -29,21 +29,28 @@ import {firebase, auth }  from '../config/firebase';
 
         
         if (this.state.password !== this.state.confirmPassword) {
-            alert("Passwords don't match.")
+            Alert.alert("Passwords don't match.")
             return
         }
+        if(this.state.email === '' && this.state.password === '') {
+            Alert.alert('Enter details to signup!')
+            return
+          }
 
         if (!this.validate(this.email))
         {
             this.errorMessage = 'wrong email domain'
-            
+            Alert.alert(this.errorMessage)
+            return
         }
         auth.
          createUserWithEmailAndPassword(this.state.email, this.state.password)
         .then(() => this.props.navigation.navigate('Homescreen'))
         .catch(
             error => this.setState({ errorMessage: error.message }))
+
     }
+
 
 // validate email 
 // ref: https://stackoverflow.com/questions/43676695/email-validation-react-native-returning-the-result-as-invalid-for-all-the-e
@@ -76,14 +83,19 @@ import {firebase, auth }  from '../config/firebase';
         <KeyboardAvoidingView
         style={[ pg.wrapper]}
         behavior="padding"
-         ><View style={pg.form}>
-            <Text style={pg.ForgotPasswordHeading}>
+         >
+             
+            <Entypo name='chevron-left' size={30} color='white'  style={{marginTop:10}} onPress={()=> this.props.navigation.navigate('Login')} />
+             
+             <View style={pg.form}>
+            <Text style={pg.ForgotPasswordHeading }>
                   إنشاء حساب مستخدم جديد
             </Text>
            
             <InputField
               customStyle={{ marginTop: 50 }}
               textColor='white'
+
               labelText="البريد الإلكتروني"
               labelTextSize={14}
               labelColor='white'
@@ -118,15 +130,15 @@ import {firebase, auth }  from '../config/firebase';
 
         </View> 
             
-        <TouchableOpacity 
-        //handelPress= {this.props.navigation.navigate('RegistrationServiceProvider')}
-        >
-        <Text style={pg.ForgotPasswordSubHeading} >          
+
+        <TouchableOpacity >  
+        <Text style={pg.ForgotPasswordSubHeading}  onPress= {() => this.props.navigation.navigate('RegistrationServiceProvider')}>          
           تسجيل كمقدم للخدمة           
              </Text>
              </TouchableOpacity>
        
         <NextArrowButton handelPress={this.handleSignUp} disabled={false} />
+        
        </KeyboardAvoidingView> 
     
         
@@ -147,11 +159,11 @@ import {firebase, auth }  from '../config/firebase';
           },
           header:{
               
-              "fontFamily": "Bradley Hand",
-              "fontWeight": "bold",
-              "fontSize": 35,
+              fontFamily: "Bradley Hand",
+              fontWeight: "bold",
+              fontSize: 35,
               
-              "color": colors.primaryBlue,
+              color: colors.primaryBlue,
             //  textDecorationStyle: 'underline',
               marginTop: 50,
               marginBottom:100
@@ -205,7 +217,8 @@ import {firebase, auth }  from '../config/firebase';
               fontSize: 28,
               color: '#FFFFFF',
               fontWeight: "300",
-              textAlign: 'right'
+              textAlign: 'right',
+              marginTop:0
             },
             ForgotPasswordSubHeading: {
               color: 'white',

@@ -23,12 +23,11 @@ import { Entypo } from '../constants/icons'
       
         auth.
          signInWithEmailAndPassword(email, password)
-        .then(() => this.props.navigation.navigate('Homescreen'))
-        .catch(error => this.setState({ errorMessage: error.message }))
+        .then(() => 
+        this.props.navigation.navigate('Homescreen') 
+        ).catch(error => this.setState({ errorMessage: 'يرجى التأكد من ادخال البريد الالكتروني و كلمة المرور الصحيح' }))
 
-        this.state.email="";
-        this.state.password="";
-        this.state
+        this.state.errorMessage="";
 
     }
 
@@ -58,10 +57,6 @@ import { Entypo } from '../constants/icons'
        </View> 
 
 
-         {this.state.errorMessage &&
-          <Text style={{ color: 'red' }}>
-            {this.state.errorMessage}
-          </Text>}
 
          <View style={styles.fields}>
            
@@ -87,6 +82,10 @@ import { Entypo } from '../constants/icons'
          autoCapitalize="none"
          />
          </View>
+         {this.state.errorMessage &&
+          <Text style={{ color: 'red' }}>
+            {this.state.errorMessage}
+          </Text>}
          <TouchableOpacity onPress={this.handleLogin}>
          <SignInButton text={'تسجيل الدخول'} onPress={this.handleLogin}></SignInButton>
          </TouchableOpacity>

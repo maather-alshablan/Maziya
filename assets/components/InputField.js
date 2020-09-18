@@ -27,7 +27,8 @@ class InputField extends Component {
     Animated.timing(this.state.scaleCheckmarkValue, {
       toValue: value,
       duration: 400,
-      easing: Easing.easeOutBack
+      easing: Easing.easeOutBack,
+      useNativeDriver: true,
     }).start();
   }
   onChangeText = (name, event) => {
@@ -91,6 +92,7 @@ class InputField extends Component {
           ]}
           secureTextEntry={secureInput}
           onChangeText={onChangeText}
+          
           autoCapitalize="none"
           keyboardType={keyboardType}
         />

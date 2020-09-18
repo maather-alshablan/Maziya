@@ -14,10 +14,14 @@ const Form = t.form.Form;
   });
 
 export default class RegistrationServiceProvider extends Component {
+render(){
+return(
+    <View>
+    <Text>Hi</Text>
+    </View>)
+}}
 
-   render(){
-        return (
-        <View style={styles.container}>
+        /*<View style={styles.container}>
             <Text style={styles.header}>تسجيل مزود الخدمة</Text>
             <Form type={fields} 
             style={formStyles}
@@ -69,4 +73,4 @@ export default class RegistrationServiceProvider extends Component {
           },
    
     })
-   
+   */
