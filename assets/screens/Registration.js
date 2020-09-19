@@ -1,10 +1,10 @@
 import React, { useState , Component} from 'react'
-import { Image, Text, Alert, TouchableOpacity, View , Label, StyleSheet, Dimensions , Button, KeyboardAvoidingView} from 'react-native'
+import { Image, Text, Alert, TouchableOpacity, View , Label, StyleSheet,  KeyboardAvoidingView} from 'react-native'
 import colors from '../constants/colors'
 import {Entypo} from '../constants/icons'
-import  SignInButton from '../components/SignInButton'
 import InputField from '../components/InputField'
 import NextArrowButton from '../components/NextArrowButton'
+import Notification from '../components/Notification';
 import {firebase, auth }  from '../config/firebase';
 
 
@@ -13,35 +13,39 @@ import {firebase, auth }  from '../config/firebase';
 
  export default class Registration extends Component {
 
-    state = { email: '', password: '',confirmPassword:'', errorMessage: null, isLoading: false }
+    state = { email: '', password: '',confirmPassword:'', errorMessage: null,  formValid: true, }
 
-    static navigationOptions = ({ navigation }) => ({
-        headerStyle: {
-          borderBottomWidth: 0,
-          elevation: 0
-        },
-        headerTransparent: true,
-        headerTintColor: 'white'
-      });
-    
+ 
+    handleCloseNotification = () => {
+      this.setState({ formValid: true });
+    };
 
      handleSignUp = () => {
 
         
         if (this.state.password !== this.state.confirmPassword) {
-            Alert.alert("Passwords don't match.")
-            return
+          this.state.formValid= false;
+            this.state.errorMessage= 'يرجى التأكد من مطابقة كلمة المرور'
+            return;
+            
         }
         if(this.state.email === '' && this.state.password === '') {
-            Alert.alert('Enter details to signup!')
-            return
+          this.state.formValid= false;
+          this.state.errorMessage='يرجى ادخال جميع البيانات'
+          return;
+            
+          }
+          if(this.state.email == '' || this.state.password == '' || this.state.confirmPassword == '') {
+            this.state.formValid= false;
+            this.state.errorMessage='يرجى ادخال جميع البيانات'
+            return;
+            
           }
 
-        if (!this.validate(this.email))
-        {
-            this.errorMessage = 'wrong email domain'
-            Alert.alert(this.errorMessage)
-            return
+        if (this.validate(this.state.email)=== false)
+        {   this.state.formValid= false;
+            this.state.errorMessage = 'يرجى ادخال البريد الالكتروني المستخدم لمنسوبي الجامعة'
+            return;
         }
 
         if ( this.state.password.length < 8 ) { 
@@ -59,7 +63,7 @@ import {firebase, auth }  from '../config/firebase';
          createUserWithEmailAndPassword(this.state.email, this.state.password)
         .then(() => this.props.navigation.navigate('Homescreen'))
         .catch(
-            error => this.setState({ errorMessage: error.message }))
+            error => this.setState({ errorMessage: 'يرجى التأكد من ادخال البيانات بالشكل الصحيح', formValid: false }))
 
     }
 
@@ -67,13 +71,16 @@ import {firebase, auth }  from '../config/firebase';
 // validate email 
 // ref: https://stackoverflow.com/questions/43676695/email-validation-react-native-returning-the-result-as-invalid-for-all-the-e
 
-    validate = ({text}) => {
+    validate = text => {
         console.log({text});
         
-        if (!{text}.endsWith('ksu.edu.sa')){
+        const domain = 'ksu.edu.sa'
+        const testS =this.state.email
+        const test = testS.endsWith('ksu.edu.sa')
+        if (!test){
 
           console.log("Email is Not Correct");
-          this.setState({ errorMessage: 'Email not within domain' })
+          this.setState({ errorMessage: 'يرجى ادخال البريد الالكتروني المستخدم لمنسوي الجامعة'})
           return false;
         }
         else {
@@ -83,9 +90,13 @@ import {firebase, auth }  from '../config/firebase';
           console.log("Email is Correct");
         }
       }
-
       handleEmailChange = email => {
+        // parent class change handler is always called with field name and value
         this.setState({ email: email });
+      };
+      handlePasswordChange = password => {
+        // parent class change handler is always called with field name and value
+        this.setState({ password: password });
       };
 
       handleEmailChange = email => {
@@ -106,8 +117,18 @@ import {firebase, auth }  from '../config/firebase';
   
 
 
+      handleconfirmPasswordChange = password => {
+        // parent class change handler is always called with field name and value
+        this.setState({ confirmPassword: password });
+      };
+     
+     
+
+
     render(){
-        return (
+      const showNotification = this.state.formValid ? false : true;
+        
+      return (
 
         <KeyboardAvoidingView
         style={[ pg.wrapper]}
@@ -124,14 +145,13 @@ import {firebase, auth }  from '../config/firebase';
             <InputField
               customStyle={{ marginTop: 50 }}
               textColor='white'
-
               labelText="البريد الإلكتروني"
               labelTextSize={14}
               labelColor='white'
               borderBottomColor='white'
               inputType="email"
               textAlign='right'
-              onChangeText={email => this.handleEmailChange(email)}
+              onChangeText={this.handleEmailChange}
             />
             <InputField
             customStyle={{ marginTop: 50 }}
@@ -141,9 +161,12 @@ import {firebase, auth }  from '../config/firebase';
             labelColor='white'
             borderBottomColor='white'
             secureTextEntry
+            //inputType="password"
             textAlign='right'
-            onChangeText={password => this.setState({ password })}
+            showCheckmark={this.state.password === "12345"}
+            onChangeText={this.handlePasswordChange}
           />
+
           <InputField
           customStyle={{ marginTop: 50 }}
           textColor='white'
@@ -152,22 +175,33 @@ import {firebase, auth }  from '../config/firebase';
           labelColor='white'
           borderBottomColor='white'
           secureTextEntry
+          inputType="confirmPassword"
           textAlign='right'
-          onChangeText={confirmPassword => this.setState({ confirmPassword })}
+          onChangeText={this.handleconfirmPasswordChange}
         />
 
 
         </View> 
             
 
-        <TouchableOpacity >  
-        <Text style={pg.ForgotPasswordSubHeading}  onPress= {() => this.props.navigation.navigate('RegistrationServiceProvider')}>          
-          تسجيل كمقدم للخدمة           
+
+=======
+        <TouchableOpacity >
+        
+        <Text style={pg.ForgotPasswordSubHeading} onPress= {() => this.props.navigation.navigate('RegistrationServiceProvider')} >          
+        تسجيل كمقدم للخدمة؟
              </Text>
              </TouchableOpacity>
        
         <NextArrowButton handelPress={this.handleSignUp} disabled={false} />
-        
+       
+        <Notification
+            showNotification={showNotification}
+            handleCloseNotification={this.handleCloseNotification}
+            title="Error"
+            message={this.state.errorMessage}
+          />
+         
        </KeyboardAvoidingView> 
     
         
@@ -193,7 +227,6 @@ import {firebase, auth }  from '../config/firebase';
               fontSize: 35,
               
               color: colors.primaryBlue,
-            //  textDecorationStyle: 'underline',
               marginTop: 50,
               marginBottom:100
               

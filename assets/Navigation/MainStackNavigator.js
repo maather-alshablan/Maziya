@@ -6,6 +6,7 @@ import {auth, firebase} from '../config/firebase';
 
 
 import Login from '../screens/LoginScreen'
+import Loading from '../screens/Loading'
 import Registration from '../screens/Registration'
 import Forgot from '../screens/ForgotPasswordScreen'
 import RegistrationServiceProvider from '../screens/RegistrationServiceProvider'
@@ -16,7 +17,9 @@ import profile from '../screens/profile'
 function MainStackNavigator() {
     const Stack = createStackNavigator()
 
-        
+        //Reference:  /*authentication : 
+    // https://rnfirebase.io/auth/usage
+  
     const [initializing, setInitializing] = useState(true);
     const [user, setUser] = useState();
     // Handle user state changes
@@ -32,9 +35,7 @@ function MainStackNavigator() {
 
   if (initializing) return null;        
     
-    /*authentication : 
-    https://rnfirebase.io/auth/usage
-    */
+   
    if (!user) {       //  If the user returned within the handler is null we assume the user is currently signed-out
 /*
     return ( // to login/sign up navigation
@@ -68,7 +69,8 @@ function MainStackNavigator() {
    }
     return ( // to login/sign up navigation
       <NavigationContainer>
-        <Stack.Navigator initialRouteName='Login' screenOptions={{ headerShown: false }}>
+        <Stack.Navigator initialRouteName='Loading' screenOptions={{ headerShown: false }}>
+        <Stack.Screen name='Loading' component={Loading} />
           <Stack.Screen name='Login' component={Login} />
           <Stack.Screen name='Forgot' component={Forgot} />
           <Stack.Screen name='Homescreen' component={Homescreen} />
