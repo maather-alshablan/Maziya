@@ -39,6 +39,11 @@ export default class RegistrationServiceProvider extends Component {
         
       }
 
+      if ( this.state.password.length < 8 ) { 
+        alert("the password should be 8 charecters or more") 
+        return 
+    }
+
     auth.
      createUserWithEmailAndPassword(this.state.email, this.state.password)
      .then(() => 
