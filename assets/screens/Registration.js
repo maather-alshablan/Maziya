@@ -185,10 +185,10 @@ import {firebase, auth }  from '../config/firebase';
             
 
 
-=======
-        <TouchableOpacity >
+
+        <TouchableOpacity onPress= {() => this.props.navigation.navigate('RegistrationServiceProvider')} >
         
-        <Text style={pg.ForgotPasswordSubHeading} onPress= {() => this.props.navigation.navigate('RegistrationServiceProvider')} >          
+        <Text style={pg.ForgotPasswordSubHeading} >          
         تسجيل كمقدم للخدمة؟
              </Text>
              </TouchableOpacity>
