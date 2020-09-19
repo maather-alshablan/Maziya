@@ -4,11 +4,69 @@ import colors from "../constants/colors";
 import styles from '../constants/styles'
 import icons from '../constants/icons'
 import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
+import SignUpButton from '../components/SignUpButton'
+import {firebase, auth }  from '../config/firebase';
+import RegNotification from '../components/RegNotification';
 
 export default class RegistrationServiceProvider extends Component {
-  state = { email: "", password: "", confirmPassword: "", errorMessage: null };
+  state = {userName:"",phoneNum:"", email: "", password: "", confirmPassword: "", nameBrand:"",Descripiton:"", errorMessage: null };
+
+  
+  handleCloseNotification = () => {
+    this.setState({ formValid: true });
+  };
+
+  
+  handleSignUp = () => {
+
+        
+    if (this.state.password !== this.state.confirmPassword) {
+      this.state.formValid= false;
+        this.state.errorMessage= 'يرجى التأكد من مطابقة كلمة المرور'
+        return;
+        
+    }
+    if(this.state.email === '' && this.state.password === '') {
+      this.state.formValid= false;
+      this.state.errorMessage='يرجى ادخال جميع البيانات'
+      return;
+        
+      }
+      if(this.state.email == '' || this.state.password == '' || this.state.confirmPassword == '') {
+        this.state.formValid= false;
+        this.state.errorMessage='يرجى ادخال جميع البيانات'
+        return;
+        
+      }
+
+    auth.
+     createUserWithEmailAndPassword(this.state.email, this.state.password)
+     .then(() => 
+     this.props.navigation.navigate('Homescreen') 
+     ).catch(error => this.setState({ errorMessage: 'يرجى التأكد من ادخال البريد الالكتروني و كلمة المرور الصحيح' }))
+
+     this.state.errorMessage="";
+}
+
+
+
+  handleEmailChange = email => {
+    // parent class change handler is always called with field name and value
+    this.setState({ email: email });
+  };
+  handlePasswordChange = password => {
+    // parent class change handler is always called with field name and value
+    this.setState({ password: password });
+  };
+
+  handleconfirmPasswordChange = password => {
+    // parent class change handler is always called with field name and value
+    this.setState({ confirmPassword: password });
+  };
+
 
   render() {
+    const showNotification = this.state.formValid ? false : true;
     return (
       <View style={styles.container}>
         <View style={styles.header}>
@@ -34,8 +92,8 @@ export default class RegistrationServiceProvider extends Component {
                   <TextInput
                     style={styles.TextInput}
                     placeholder="الاسم"
-                    onChangeText={(email) => this.setState({ email })}
-                    value={this.state.email}
+                    onChangeText={(userName) => this.setState({ userName })}
+                    value={this.state.userName}
                     autoCapitalize="none"
                   /></View>
                   <View style={styles.fields}>
@@ -46,14 +104,15 @@ export default class RegistrationServiceProvider extends Component {
                     onChangeText={(email) => this.setState({ email })}
                     value={this.state.email}
                     autoCapitalize="none"
+                    
                   /></View>
                   <View style={styles.fields}>
                   <Text style={styles.fieldLabels}>⚫</Text>
                   <TextInput
                     style={styles.TextInput}
                     placeholder="رقم الجوال"
-                    onChangeText={(email) => this.setState({ email })}
-                    value={this.state.email}
+                    onChangeText={(phoneNum) => this.setState({phoneNum })}
+                    value={this.state.phoneNum}
                     autoCapitalize="none"
                   />
                   </View>
@@ -62,12 +121,25 @@ export default class RegistrationServiceProvider extends Component {
                   <TextInput
                     style={styles.TextInput}
                     placeholder="كلمة المرور"
-                    onChangeText={(email) => this.setState({ email })}
-                    value={this.state.email}
+                    onChangeText={(password) => this.setState({ password })}
+                    value={this.state.password}
                     autoCapitalize="none"
+                    
+                  />
+                </View>
+                <View style={styles.fields}>
+                  <Text style={styles.fieldLabels}>⚫</Text>
+                  <TextInput
+                    style={styles.TextInput}
+                    placeholder="تأكيد كلمة المرور"
+                    onChangeText={(confirmPassword) => this.setState({ confirmPassword })}
+                    value={this.state.confirmPassword}
+                    autoCapitalize="none"
+                    
                   />
                 </View>
               </View>
+              
             </ProgressStep>
             <ProgressStep
               label="الوصف"
@@ -77,13 +149,34 @@ export default class RegistrationServiceProvider extends Component {
               nextBtnStyle={styles.nextButton}
             >
               <View style={{ alignItems: "center" }}>
-                <Text>This is the content within step 2!</Text>
+              <View style={styles.fields}>
+                  <Text style={styles.fieldLabels}>⚫</Text>
+                  <TextInput
+                    style={styles.TextInput}
+                    placeholder="أضف علامتك التجارية "
+                    onChangeText={(nameBrand) => this.setState({nameBrand })}
+                    value={this.state.nameBrand}
+                    autoCapitalize="none"
+                  />
+                </View>
+                
+                <View style={styles.fields}>
+                  <Text style={styles.fieldLabels}>⚫</Text>
+                  <TextInput
+                    style={styles.TextInput}
+                    placeholder=" وصف العلامة التجارية"
+                    onChangeText={(Descripiton) => this.setState({Descripiton })}
+                    value={this.state.Descripiton}
+                    autoCapitalize="none"
+                  />
+                </View>
               </View>
             </ProgressStep>
+            
             <ProgressStep
               label="الموقع"
               previousBtnText="السابق"
-              nextBtnText="التالي"
+              nextBtnText ="التالي"
               nextBtnTextStyle={{ color: "#ffff", fontSize: 20 }}
               nextBtnStyle={styles.nextButton}
             >
@@ -91,18 +184,31 @@ export default class RegistrationServiceProvider extends Component {
                 <Text>This is the content within step 3!</Text>
               </View>
             </ProgressStep>
-            <ProgressStep
+            <ProgressStep 
               label="العروض"
               previousBtnText="السابق"
-              finishBtnText="تسجيل"
+              finishBtnText="تسجيل" 
               nextBtnTextStyle={{ color: "#ffff", fontSize: 20 }}
               nextBtnStyle={styles.nextButton}
+              
             >
               <View style={{ alignItems: "center" }}>
                 <Text>This is the content within step 3!</Text>
+               
+                <TouchableOpacity onPress={this.handleSignUp}>
+         <SignUpButton text={'إنشاء حساب'} onPress={this.handleSignUp}></SignUpButton>
+         <RegNotification
+            showNotification={showNotification}
+            handleCloseNotification={this.handleCloseNotification}
+            title="Error"
+            message={this.state.errorMessage}
+          />
+         </TouchableOpacity>
               </View>
             </ProgressStep>
+          
           </ProgressSteps>
+          
         </View>
       </View>
     );
