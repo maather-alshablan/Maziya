@@ -53,10 +53,10 @@ import {firebase, auth }  from '../config/firebase';
           return 
       }
 
-      if ( islegalpassword (password) ) {
+     /* if ( this.isLegalPassword(this.state.password)=== false ) {
            alert("the password should contain capital late, small late and number")
             return 
-      }
+      }*/
       
    
         auth.
@@ -103,7 +103,7 @@ import {firebase, auth }  from '../config/firebase';
         this.setState({ email: email });
       };
   
-    isLegalPassword =( {text}) =>{
+    /*isLegalPassword = text =>{
   
         if (!text.matches(".*[A-Z].*")) return false;
    
@@ -111,8 +111,13 @@ import {firebase, auth }  from '../config/firebase';
    
         if (!text.matches(".*[0-9]")) return false;
    
-        return true;
-   }
+        else {
+
+          this.setState({ password: {text} })
+
+          console.log("Password is Correct");
+        }
+   }*/
   
   
 
