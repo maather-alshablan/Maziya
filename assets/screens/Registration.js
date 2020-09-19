@@ -1,10 +1,10 @@
 import React, { useState , Component} from 'react'
-import { Image, Text, TextInput, TouchableOpacity, View , Label, StyleSheet, Dimensions , Button, KeyboardAvoidingView} from 'react-native'
+import { Image, Text, Alert, TouchableOpacity, View , Label, StyleSheet,  KeyboardAvoidingView} from 'react-native'
 import colors from '../constants/colors'
 import {Entypo} from '../constants/icons'
-import  SignInButton from '../components/SignInButton'
 import InputField from '../components/InputField'
 import NextArrowButton from '../components/NextArrowButton'
+import Notification from '../components/Notification';
 import {firebase, auth }  from '../config/firebase';
 
 
@@ -13,48 +13,62 @@ import {firebase, auth }  from '../config/firebase';
 
  export default class Registration extends Component {
 
-    state = { email: '', password: '',confirmPassword:'', errorMessage: null }
+    state = { email: '', password: '',confirmPassword:'', errorMessage: null,  formValid: true, }
 
-    static navigationOptions = ({ navigation }) => ({
-        headerStyle: {
-          borderBottomWidth: 0,
-          elevation: 0
-        },
-        headerTransparent: true,
-        headerTintColor: 'white'
-      });
-    
+ 
+    handleCloseNotification = () => {
+      this.setState({ formValid: true });
+    };
 
      handleSignUp = () => {
 
         
         if (this.state.password !== this.state.confirmPassword) {
-            alert("Passwords don't match.")
-            return
-        }
-
-        if (!this.validate(this.email))
-        {
-            this.errorMessage = 'wrong email domain'
+          this.state.formValid= false;
+            this.state.errorMessage= 'يرجى التأكد من مطابقة كلمة المرور'
+            return;
             
+        }
+        if(this.state.email === '' && this.state.password === '') {
+          this.state.formValid= false;
+          this.state.errorMessage='يرجى ادخال جميع البيانات'
+          return;
+            
+          }
+          if(this.state.email == '' || this.state.password == '' || this.state.confirmPassword == '') {
+            this.state.formValid= false;
+            this.state.errorMessage='يرجى ادخال جميع البيانات'
+            return;
+            
+          }
+
+        if (this.validate(this.state.email)=== false)
+        {   this.state.formValid= false;
+            this.state.errorMessage = 'يرجى ادخال البريد الالكتروني المستخدم لمنسوبي الجامعة'
+            return;
         }
         auth.
          createUserWithEmailAndPassword(this.state.email, this.state.password)
         .then(() => this.props.navigation.navigate('Homescreen'))
         .catch(
-            error => this.setState({ errorMessage: error.message }))
+            error => this.setState({ errorMessage: 'يرجى التأكد من ادخال البيانات بالشكل الصحيح', formValid: false }))
+
     }
+
 
 // validate email 
 // ref: https://stackoverflow.com/questions/43676695/email-validation-react-native-returning-the-result-as-invalid-for-all-the-e
 
-    validate = ({text}) => {
+    validate = text => {
         console.log({text});
         
-        if (!{text}.endsWith('ksu.edu.sa')){
+        const domain = 'ksu.edu.sa'
+        const testS =this.state.email
+        const test = testS.endsWith('ksu.edu.sa')
+        if (!test){
 
           console.log("Email is Not Correct");
-          this.setState({ errorMessage: 'Email not within domain' })
+          this.setState({ errorMessage: 'يرجى ادخال البريد الالكتروني المستخدم لمنسوي الجامعة'})
           return false;
         }
         else {
@@ -64,20 +78,36 @@ import {firebase, auth }  from '../config/firebase';
           console.log("Email is Correct");
         }
       }
-
       handleEmailChange = email => {
+        // parent class change handler is always called with field name and value
         this.setState({ email: email });
       };
+      handlePasswordChange = password => {
+        // parent class change handler is always called with field name and value
+        this.setState({ password: password });
+      };
 
+      handleconfirmPasswordChange = password => {
+        // parent class change handler is always called with field name and value
+        this.setState({ confirmPassword: password });
+      };
+     
+     
 
     render(){
-        return (
+      const showNotification = this.state.formValid ? false : true;
+        
+      return (
 
         <KeyboardAvoidingView
         style={[ pg.wrapper]}
         behavior="padding"
-         ><View style={pg.form}>
-            <Text style={pg.ForgotPasswordHeading}>
+         >
+             
+            <Entypo name='chevron-left' size={30} color='white'  style={{marginTop:10}} onPress={()=> this.props.navigation.navigate('Login')} />
+             
+             <View style={pg.form}>
+            <Text style={pg.ForgotPasswordHeading }>
                   إنشاء حساب مستخدم جديد
             </Text>
            
@@ -90,7 +120,7 @@ import {firebase, auth }  from '../config/firebase';
               borderBottomColor='white'
               inputType="email"
               textAlign='right'
-              onChangeText={email => this.handleEmailChange(email)}
+              onChangeText={this.handleEmailChange}
             />
             <InputField
             customStyle={{ marginTop: 50 }}
@@ -100,9 +130,12 @@ import {firebase, auth }  from '../config/firebase';
             labelColor='white'
             borderBottomColor='white'
             secureTextEntry
+            //inputType="password"
             textAlign='right'
-            onChangeText={password => this.setState({ password })}
+            showCheckmark={this.state.password === "12345"}
+            onChangeText={this.handlePasswordChange}
           />
+
           <InputField
           customStyle={{ marginTop: 50 }}
           textColor='white'
@@ -111,14 +144,16 @@ import {firebase, auth }  from '../config/firebase';
           labelColor='white'
           borderBottomColor='white'
           secureTextEntry
+          inputType="confirmPassword"
           textAlign='right'
-          onChangeText={confirmPassword => this.setState({ confirmPassword })}
+          onChangeText={this.handleconfirmPasswordChange}
         />
 
 
         </View> 
             
 
+<<<<<<< HEAD
 
             
         <TouchableOpacity 
@@ -126,10 +161,24 @@ import {firebase, auth }  from '../config/firebase';
         >
         <Text style={pg.ForgotPasswordSubHeading} >          
           تسجيل كمقدم للخدمة           
+=======
+        <TouchableOpacity >
+        
+        <Text style={pg.ForgotPasswordSubHeading} onPress= {() => this.props.navigation.navigate('RegistrationServiceProvider')} >          
+        تسجيل كمقدم للخدمة؟
+>>>>>>> 52996750ee532bdb861b3599dc0bf5ae2dca7c6e
              </Text>
              </TouchableOpacity>
        
         <NextArrowButton handelPress={this.handleSignUp} disabled={false} />
+       
+        <Notification
+            showNotification={showNotification}
+            handleCloseNotification={this.handleCloseNotification}
+            title="Error"
+            message={this.state.errorMessage}
+          />
+         
        </KeyboardAvoidingView> 
     
         
@@ -150,12 +199,11 @@ import {firebase, auth }  from '../config/firebase';
           },
           header:{
               
-              "fontFamily": "Bradley Hand",
-              "fontWeight": "bold",
-              "fontSize": 35,
+              fontFamily: "Bradley Hand",
+              fontWeight: "bold",
+              fontSize: 35,
               
-              "color": colors.primaryBlue,
-            //  textDecorationStyle: 'underline',
+              color: colors.primaryBlue,
               marginTop: 50,
               marginBottom:100
               
@@ -208,7 +256,8 @@ import {firebase, auth }  from '../config/firebase';
               fontSize: 28,
               color: '#FFFFFF',
               fontWeight: "300",
-              textAlign: 'right'
+              textAlign: 'right',
+              marginTop:0
             },
             ForgotPasswordSubHeading: {
               color: 'white',
