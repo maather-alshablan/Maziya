@@ -92,7 +92,6 @@ class InputField extends Component {
           ]}
           secureTextEntry={secureInput}
           onChangeText={onChangeText}
-          
           autoCapitalize="none"
           keyboardType={keyboardType}
         />

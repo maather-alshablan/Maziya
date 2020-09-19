@@ -5,12 +5,13 @@ import InputField from '../components/InputField'
 import {auth} from '../config/firebase'
 import NextArrowButton from '../components/NextArrowButton'
 import {Entypo} from '../constants/icons'
+import Notification from '../components/Notification';
 
 
 
 
 export default class ForgotPasswordScreen extends Component  {
-  state = { email: '', errorMessage: null, textInput:'' }
+  state = { email: '', errorMessage: null, textInput:'' ,formValid: true,}
    
 
   static navigationOptions = ({ navigation }) => ({
@@ -22,16 +23,18 @@ export default class ForgotPasswordScreen extends Component  {
     headerTintColor: 'white'
   });
 
+  handleCloseNotification = () => {
+    this.setState({ formValid: true });
+  };
 
   forgotPassword = () => {
        auth.sendPasswordResetEmail(this.state.email)
       .then(function () {
         Alert.alert('تم ارسال طلب تعديل كلمة المرور على بريدك الإلكتروني')
         this.props.navigation.navigate("Login");
-      }).catch(function (error) {
-        Alert.alert(error.message);
-      });
-  }
+      }).catch(error => this.setState({ errorMessage: 'يرجى التأكد من ادخال البيانات بالشكل الصحيح', formValid: false })
+      )};
+  
 
   handleEmailChange = email => {
     this.setState({ email: email });
@@ -39,6 +42,8 @@ export default class ForgotPasswordScreen extends Component  {
 
   
 render() {
+  const showNotification = this.state.formValid ? false : true;
+
   return (
     <KeyboardAvoidingView style={[ pg.wrapper]}
       behavior="padding"
@@ -69,7 +74,12 @@ render() {
       style={{
         marginTop:50
       }}/>
-     
+        <Notification
+            showNotification={showNotification}
+            handleCloseNotification={this.handleCloseNotification}
+            title="Error"
+            message={this.state.errorMessage}
+          />
     
      </KeyboardAvoidingView>
   );

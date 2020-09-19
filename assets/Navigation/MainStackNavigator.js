@@ -6,6 +6,7 @@ import {auth, firebase} from '../config/firebase';
 
 
 import Login from '../screens/LoginScreen'
+import Loading from '../screens/Loading'
 import Registration from '../screens/Registration'
 import Forgot from '../screens/ForgotPasswordScreen'
 import RegistrationServiceProvider from '../screens/RegistrationServiceProvider'
@@ -68,7 +69,8 @@ function MainStackNavigator() {
    }
     return ( // to login/sign up navigation
       <NavigationContainer>
-        <Stack.Navigator initialRouteName='Login' screenOptions={{ headerShown: false }}>
+        <Stack.Navigator initialRouteName='Loading' screenOptions={{ headerShown: false }}>
+        <Stack.Screen name='Loading' component={Loading} />
           <Stack.Screen name='Login' component={Login} />
           <Stack.Screen name='Forgot' component={Forgot} />
           <Stack.Screen name='Homescreen' component={Homescreen} />
