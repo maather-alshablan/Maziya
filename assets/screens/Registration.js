@@ -1,8 +1,7 @@
 import React, { useState , Component} from 'react'
-import { Image, Text, Alert, TouchableOpacity, View , Label, StyleSheet, Dimensions , Button, KeyboardAvoidingView} from 'react-native'
+import { Image, Text, Alert, TouchableOpacity, View , Label, StyleSheet,  KeyboardAvoidingView} from 'react-native'
 import colors from '../constants/colors'
 import {Entypo} from '../constants/icons'
-import  SignInButton from '../components/SignInButton'
 import InputField from '../components/InputField'
 import NextArrowButton from '../components/NextArrowButton'
 import Notification from '../components/Notification';
@@ -154,8 +153,9 @@ import {firebase, auth }  from '../config/firebase';
         </View> 
             
 
-        <TouchableOpacity >  
-        <Text style={pg.ForgotPasswordSubHeading}  onPress= {() => this.props.navigation.navigate('RegistrationServiceProvider')}>          
+        <TouchableOpacity >
+        
+        <Text style={pg.ForgotPasswordSubHeading} onPress= {() => this.props.navigation.navigate('RegistrationServiceProvider')} >          
         تسجيل كمقدم للخدمة؟
              </Text>
              </TouchableOpacity>

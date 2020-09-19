@@ -18,5 +18,6 @@ render(){
 return(
     <View>
     <Text>Hi</Text>
-    </View>)
-}}
+    </View>
+    );
+}};

@@ -17,7 +17,9 @@ import profile from '../screens/profile'
 function MainStackNavigator() {
     const Stack = createStackNavigator()
 
-        
+        //Reference:  /*authentication : 
+    // https://rnfirebase.io/auth/usage
+  
     const [initializing, setInitializing] = useState(true);
     const [user, setUser] = useState();
     // Handle user state changes
@@ -33,9 +35,7 @@ function MainStackNavigator() {
 
   if (initializing) return null;        
     
-    /*authentication : 
-    https://rnfirebase.io/auth/usage
-    */
+   
    if (!user) {       //  If the user returned within the handler is null we assume the user is currently signed-out
 /*
     return ( // to login/sign up navigation

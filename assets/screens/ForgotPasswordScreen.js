@@ -31,9 +31,12 @@ export default class ForgotPasswordScreen extends Component  {
        auth.sendPasswordResetEmail(this.state.email)
       .then(function () {
         Alert.alert('تم ارسال طلب تعديل كلمة المرور على بريدك الإلكتروني')
-        this.props.navigation.navigate("Login");
+        
       }).catch(error => this.setState({ errorMessage: 'يرجى التأكد من ادخال البيانات بالشكل الصحيح', formValid: false })
-      )};
+      )
+      
+      this.state.email="";
+    };
   
 
   handleEmailChange = email => {
@@ -77,7 +80,7 @@ render() {
         <Notification
             showNotification={showNotification}
             handleCloseNotification={this.handleCloseNotification}
-            title="Error"
+           // title="Error"
             message={this.state.errorMessage}
           />
     
