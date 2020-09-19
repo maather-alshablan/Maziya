@@ -118,8 +118,11 @@ import {firebase, auth }  from '../config/firebase';
 
         </View> 
             
+
+
+            
         <TouchableOpacity 
-        //handelPress= {this.props.navigation.navigate('RegistrationServiceProvider')}
+        handelPress= {this.props.navigation.navigate('RegistrationServiceProvider')}
         >
         <Text style={pg.ForgotPasswordSubHeading} >          
           تسجيل كمقدم للخدمة           

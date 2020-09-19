@@ -59,7 +59,37 @@ const styles ={
       forgotPasswordView:{
         marginTop: 10,
         "alignItems": "flex-start"
-      }
+      },
+      header: {
+            fontFamily: "Bradley Hand",
+            fontWeight: "bold",
+            fontSize: 35,
+            alignSelf: "center",
+            color: colors.primaryBlue,
+            marginTop: 15,
+            marginBottom: 15,
+          },
+          button: {
+            flexDirection: "row",
+            alignItems: "center",
+            alignSelf: "stretch",
+            justifyContent: "center",
+            borderRadius: 22.5,
+            borderWidth: 1,
+            borderColor: "rgba(247, 247, 247, 255)",
+            backgroundColor: "rgba(1, 132, 189, 255)",
+          },
+          nextButton: {
+            flexDirection: "row",
+            alignItems: "center",
+            alignSelf: "stretch",
+            justifyContent: "center",
+            color: colors.primaryGrey,
+            borderRadius: 22.5,
+            borderWidth: 0.1,
+            borderColor: colors.primaryGrey,
+            backgroundColor: colors.primaryBlue,
+          }
   
     
   };
