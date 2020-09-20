@@ -1,9 +1,9 @@
 {
   "devToolsPort": 19002,
-  "expoServerPort": 19003,
-  "packagerPort": 19005,
-  "packagerPid": 10374,
+  "expoServerPort": 19000,
+  "packagerPort": 19001,
+  "packagerPid": 13202,
   "expoServerNgrokUrl": "https://iw-3h7.anonymous.maziya.exp.direct",
   "packagerNgrokUrl": "https://packager.iw-3h7.anonymous.maziya.exp.direct",
-  "ngrokPid": 10399
+  "ngrokPid": 13212
 }
