@@ -1,20 +1,10 @@
 {
-<<<<<<< HEAD
-  "devToolsPort": 19003,
-  "expoServerPort": 19004,
-  "packagerPort": 19005,
-  "packagerPid": 96612,
+  "devToolsPort": 19002,
+  "expoServerPort": 19000,
+  "packagerPort": 19003,
+  "packagerPid": 97633,
   "webpackServerPort": null,
   "expoServerNgrokUrl": null,
   "packagerNgrokUrl": null,
   "ngrokPid": null
-=======
-  "devToolsPort": 19002,
-  "expoServerPort": 19003,
-  "packagerPort": 19005,
-  "packagerPid": 10374,
-  "expoServerNgrokUrl": "https://iw-3h7.anonymous.maziya.exp.direct",
-  "packagerNgrokUrl": "https://packager.iw-3h7.anonymous.maziya.exp.direct",
-  "ngrokPid": 10399
->>>>>>> 931e98907f5f64220c63ea76137630fb1b623f0c
 }
