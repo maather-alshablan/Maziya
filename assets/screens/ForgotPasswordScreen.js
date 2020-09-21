@@ -51,7 +51,7 @@ render() {
     <KeyboardAvoidingView style={[ pg.wrapper]}
       behavior="padding"
     >
-             <Entypo name='chevron-left' size={30} color='white'  style={{marginTop:10}} onPress={()=> this.props.navigation.navigate('Login')} />
+             <Entypo name='chevron-left' size={30} color='white'  style={{marginTop:40}} onPress={()=> this.props.navigation.navigate('Login')} />
 
         <View style={pg.form}>
           <Text style={pg.ForgotPasswordHeading}>

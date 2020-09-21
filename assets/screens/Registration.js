@@ -49,8 +49,9 @@ import {firebase, auth }  from '../config/firebase';
         }
 
         if ( this.state.password.length < 8 ) { 
-          alert("the password should be 8 charecters or more") 
-          return 
+          this.state.errorMessage= "the password should be 8 charecters or more";
+           this.state.formValid= false;
+          return; 
       }
 
       /*if ( islegalpassword (password) ) {
@@ -135,7 +136,7 @@ import {firebase, auth }  from '../config/firebase';
         behavior="padding"
          >
              
-            <Entypo name='chevron-left' size={30} color='white'  style={{marginTop:10}} onPress={()=> this.props.navigation.navigate('Login')} />
+            <Entypo name='chevron-left' size={30} color='white'  style={{marginTop:40}} onPress={()=> this.props.navigation.navigate('Login')} />
              
              <View style={pg.form}>
             <Text style={pg.ForgotPasswordHeading }>

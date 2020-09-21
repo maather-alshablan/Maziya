@@ -2,11 +2,12 @@ import React, { Component } from "react";
 import { Image, Text, TextInput, TouchableOpacity, View , Label, StyleSheet, Dimensions , Button, ColorPropType} from 'react-native'
 import colors from "../constants/colors";
 import styles from '../constants/styles'
-import icons from '../constants/icons'
+import {Entypo} from '../constants/icons'
 import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
 import SignUpButton from '../components/SignUpButton'
 import {firebase, auth }  from '../config/firebase';
 import RegNotification from '../components/RegNotification';
+import { Colors } from "react-native/Libraries/NewAppScreen";
 
 export default class RegistrationServiceProvider extends Component {
   state = {userName:"",phoneNum:"", email: "", password: "", confirmPassword: "", nameBrand:"",Descripiton:"", errorMessage: null };
@@ -76,7 +77,16 @@ export default class RegistrationServiceProvider extends Component {
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.header}>تسجيل مزود الخدمة</Text>
+          <Entypo name='chevron-left' size={30} color={colors.primaryBlue}  
+        style={{
+          marginTop:0,
+          marginRight:340
+
+        }}
+         onPress={()=> this.props.navigation.navigate('Registration')} />
+
         </View>
+      
 
         <View style={{ flex: 1 }}>
           <ProgressSteps
