@@ -5,7 +5,8 @@ import {Entypo} from '../constants/icons'
 import InputField from '../components/InputField'
 import NextArrowButton from '../components/NextArrowButton'
 import Notification from '../components/Notification';
-import {firebase, auth }  from '../config/firebase';
+import {firebase, auth, database }  from '../config/firebase';
+import { TouchableHighlight } from 'react-native-gesture-handler'
 
 
 
@@ -13,7 +14,7 @@ import {firebase, auth }  from '../config/firebase';
 
  export default class Registration extends Component {
 
-    state = { email: '', password: '',confirmPassword:'', errorMessage: null,  formValid: true, }
+    state = { name:'',email: '', password: '',confirmPassword:'', errorMessage: null,  formValid: true, }
 
  
     handleCloseNotification = () => {
@@ -62,35 +63,65 @@ import {firebase, auth }  from '../config/firebase';
    
         auth.
          createUserWithEmailAndPassword(this.state.email, this.state.password)
-        .then(() => this.props.navigation.navigate('Homescreen'))
+        .then(() => 
+        //this.props.navigation.navigate('Homescreen')
+        this.writeUserData()
+        )
         .catch(
-            error => this.setState({ errorMessage: 'يرجى التأكد من ادخال البيانات بالشكل الصحيح', formValid: false }))
+            ()  => this.setState({ errorMessage: 'يرجى التأكد من ادخال البيانات بالشكل الصحيح', formValid: false }))
+
+            if (this.state.errorMessage == '' ){
+              
+            }
+    }
+
+    successfulRegistration = ()=> {
+     auth.currentUser.sendEmailVerification().then( ()=> {
+      this.writeUserData
+      Alert.alert('please check email')
+     }).catch(function(error) {
+        // An error happened.
+        console.log('did not qritrw')
+      });
 
     }
 
+     writeUserData = () => {
+
+      userid = auth.currentUser.uid;
+      
+      database.ref().child('users').child(userid).set({
+        name: this.state.name,
+        email: this.state.email,
+        password: this.state.password,
+        accountType : 'member', 
+      }).then(this.props.navigation.navigate('Homescreen')).catch(error => console.log(error)
+      );
+    }
 
 // validate email 
 // ref: https://stackoverflow.com/questions/43676695/email-validation-react-native-returning-the-result-as-invalid-for-all-the-e
 
     validate = text => {
-        console.log({text});
-        
-        const domain = 'ksu.edu.sa'
+        console.log(text);
         const testS =this.state.email
-        const test = testS.endsWith('ksu.edu.sa')
-        if (!test){
+        const test1 = testS.endsWith('ksu.edu.sa')
+        const test2 = testS.endsWith('student.ksu.edu.sa')
 
+        if (!test1 || !test1){
           console.log("Email is Not Correct");
           this.setState({ errorMessage: 'يرجى ادخال البريد الالكتروني المستخدم لمنسوي الجامعة'})
           return false;
         }
         else {
-
-          this.setState({ email: {text} })
-
           console.log("Email is Correct");
         }
       }
+
+      handleNameChange = name => {
+        // parent class change handler is always called with field name and value
+        this.setState({ name: name  });
+      };
       handleEmailChange = email => {
         // parent class change handler is always called with field name and value
         this.setState({ email: email });
@@ -100,9 +131,13 @@ import {firebase, auth }  from '../config/firebase';
         this.setState({ password: password });
       };
 
-      handleEmailChange = email => {
-        this.setState({ email: email });
+      handleconfirmPasswordChange = password => {
+        // parent class change handler is always called with field name and value
+        this.setState({ confirmPassword: password });
       };
+     
+
+   
   
    /* isLegalPassword =( {text}) =>{
   
@@ -115,15 +150,6 @@ import {firebase, auth }  from '../config/firebase';
         return true;
    }*/
   
-  
-
-
-      handleconfirmPasswordChange = password => {
-        // parent class change handler is always called with field name and value
-        this.setState({ confirmPassword: password });
-      };
-     
-     
 
 
     render(){
@@ -142,9 +168,20 @@ import {firebase, auth }  from '../config/firebase';
             <Text style={pg.ForgotPasswordHeading }>
                   إنشاء حساب مستخدم جديد
             </Text>
-           
+
             <InputField
-              customStyle={{ marginTop: 50 }}
+              customStyle={{ marginTop: 30 }}
+              textColor='white'
+              labelText="الإسم"
+              labelTextSize={14}
+              labelColor='white'
+              borderBottomColor='white'
+              inputType="email"
+              textAlign='right'
+              onChangeText={this.handleNameChange}
+            />
+            <InputField
+              customStyle={{ marginTop: 40 }}
               textColor='white'
               labelText="البريد الإلكتروني"
               labelTextSize={14}
@@ -155,28 +192,28 @@ import {firebase, auth }  from '../config/firebase';
               onChangeText={this.handleEmailChange}
             />
             <InputField
-            customStyle={{ marginTop: 50 }}
+            customStyle={{ marginTop: 40 }}
             textColor='white'
             labelText="    كلمة المرور    "
             labelTextSize={14}
             labelColor='white'
             borderBottomColor='white'
             secureTextEntry
-            //inputType="password"
+            inputType="password"
             textAlign='right'
             showCheckmark={this.state.password === "12345"}
             onChangeText={this.handlePasswordChange}
           />
 
           <InputField
-          customStyle={{ marginTop: 50 }}
+          customStyle={{ marginTop: 40 }}
           textColor='white'
           labelText="تأكيد كلمة المرور"
           labelTextSize={14}
           labelColor='white'
           borderBottomColor='white'
           secureTextEntry
-          inputType="confirmPassword"
+          inputType="password"
           textAlign='right'
           onChangeText={this.handleconfirmPasswordChange}
         />
@@ -187,9 +224,9 @@ import {firebase, auth }  from '../config/firebase';
 
 
 
-        <TouchableOpacity onPress= {() => this.props.navigation.navigate('RegistrationServiceProvider')} >
+        <TouchableOpacity onPress= {() => this.props.navigation.navigate('RegistrationServiceProvider')}>
         
-        <Text style={pg.ForgotPasswordSubHeading} >          
+        <Text style={pg.ForgotPasswordSubHeading}   >          
         تسجيل كمقدم للخدمة؟
              </Text>
              </TouchableOpacity>
@@ -271,7 +308,7 @@ import {firebase, auth }  from '../config/firebase';
               backgroundColor: colors.primaryBlue
             },
             form: {
-              marginTop: 90,
+              marginTop: 70,
               paddingLeft: 20,
               paddingRight: 20,
               flex: 1,
