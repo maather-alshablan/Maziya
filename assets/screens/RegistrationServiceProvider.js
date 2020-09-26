@@ -129,6 +129,8 @@ writeServiceProvider = () => {
           <Entypo name='chevron-left' size={30} color={colors.primaryBlue} style={{ marginTop:0, marginRight:340 }} onPress={()=> this.props.navigation.navigate('Registration')} />
         </View>
        
+
+       
         <View style={{ flex: 1 }} >
           <ProgressSteps
             activeStepIconBorderColor={colors.primaryBlue}
