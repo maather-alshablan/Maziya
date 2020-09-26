@@ -25,31 +25,32 @@ import {firebase, auth }  from '../config/firebase';
         
         if (this.state.password !== this.state.confirmPassword) {
           this.state.formValid= false;
-            this.state.errorMessage= 'يرجى التأكد من مطابقة كلمة المرور'
+          alert("يرجى التأكد من مطابقة كلمة المرور")  
             return;
             
         }
         if(this.state.email === '' && this.state.password === '') {
           this.state.formValid= false;
-          this.state.errorMessage='يرجى ادخال جميع البيانات'
+          alert(" يرجى ادخال جميع البيانات")
           return;
             
           }
           if(this.state.email == '' || this.state.password == '' || this.state.confirmPassword == '') {
             this.state.formValid= false;
-            this.state.errorMessage='يرجى ادخال جميع البيانات'
+            alert(" يرجى ادخال جميع البيانات")
+            
             return;
             
           }
 
         if (this.validate(this.state.email)=== false)
         {   this.state.formValid= false;
-            this.state.errorMessage = 'يرجى ادخال البريد الالكتروني المستخدم لمنسوبي الجامعة'
+            alert("يرجى ادخال البريد الالكتروني المستخدم لمنسوبي الجامعة")
             return;
         }
 
         if ( this.state.password.length < 8 ) { 
-          alert("the password should be 8 charecters or more") 
+          alert("يرجى ادخال كلمة مرور مكونة من ٨ خانات او اكثر") 
           return 
       }
 
