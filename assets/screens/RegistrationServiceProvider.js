@@ -5,11 +5,10 @@ import styles from '../constants/styles'
 import {Entypo} from '../constants/icons'
 import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
 import SignUpButton from '../components/SignUpButton'
-import {firebase, auth, database }  from '../config/firebase';
+import {firebase, auth, database ,storage}  from '../config/firebase';
 import RegNotification from '../components/RegNotification';
 import { Dropdown } from 'react-native-material-dropdown';
-import { Colors } from "react-native/Libraries/NewAppScreen";
-
+import upload from '../components/UploadImage'
 export default class RegistrationServiceProvider extends Component {
   state = {userName:"",phoneNum:"", email: "", password: "", confirmPassword: "", nameBrand:"", Descripiton:"",category:"", errorMessage: null, formValid:false,error:false };
 
@@ -227,9 +226,12 @@ writeServiceProvider = () => {
                   data={categories}
                   onChangeText={(category) => this.setState({category})} 
                   containerStyle={{ width:100,  marginLeft:150,textAlign:'right'
-                }}
-                  />
+                }}/>
                 </View>
+                <View style={styles.fields}>
+                <upload/> 
+                </View>
+
               </View>
             </ProgressStep>
             
