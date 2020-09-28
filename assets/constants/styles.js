@@ -4,6 +4,7 @@ import colors from '../constants/colors'
 const styles ={
     container: {
       flex: 1,
+      marginTop: 30,
       justifyContent: 'center',
       alignItems: 'center',
       backgroundColor: 'white'

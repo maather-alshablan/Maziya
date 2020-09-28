@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Image, Text, TextInput, TouchableOpacity, View , Label, StyleSheet, Dimensions , Button, ColorPropType} from 'react-native'
+ import { Image, Text, TextInput, TouchableOpacity, View , Label, StyleSheet, Dimensions , Button, ColorPropType, Alert} from 'react-native'
 import colors from "../constants/colors";
 import styles from '../constants/styles'
 import icons from '../constants/icons'
@@ -7,44 +7,54 @@ import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
 import SignUpButton from '../components/SignUpButton'
 import {firebase, auth }  from '../config/firebase';
 import RegNotification from '../components/RegNotification';
-import {Entypo} from '../constants/icons'
+import {ImagePicker } from 'expo'
+
 
 export default class RegistrationServiceProvider extends Component {
   state = {userName:"",phoneNum:"", email: "", password: "", confirmPassword: "", nameBrand:"",Descripiton:"", errorMessage: null };
-
+ 
   
   handleCloseNotification = () => {
     this.setState({ formValid: true });
   };
 
   
-  handleSignUp = () => {
+  handleCloseNotification = () => {
+    this.setState({ formValid: true });
+  };
 
-        
-    if (this.state.password !== this.state.confirmPassword) {
-      this.state.formValid= false;
-        this.state.errorMessage= 'يرجى التأكد من مطابقة كلمة المرور'
-        return;
-        
-    }
-    if(this.state.email === '' && this.state.password === '') {
-      this.state.formValid= false;
-      this.state.errorMessage='يرجى ادخال جميع البيانات'
-      return;
-        
-      }
-      if(this.state.email == '' || this.state.password == '' || this.state.confirmPassword == '') {
+   handleSignUp = () => {
+
+      
+      if (this.state.password !== this.state.confirmPassword) {
         this.state.formValid= false;
-        this.state.errorMessage='يرجى ادخال جميع البيانات'
-        return;
-        
+        alert("يرجى التأكد من مطابقة كلمة المرور")  
+          return;
+          
       }
+      if(this.state.email === '' && this.state.password === '') {
+        this.state.formValid= false;
+        alert(" يرجى ادخال جميع البيانات")
+        return;
+          
+        }
+        if(this.state.email == '' || this.state.password == '' || this.state.confirmPassword == '') {
+          this.state.formValid= false;
+          alert(" يرجى ادخال جميع البيانات")
+          
+          return;
+          
+        }
+
+    
 
       if ( this.state.password.length < 8 ) { 
-        alert("the password should be 8 charecters or more") 
+        this.state.errorMessage= "the password should be 8 charecters or more";
+         this.state.formValid= false;
+  
+        alert("يرجى ادخال كلمة مرور مكونة من ٨ خانات او اكثر") 
         return 
     }
-
     auth.
      createUserWithEmailAndPassword(this.state.email, this.state.password)
      .then(() => 
@@ -70,6 +80,27 @@ export default class RegistrationServiceProvider extends Component {
     this.setState({ confirmPassword: password });
   };
 
+  onChooseImgePress = async () => {
+       let result = await ImagePicker.launchCameraAsync();
+       //let result = await ImagePicker.launchImageLibraryAsync();
+  if (!result.cancelled ){
+    this.UploadImage(result.uri , "test-image ")
+    .then(() => {
+Alert.alert("sucess ")
+    })
+    .catch ((error) => { 
+      Alert.alert(error);
+  });
+      }
+    }
+      UploadImage= async (uri, imgName) => {
+    const response = await fatch(uri);
+    const blob = await response.blob();
+
+    var ref = firbase.storage().re().child("images/"+ imgName);
+    return ref.put(blob);
+      }
+
 
   render() {
     const showNotification = this.state.formValid ? false : true;
@@ -77,10 +108,9 @@ export default class RegistrationServiceProvider extends Component {
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.header}>تسجيل مزود الخدمة</Text>
-          <Entypo name='chevron-left' size={30} color={colors.primaryBlue} style={{ marginTop:0, marginRight:340 }} onPress={()=> this.props.navigation.navigate('Registration')} />
         </View>
-       
-        <View style={{ flex: 1 }} >
+
+        <View style={{ flex: 1 }}>
           <ProgressSteps
             activeStepIconBorderColor={colors.primaryBlue}
             activeLabelColor={colors.primaryBlue}
@@ -156,16 +186,9 @@ export default class RegistrationServiceProvider extends Component {
               nextBtnStyle={styles.nextButton}
             >
               <View style={{ alignItems: "center" }}>
-              <View style={styles.fields}>
-                  <Text style={styles.fieldLabels}>⚫</Text>
-                  <TextInput
-                    style={styles.TextInput}
-                    placeholder="أضف علامتك التجارية "
-                    onChangeText={(nameBrand) => this.setState({nameBrand })}
-                    value={this.state.nameBrand}
-                    autoCapitalize="none"
-                  />
-                </View>
+              <View style={styles.container}>
+                <SignUpButton text ={'choose photo'} onPress={this.onChooseImgePress}></SignUpButton>
+              </View>
                 
                 <View style={styles.fields}>
                   <Text style={styles.fieldLabels}>⚫</Text>

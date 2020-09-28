@@ -79,9 +79,7 @@ class InputField extends Component {
             style={styles.showButton}
             onPress={this.toggleShowPassword}
           >
-            <Text style={styles.showButtonText}>
-              {secureInput ? "Show" : "Hide"}
-            </Text>
+           
           </TouchableOpacity>
         ) : null}
         <TextInput

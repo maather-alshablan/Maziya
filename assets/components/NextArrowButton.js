@@ -21,7 +21,10 @@ export default class NextArrowButton extends Component {
               color={colors.primaryBlue}
               size={32}
               style={styles.icon}
+            
+            
             />
+
           </TouchableHighlight>
         </View>
       );
