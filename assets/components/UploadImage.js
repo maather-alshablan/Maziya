@@ -13,7 +13,7 @@ import {
 import colors from '../constants/colors'
 //import * as Progress from 'react-native-progress';
 import {storage}  from '../config/firebase';
-
+/*
 export default function UploadImage() {
     const [image, setImage] = useState(null);
     const [uploading, setUploading] = useState(false);
@@ -102,7 +102,7 @@ export default function UploadImage() {
       );
         
 }
-          
+  */        
 
 
        
