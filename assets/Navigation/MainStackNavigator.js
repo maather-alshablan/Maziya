@@ -2,7 +2,11 @@ import * as React from 'react'
 import { useState , useEffect} from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
-import {auth, firebase} from '../config/firebase';
+
+import spTabNavigator from '../Navigation/spTabNavigator'
+import AppDrawer from '../Navigation/appdrawer'
+import {auth} from '../config/firebase';
+
 
 
 import Login from '../screens/LoginScreen'
@@ -10,12 +14,15 @@ import Loading from '../screens/Loading'
 import Registration from '../screens/Registration'
 import Forgot from '../screens/ForgotPasswordScreen'
 import RegistrationServiceProvider from '../screens/RegistrationServiceProvider'
+import HomescreenServiceProvider from '../screens/serviceProviderHomescreen'
 
 import Homescreen from '../screens/Homescreen'
-import profile from '../screens/profile'
+import { Entypo } from '../constants/icons'
+
 
 function MainStackNavigator() {
     const Stack = createStackNavigator()
+
 
         //Reference:  /*authentication : 
     // https://rnfirebase.io/auth/usage
@@ -67,16 +74,20 @@ function MainStackNavigator() {
 */
 
    }
+
+   
     return ( // to login/sign up navigation
       <NavigationContainer>
         <Stack.Navigator initialRouteName='Loading' screenOptions={{ headerShown: false }}>
         <Stack.Screen name='Loading' component={Loading} />
+    
           <Stack.Screen name='Login' component={Login} />
           <Stack.Screen name='Forgot' component={Forgot} />
-          <Stack.Screen name='Homescreen' component={Homescreen} />
           <Stack.Screen name='Registration' component={Registration} />
-          <Stack.Screen name='RegistrationServiceProvider' component={RegistrationServiceProvider} />
-
+          <Stack.Screen name='RegistrationServiceProvider' component={RegistrationServiceProvider} /> 
+          <Stack.Screen name='SPhomescreen' component={spTabNavigator} />
+          <Stack.Screen name='Homescreen' component={AppDrawer} />  
+    
         </Stack.Navigator>
       </NavigationContainer>
     )

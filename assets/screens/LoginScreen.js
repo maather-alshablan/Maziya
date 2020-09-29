@@ -24,7 +24,7 @@ import { Entypo } from '../constants/icons'
         auth.
          signInWithEmailAndPassword(email, password)
         .then(() => 
-        this.props.navigation.navigate('Homescreen') 
+        this.routeUser()
         ).catch(error => this.setState({ errorMessage: 'يرجى التأكد من ادخال البريد الالكتروني و كلمة المرور الصحيح' }))
 
         this.state.errorMessage="";
@@ -33,6 +33,18 @@ import { Entypo } from '../constants/icons'
 
     }
 
+    routeUser = () => {
+        if (this.state.email.endsWith('ksu.edu.sa')){
+        console.log('Directed to member homescreen')
+        this.navigation.navigate('Homescreen')
+        }
+        else {
+        console.log('Directed to service provider homescreen')
+        this.navigation.navigate('SPhomescreen')
+
+        }
+
+    }
     
     render(){
     return (

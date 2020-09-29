@@ -11,8 +11,11 @@ import {
 } from 'react-native';
 //import ImagePicker from 'react-native-image-picker';
 import colors from '../constants/colors'
-//import * as Progress from 'react-native-progress';
+import * as Progress from 'react-native-progress';
 import {storage}  from '../config/firebase';
+
+
+//reference: https://www.instamobile.io/mobile-development/react-native-firebase-storage/
 
 export default function UploadImage() {
     const [image, setImage] = useState(null);
@@ -51,9 +54,7 @@ export default function UploadImage() {
         setUploading(true);
         setTransferred(0);
       
-        const task = storage()
-          .ref(filename)
-          .putFile(uploadUri);
+        const task = storage.ref(filename).putFile(uploadUri);
       
         // set progress state
         task.on('state_changed', snapshot => {

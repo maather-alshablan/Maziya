@@ -8,7 +8,7 @@ import SignUpButton from '../components/SignUpButton'
 import {firebase, auth, database ,storage}  from '../config/firebase';
 import RegNotification from '../components/RegNotification';
 import { Dropdown } from 'react-native-material-dropdown';
-import upload from '../components/UploadImage'
+//import Upload from '../components/UploadImage'
 export default class RegistrationServiceProvider extends Component {
   state = {userName:"",phoneNum:"", email: "", password: "", confirmPassword: "", nameBrand:"", Descripiton:"",category:"", errorMessage: null, formValid:false,error:false };
 
@@ -23,13 +23,13 @@ onNextStep = () => {
       
   }
   
-  if (this.state.phoneNum < 10 ) {
+  if (this.state.phoneNum != 10 ) {
     this.state.formValid= false;
       this.state.errorMessage= 'يرجى التأكد من ادخال رقم التواصل يالصيغة  0XXXXXXXXX '
       return;
       
   }
-    if(this.state.userName == ''|| this.state.email == '' || this.state.password == '' || this.state.confirmPassword == '') {
+    if(this.state.userName === ''|| this.state.email === '' || this.state.password === '' || this.state.confirmPassword === '') {
       this.state.formValid= false;
       this.state.errorMessage='يرجى ادخال جميع البيانات'
       return;
@@ -46,6 +46,7 @@ onNextStep = () => {
     this.setState({ error: true });
   } else {
     this.setState({ error: false });
+    this.state.formValid = true
   }
 };
 
@@ -79,13 +80,14 @@ writeUserData = () => {
 }
 
 writeServiceProvider = () => {
+  console.log('here in service provider')
   database.ref().child('serviceProvider').child(this.state.nameBrand).set({
     Descripiton: this.state.Descripiton,
     category: this.state.category,
     phone: this.state.phoneNum,
     email: this.state.email,
     imageref:''
-  }).then(this.props.navigation.navigate('Homescreen')).catch(error => console.log(error)
+  }).then(this.props.navigation.navigate('SPhomescreen')).catch(error => console.log(error)
   );
 }
 
@@ -225,11 +227,11 @@ writeServiceProvider = () => {
                   label='الفئة'
                   data={categories}
                   onChangeText={(category) => this.setState({category})} 
-                  containerStyle={{ width:100,  marginLeft:150,textAlign:'right'
+                  containerStyle={{ width:100,  marginLeft:150
                 }}/>
                 </View>
                 <View style={styles.fields}>
-                <upload/> 
+               { /*<Upload/> */}
                 </View>
 
               </View>
@@ -245,7 +247,8 @@ writeServiceProvider = () => {
               <View style={{ alignItems: "center" }}>
                 <Text>This is the content within step 3!</Text>
               </View>
-            </ProgressStep>
+            </ProgressStep> 
+            {/*remove step*/}
             <ProgressStep 
               label="العروض"
               previousBtnText="السابق"
