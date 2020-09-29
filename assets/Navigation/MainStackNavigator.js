@@ -17,13 +17,11 @@ import RegistrationServiceProvider from '../screens/RegistrationServiceProvider'
 import HomescreenServiceProvider from '../screens/serviceProviderHomescreen'
 
 import Homescreen from '../screens/Homescreen'
-<<<<<<< HEAD
 import { Entypo } from '../constants/icons'
 
-=======
+
 import profile from '../screens/profile'
 import NewOffer from '../screens/NewOffer';
->>>>>>> b481f65e63488595c77f2431f7805267771590fe
 
 function MainStackNavigator() {
     const Stack = createStackNavigator()
@@ -89,15 +87,15 @@ function MainStackNavigator() {
           <Stack.Screen name='Login' component={Login} />
           <Stack.Screen name='Forgot' component={Forgot} />
           <Stack.Screen name='Registration' component={Registration} />
-<<<<<<< HEAD
+
           <Stack.Screen name='RegistrationServiceProvider' component={RegistrationServiceProvider} /> 
           <Stack.Screen name='SPhomescreen' component={spTabNavigator} />
           <Stack.Screen name='Homescreen' component={AppDrawer} />  
     
-=======
-          <Stack.Screen name='RegistrationServiceProvider' component={RegistrationServiceProvider} />
+
+        
           <Stack.Screen name='NewOffer' component={NewOffer} />
->>>>>>> b481f65e63488595c77f2431f7805267771590fe
+
         </Stack.Navigator>
       </NavigationContainer>
     )
