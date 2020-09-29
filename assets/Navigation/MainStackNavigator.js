@@ -13,6 +13,7 @@ import RegistrationServiceProvider from '../screens/RegistrationServiceProvider'
 
 import Homescreen from '../screens/Homescreen'
 import profile from '../screens/profile'
+import NewOffer from '../screens/NewOffer';
 
 function MainStackNavigator() {
     const Stack = createStackNavigator()
@@ -76,7 +77,7 @@ function MainStackNavigator() {
           <Stack.Screen name='Homescreen' component={Homescreen} />
           <Stack.Screen name='Registration' component={Registration} />
           <Stack.Screen name='RegistrationServiceProvider' component={RegistrationServiceProvider} />
-
+          <Stack.Screen name='NewOffer' component={NewOffer} />
         </Stack.Navigator>
       </NavigationContainer>
     )

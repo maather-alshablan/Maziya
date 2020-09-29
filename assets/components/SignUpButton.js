@@ -26,7 +26,7 @@ export default ({text}) => {
         "backgroundColor": "rgba(1, 132, 189, 255)"
       }
     } >
-    <TouchableOpacity onPress={onPress}>
+    
     <Text style = {
       {
         "fontFamily": "Bodoni 72 Smallcaps",
@@ -35,7 +35,7 @@ export default ({text}) => {
         alignSelf:'center'
       
       }
-    } > {text}</Text></TouchableOpacity>
+    } > {text}</Text>
  
   
     

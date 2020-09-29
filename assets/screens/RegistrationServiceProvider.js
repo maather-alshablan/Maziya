@@ -5,10 +5,12 @@ import styles from '../constants/styles'
 import icons from '../constants/icons'
 import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
 import SignUpButton from '../components/SignUpButton'
+import RegButton from '../components/RegButton'
 import {firebase, auth }  from '../config/firebase';
 import RegNotification from '../components/RegNotification';
 import {ImagePicker } from 'expo'
-
+import { TouchableHighlight } from 'react-native-gesture-handler'
+ 
 
 export default class RegistrationServiceProvider extends Component {
   state = {userName:"",phoneNum:"", email: "", password: "", confirmPassword: "", nameBrand:"",Descripiton:"", errorMessage: null };
@@ -45,7 +47,7 @@ export default class RegistrationServiceProvider extends Component {
           return;
           
         }
-
+onpress
     
 
       if ( this.state.password.length < 8 ) { 
@@ -128,7 +130,7 @@ Alert.alert("sucess ")
                   <Text style={styles.fieldLabels}>⚫ </Text>
                   <TextInput
                     style={styles.TextInput}
-                    placeholder="الاسم"
+                    placeholder="*الاسم"
                     onChangeText={(userName) => this.setState({ userName })}
                     value={this.state.userName}
                     autoCapitalize="none"
@@ -137,7 +139,7 @@ Alert.alert("sucess ")
                   <Text style={styles.fieldLabels}>⚫</Text>
                   <TextInput
                     style={styles.TextInput}
-                    placeholder="البريد الإلكتروني"
+                    placeholder="*البريد الإلكتروني"
                     onChangeText={(email) => this.setState({ email })}
                     value={this.state.email}
                     autoCapitalize="none"
@@ -157,7 +159,7 @@ Alert.alert("sucess ")
                   <Text style={styles.fieldLabels}>⚫</Text>
                   <TextInput
                     style={styles.TextInput}
-                    placeholder="كلمة المرور"
+                    placeholder="*كلمة المرور"
                     onChangeText={(password) => this.setState({ password })}
                     value={this.state.password}
                     autoCapitalize="none"
@@ -168,7 +170,7 @@ Alert.alert("sucess ")
                   <Text style={styles.fieldLabels}>⚫</Text>
                   <TextInput
                     style={styles.TextInput}
-                    placeholder="تأكيد كلمة المرور"
+                    placeholder="*تأكيد كلمة المرور"
                     onChangeText={(confirmPassword) => this.setState({ confirmPassword })}
                     value={this.state.confirmPassword}
                     autoCapitalize="none"
@@ -187,7 +189,9 @@ Alert.alert("sucess ")
             >
               <View style={{ alignItems: "center" }}>
               <View style={styles.container}>
-                <SignUpButton text ={'choose photo'} onPress={this.onChooseImgePress}></SignUpButton>
+              <TouchableOpacity onPress={this.handleSignUp}>
+                <RegButton text ={'choose photo'} onPress={this.onChooseImgePress}></RegButton>
+                </TouchableOpacity>
               </View>
                 
                 <View style={styles.fields}>
@@ -210,8 +214,25 @@ Alert.alert("sucess ")
               nextBtnTextStyle={{ color: "#ffff", fontSize: 20 }}
               nextBtnStyle={styles.nextButton}
             >
+              <View style={styles.fields}>
+                  <Text style={styles.fieldLabels}>⚫</Text>
+                  <TextInput
+                    style={styles.TextInput}
+                    placeholder=" وصف العلامة التجارية"
+                    onChangeText={(Descripiton) => this.setState({Descripiton })}
+                    value={this.state.Descripiton}
+                    autoCapitalize="none"
+                  />
+                </View>
               <View style={{ alignItems: "center" }}>
-                <Text>This is the content within step 3!</Text>
+              <Image 
+        source = {require('../images/mapsmockup.png')} 
+        style={{
+            width: Dimensions.get('window').height *0.35,
+           
+        }}
+        resizeMode = 'contain'
+        />
               </View>
             </ProgressStep>
             <ProgressStep 
