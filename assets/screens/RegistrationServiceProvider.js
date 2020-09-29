@@ -1,83 +1,83 @@
 import React, { Component } from "react";
-import { Image, Text, TextInput, TouchableOpacity, View , Label, StyleSheet, Dimensions , Button, ColorPropType} from 'react-native'
+ import { Image, Text, TextInput, TouchableOpacity, View , Label, StyleSheet, Dimensions , Button, ColorPropType, Alert} from 'react-native'
 import colors from "../constants/colors";
 import styles from '../constants/styles'
-import {Entypo} from '../constants/icons'
+import icons from '../constants/icons'
 import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
 import SignUpButton from '../components/SignUpButton'
-import {firebase, auth, database ,storage}  from '../config/firebase';
+import RegButton from '../components/RegButton'
+import {firebase, auth }  from '../config/firebase';
 import RegNotification from '../components/RegNotification';
-import { Dropdown } from 'react-native-material-dropdown';
-//import Upload from '../components/UploadImage'
+import {ImagePicker } from 'expo'
+import { TouchableHighlight } from 'react-native-gesture-handler'
+ 
+
 export default class RegistrationServiceProvider extends Component {
-  state = {userName:"",phoneNum:"", email: "", password: "", confirmPassword: "", nameBrand:"", Descripiton:"",category:"", errorMessage: null, formValid:false,error:false };
+  state = {userName:"",phoneNum:"", email: "", password: "", confirmPassword: "", nameBrand:"",Descripiton:"", errorMessage: null };
+ 
+ 
+  
+  handleCloseNotification = () => {
+    this.setState({ formValid: true });
+  
+    if (!this.state.formValid) {
+      this.setState({ error: true });
+    } else {
+      this.setState({ error: false });
+      this.state.formValid = true
+    }
+  
+  };
 
-
-onNextStep = () => {
+   handleSignUp = () => {
 
         
-  if (this.state.password !== this.state.confirmPassword) {
-    this.state.formValid= false;
-      this.state.errorMessage= 'يرجى التأكد من مطابقة كلمة المرور'
-      return;
-      
-  }
-  
   if (this.state.phoneNum != 10 ) {
     this.state.formValid= false;
       this.state.errorMessage= 'يرجى التأكد من ادخال رقم التواصل يالصيغة  0XXXXXXXXX '
       return;
-      
-  }
-    if(this.state.userName === ''|| this.state.email === '' || this.state.password === '' || this.state.confirmPassword === '') {
-      this.state.formValid= false;
-      this.state.errorMessage='يرجى ادخال جميع البيانات'
-      return;
-      
     }
+      
+      if (this.state.password !== this.state.confirmPassword) {
+        this.state.formValid= false;
+        alert("يرجى التأكد من مطابقة كلمة المرور")  
+          return;
+          
+      }
+      if(this.state.email === '' && this.state.password === '') {
+        this.state.formValid= false;
+        alert(" يرجى ادخال جميع البيانات")
+        return;
+          
+        }
+        if(this.state.email == '' || this.state.password == '' || this.state.confirmPassword == '') {
+          this.state.formValid= false;
+          alert(" يرجى ادخال جميع البيانات")
+          
+          return;
+          
+        }
+        
+onpress
+    
 
-    if ( this.state.password.length < 8 ) { 
-      alert("the password should be 8 charecters or more") 
-      this.state.formValid=false
-      return 
-  }
-
-  if (!this.state.formValid) {
-    this.setState({ error: true });
-  } else {
-    this.setState({ error: false });
-    this.state.formValid = true
-  }
-};
-
-
+      if ( this.state.password.length < 8 ) { 
+        this.state.errorMessage= "the password should be 8 charecters or more";
+         this.state.formValid= false;
   
-  handleSignUp = () => {
-
+        alert("يرجى ادخال كلمة مرور مكونة من ٨ خانات او اكثر") 
+        return 
+    }
     auth.
      createUserWithEmailAndPassword(this.state.email, this.state.password)
      .then(() => 
-     this.writeUserData()
+     this.props.navigation.navigate('Homescreen') 
      ).catch(error => this.setState({ errorMessage: 'يرجى التأكد من ادخال البريد الالكتروني و كلمة المرور الصحيح' }))
 
      this.state.errorMessage="";
 }
 
-writeUserData = () => {
 
-  userid = auth.currentUser.uid;
-  
-  database.ref().child('users').child(userid).set({
-    name: this.state.userName,
-    email: this.state.email,
-    password: this.state.password,
-    trademark: this.state.nameBrand,
-    accountType : 'service provider', 
-  }).then(
-    this.writeServiceProvider()
-    ).catch(error => console.log(error)
-  );
-}
 
 writeServiceProvider = () => {
   console.log('here in service provider')
@@ -90,56 +90,58 @@ writeServiceProvider = () => {
   }).then(this.props.navigation.navigate('SPhomescreen')).catch(error => console.log(error)
   );
 }
+  handleEmailChange = email => {
+    // parent class change handler is always called with field name and value
+    this.setState({ email: email });
+  };
+  handlePasswordChange = password => {
+    // parent class change handler is always called with field name and value
+    this.setState({ password: password });
+  };
 
+  handleconfirmPasswordChange = password => {
+    // parent class change handler is always called with field name and value
+    this.setState({ confirmPassword: password });
+  };
 
+  onChooseImgePress = async () => {
+       let result = await ImagePicker.launchCameraAsync();
+       //let result = await ImagePicker.launchImageLibraryAsync();
+  if (!result.cancelled ){
+    this.UploadImage(result.uri , "test-image ")
+    .then(() => {
+Alert.alert("sucess ")
+    })
+    .catch ((error) => { 
+      Alert.alert(error);
+  });
+      }
+    }
+      UploadImage= async (uri, imgName) => {
+    const response = await fatch(uri);
+    const blob = await response.blob();
 
+    var ref = firbase.storage().re().child("images/"+ imgName);
+    return ref.put(blob);
+      }
 
 
   render() {
-
-    let categories = [{
-      label: 'مطاعم',
-      value: 'مطاعم',
-    }, {
-      label: 'قهوة',
-      value: 'قهوة',
-    }, {
-      label: 'صحة',
-      value: 'صحة',
-    }, {
-      label: 'مستلزمات',
-      value: 'مستلزمات',
-    }, {
-      label: 'تسوق',
-      value: 'تسوق',
-    }, {
-      label: 'دورات ',
-      value: 'دورات',
-    }, {
-      label: 'ورش عمل',
-      value: 'دورات',
-    }, {
-      label: 'عناية',
-      value: 'عناية',
-    }];
     const showNotification = this.state.formValid ? false : true;
     return (
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.header}>تسجيل مزود الخدمة</Text>
-          <Entypo name='chevron-left' size={30} color={colors.primaryBlue} style={{ marginTop:0, marginRight:340 }} onPress={()=> this.props.navigation.navigate('Registration')} />
         </View>
-       
 
-       
-        <View style={{ flex: 1 }} >
+        <View style={{ flex: 1 }}>
           <ProgressSteps
             activeStepIconBorderColor={colors.primaryBlue}
             activeLabelColor={colors.primaryBlue}
             completedProgressBarColor={colors.primaryBlue}
             completedStepIconColor={colors.primaryBlue}
           >
-            <ProgressStep onNext={this.onNextStep} errors={this.state.error}
+            <ProgressStep
               label="الحساب"
               nextBtnText="التالي"
               nextBtnTextStyle={{ color: "#ffff", fontSize: 20 }}
@@ -147,23 +149,26 @@ writeServiceProvider = () => {
             >
               <View>
                 <View style={styles.fields}>
+                  <Text style={styles.fieldLabels}>⚫ </Text>
                   <TextInput
                     style={styles.TextInput}
-                    placeholder="الاسم"
+                    placeholder="*الاسم"
                     onChangeText={(userName) => this.setState({ userName })}
                     value={this.state.userName}
                     autoCapitalize="none"
                   /></View>
                   <View style={styles.fields}>
+                  <Text style={styles.fieldLabels}>⚫</Text>
                   <TextInput
                     style={styles.TextInput}
-                    placeholder="البريد الإلكتروني"
+                    placeholder="*البريد الإلكتروني"
                     onChangeText={(email) => this.setState({ email })}
                     value={this.state.email}
                     autoCapitalize="none"
                     
                   /></View>
                   <View style={styles.fields}>
+                  <Text style={styles.fieldLabels}>⚫</Text>
                   <TextInput
                     style={styles.TextInput}
                     placeholder="رقم الجوال"
@@ -173,9 +178,10 @@ writeServiceProvider = () => {
                   />
                   </View>
                   <View style={styles.fields}>
+                  <Text style={styles.fieldLabels}>⚫</Text>
                   <TextInput
                     style={styles.TextInput}
-                    placeholder="كلمة المرور"
+                    placeholder="*كلمة المرور"
                     onChangeText={(password) => this.setState({ password })}
                     value={this.state.password}
                     autoCapitalize="none"
@@ -183,9 +189,10 @@ writeServiceProvider = () => {
                   />
                 </View>
                 <View style={styles.fields}>
+                  <Text style={styles.fieldLabels}>⚫</Text>
                   <TextInput
                     style={styles.TextInput}
-                    placeholder="تأكيد كلمة المرور"
+                    placeholder="*تأكيد كلمة المرور"
                     onChangeText={(confirmPassword) => this.setState({ confirmPassword })}
                     value={this.state.confirmPassword}
                     autoCapitalize="none"
@@ -195,7 +202,7 @@ writeServiceProvider = () => {
               </View>
               
             </ProgressStep>
-            <ProgressStep onNext={this.onNextStep} errors={this.state.error}
+            <ProgressStep
               label="الوصف"
               previousBtnText="السابق"
               nextBtnText="التالي"
@@ -203,17 +210,14 @@ writeServiceProvider = () => {
               nextBtnStyle={styles.nextButton}
             >
               <View style={{ alignItems: "center" }}>
-              <View style={styles.fields}>
-                  <TextInput
-                    style={styles.TextInput}
-                    placeholder="اسم العلامة التجارية "
-                    onChangeText={(nameBrand) => this.setState({nameBrand })}
-                    value={this.state.nameBrand}
-                    autoCapitalize="none"
-                  />
-                </View>
+              <View style={styles.container}>
+              <TouchableOpacity onPress={this.handleSignUp}>
+                <RegButton text ={'choose photo'} onPress={this.onChooseImgePress}></RegButton>
+                </TouchableOpacity>
+              </View>
                 
                 <View style={styles.fields}>
+                  <Text style={styles.fieldLabels}>⚫</Text>
                   <TextInput
                     style={styles.TextInput}
                     placeholder=" وصف العلامة التجارية"
@@ -233,7 +237,6 @@ writeServiceProvider = () => {
                 <View style={styles.fields}>
                { /*<Upload/> */}
                 </View>
-
               </View>
             </ProgressStep>
             
@@ -244,8 +247,25 @@ writeServiceProvider = () => {
               nextBtnTextStyle={{ color: "#ffff", fontSize: 20 }}
               nextBtnStyle={styles.nextButton}
             >
+              <View style={styles.fields}>
+                  <Text style={styles.fieldLabels}>⚫</Text>
+                  <TextInput
+                    style={styles.TextInput}
+                    placeholder=" وصف العلامة التجارية"
+                    onChangeText={(Descripiton) => this.setState({Descripiton })}
+                    value={this.state.Descripiton}
+                    autoCapitalize="none"
+                  />
+                </View>
               <View style={{ alignItems: "center" }}>
-                <Text>This is the content within step 3!</Text>
+              <Image 
+        source = {require('../images/mapsmockup.png')} 
+        style={{
+            width: Dimensions.get('window').height *0.35,
+           
+        }}
+        resizeMode = 'contain'
+        />
               </View>
             </ProgressStep> 
             {/*remove step*/}

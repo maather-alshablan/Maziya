@@ -13,10 +13,14 @@ import {
 import colors from '../constants/colors'
 import * as Progress from 'react-native-progress';
 import {storage}  from '../config/firebase';
+<<<<<<< HEAD
 
 
 //reference: https://www.instamobile.io/mobile-development/react-native-firebase-storage/
 
+=======
+/*
+>>>>>>> b481f65e63488595c77f2431f7805267771590fe
 export default function UploadImage() {
     const [image, setImage] = useState(null);
     const [uploading, setUploading] = useState(false);
@@ -103,7 +107,7 @@ export default function UploadImage() {
       );
         
 }
-          
+  */        
 
 
        

@@ -1,7 +1,8 @@
 import React from 'react';
 import {
   View,
-  Text
+  Text,
+  TouchableOpacity
 } from 'react-native';
 
 export default ({text}) => {
@@ -25,6 +26,7 @@ export default ({text}) => {
         "backgroundColor": "rgba(1, 132, 189, 255)"
       }
     } >
+    
     <Text style = {
       {
         "fontFamily": "Bodoni 72 Smallcaps",
