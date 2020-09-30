@@ -1,6 +1,7 @@
 import 'react-native-gesture-handler';
 import React from 'react'
 import MainStackNavigator from './assets/Navigation/MainStackNavigator'
+//import Appcontainer from './assets/Navigation/AppContainer'
 
 
 

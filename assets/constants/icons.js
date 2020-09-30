@@ -7,9 +7,11 @@ import Ionicons  from 'react-native-vector-icons/Ionicons';
 import Fontisto  from 'react-native-vector-icons/Fontisto';
 import Foundation  from 'react-native-vector-icons/Foundation';
 import MaterialIcons  from 'react-native-vector-icons/MaterialIcons';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import Zocial  from 'react-native-vector-icons/Zocial';
 import Octicons  from 'react-native-vector-icons/Octicons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 
-export {FontAwesome, Entypo,EvilIcons,Feather,Ionicons,Fontisto,Foundation,MaterialIcons,Zocial,Octicons,SimpleLineIcons};
+export {FontAwesome, FontAwesome5, Entypo,EvilIcons,Feather,Ionicons,Fontisto, MaterialCommunityIcons,Foundation,MaterialIcons,Zocial,Octicons,SimpleLineIcons};
