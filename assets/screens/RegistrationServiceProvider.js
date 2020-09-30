@@ -22,7 +22,6 @@ import { firebase, auth } from "../config/firebase";
 import Notification from "../components/Notification";
 import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
-
 import { TouchableHighlight } from "react-native-gesture-handler";
 
 export default class RegistrationServiceProvider extends Component {
@@ -55,7 +54,7 @@ export default class RegistrationServiceProvider extends Component {
     }
   };*/
 
-  async componentDidMount() {
+  async componentDidMount() { 
     const permission = await Permissions.getAsync(Permissions.CAMERA_ROLL);
     if (permission.status !== "granted") {
       const newPermission = await Permissions.askAsync(Permissions.CAMERA_ROLL);
@@ -145,7 +144,8 @@ export default class RegistrationServiceProvider extends Component {
 
     this.state.errorMessage = "";
   };
-
+  // firebase not sure !
+/*
   writeServiceProvider = () => {
     console.log("here in service provider");
     database
@@ -161,7 +161,8 @@ export default class RegistrationServiceProvider extends Component {
       })
       .then(this.props.navigation.navigate("SPhomescreen"))
       .catch((error) => console.log(error));
-  };
+  };*/
+
   handleEmailChange = (email) => {
     // parent class change handler is always called with field name and value
     this.setState({ email: email });
