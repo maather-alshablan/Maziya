@@ -19,7 +19,7 @@ import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
 import SignUpButton from "../components/SignUpButton";
 import RegButton from "../components/RegButton";
 import { firebase, auth } from "../config/firebase";
-import RegNotification from "../components/RegNotification";
+import Notification from "../components/Notification";
 import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
 
@@ -40,17 +40,27 @@ export default class RegistrationServiceProvider extends Component {
 
   onNextFirstStep = () => {
     console.log("onNextFirstStep");
-    // we will add all validation for step one
+    //  step one
     if (this.state.email === "" && this.state.password === "") {
       this.setState({ errors: true });
     }
+    
   };
+
+  /*onNextStep = () => {
+    console.log("onNextStep");
+    //step two
+    if (this.state.email === "" && this.state.password === "") {
+      this.setState({ errors: true });
+    }
+  };*/
+
   async componentDidMount() {
     const permission = await Permissions.getAsync(Permissions.CAMERA_ROLL);
     if (permission.status !== "granted") {
       const newPermission = await Permissions.askAsync(Permissions.CAMERA_ROLL);
       if (newPermission.status === "granted") {
-        //its granted.
+        
       }
     } else {
     }
@@ -114,7 +124,7 @@ export default class RegistrationServiceProvider extends Component {
       return;
     }
 
-    onpress;
+    
 
     if (this.state.password.length < 8) {
       this.state.errorMessage = "the password should be 8 charecters or more";
@@ -180,6 +190,8 @@ export default class RegistrationServiceProvider extends Component {
   //       });
   //   }
   // };
+
+  // not tested .
   UploadImage = async (uri, imgName) => {
     const response = await fatch(uri);
     const blob = await response.blob();
@@ -220,6 +232,7 @@ export default class RegistrationServiceProvider extends Component {
               nextBtnStyle={styles.nextButton}
               onNext={this.onNextFirstStep}
               errors={this.state.errors}
+              
             >
               <View>
                 <View style={styles.fields}>
@@ -246,7 +259,7 @@ export default class RegistrationServiceProvider extends Component {
                   <Text style={styles.fieldLabels}>⚫</Text>
                   <TextInput
                     style={styles.TextInput}
-                    placeholder="رقم الجوال"
+                    placeholder="  (*** **** *05) رقم الجوال"
                     onChangeText={(phoneNum) => this.setState({ phoneNum })}
                     value={this.state.phoneNum}
                     autoCapitalize="none"
@@ -362,12 +375,8 @@ export default class RegistrationServiceProvider extends Component {
                     text={"إنشاء حساب"}
                     onPress={this.handleSignUp}
                   ></SignUpButton>
-                  <RegNotification
-                    showNotification={showNotification}
-                    handleCloseNotification={this.handleCloseNotification}
-                    title="Error"
-                    message={this.state.errorMessage}
-                  />
+              
+
                 </TouchableOpacity>
               </View>
             </ProgressStep>

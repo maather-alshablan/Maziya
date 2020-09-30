@@ -5,7 +5,7 @@ export default ({ text, onPress }) => {
   return (
     <View
       style={{
-        alignItems: "right",
+        alignItems: "center",
       }}
     >
       <View
@@ -26,7 +26,7 @@ export default ({ text, onPress }) => {
           <Text
             style={{
               fontFamily: "Bodoni 72 Smallcaps",
-              fontSize: 30,
+              fontSize: 10,
               color: "rgba(247, 247, 247, 255)",
               alignSelf: "center",
             }}
