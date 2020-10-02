@@ -336,7 +336,7 @@ export default class RegistrationServiceProvider extends Component {
             <ProgressStep
               label="الموقع"
               previousBtnText="السابق"
-              nextBtnText="التالي"
+              finishBtnText="تسجيل"
               nextBtnTextStyle={{ color: "#ffff", fontSize: 20 }}
               nextBtnStyle={styles.nextButton}
             >
@@ -349,8 +349,10 @@ export default class RegistrationServiceProvider extends Component {
                   value={this.state.Descripiton}
                   autoCapitalize="none"
                 />
+                
               </View>
               <View style={{ alignItems: "center" }}>
+              <Image source={require("../images/mapsmockup.png")} alt="Girl in a jacket" width="500" height="600"/>
                 <Image
                   source={require("../images/mapsmockup.png")}
                   style={{
@@ -358,29 +360,17 @@ export default class RegistrationServiceProvider extends Component {
                   }}
                   resizeMode="contain"
                 />
-              </View>
-            </ProgressStep>
-            {/*remove step*/}
-            <ProgressStep
-              label="العروض"
-              previousBtnText="السابق"
-              finishBtnText="تسجيل"
-              nextBtnTextStyle={{ color: "#ffff", fontSize: 20 }}
-              nextBtnStyle={styles.nextButton}
-            >
-              <View style={{ alignItems: "center" }}>
-                <Text>This is the content within step 3!</Text>
-
+                
                 <TouchableOpacity onPress={this.handleSignUp}>
                   <SignUpButton
                     text={"إنشاء حساب"}
                     onPress={this.handleSignUp}
                   ></SignUpButton>
-              
-
-                </TouchableOpacity>
+                  </TouchableOpacity>
               </View>
             </ProgressStep>
+            {/*remove step*/}
+          
           </ProgressSteps>
         </View>
       </View>
