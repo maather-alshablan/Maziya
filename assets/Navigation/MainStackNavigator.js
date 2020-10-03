@@ -18,7 +18,7 @@ import Homescreen from "../screens/Homescreen";
 import { Entypo } from "../constants/icons";
 
 import profile from "../screens/profile";
-import NewOffer from "../screens/NewOffer";
+import NewOffer from "../screens/NewOffer.js";
 
 function MainStackNavigator() {
   const Stack = createStackNavigator();

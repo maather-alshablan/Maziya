@@ -24,6 +24,8 @@ import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
 import { TouchableHighlight } from "react-native-gesture-handler";
 
+
+
 export default class RegistrationServiceProvider extends Component {
   state = {
     userName: "",
@@ -265,6 +267,7 @@ export default class RegistrationServiceProvider extends Component {
                     value={this.state.phoneNum}
                     autoCapitalize="none"
                   />
+                 
                 </View>
                 <View style={styles.fields}>
                   <Text style={styles.fieldLabels}>⚫</Text>
