@@ -17,7 +17,7 @@ function CustomDrawerContent(props) { // fix navigation issue: error > navigatio
       <DrawerItemList {...props} />
       <DrawerItem label='تسجيل الخروج' onPress={()=> auth
           .signOut()
-          .then(() => this.navigation.navigate('Login'))}
+          .then(() => this.props.navigation.navigate('Login'))}
           /> 
       
           </DrawerContentScrollView>

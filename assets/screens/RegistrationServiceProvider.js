@@ -11,18 +11,19 @@ import {
   Button,
   ColorPropType,
   Alert,
+  LogBox
 } from "react-native";
 import colors from "../constants/colors";
 import styles from "../constants/styles";
-import icons from "../constants/icons";
+import {Entypo, Ionicons,MaterialIcons,MaterialCommunityIcons, Fontisto, FontAwesome} from "../constants/icons";
 import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
 import SignUpButton from "../components/SignUpButton";
 import RegButton from "../components/RegButton";
-import { firebase, auth } from "../config/firebase";
+import { database, auth,storage } from "../config/firebase";
 import Notification from "../components/Notification";
 import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
-import { TouchableHighlight } from "react-native-gesture-handler";
+import {Dropdown }from 'react-native-material-dropdown';
 
 
 
@@ -35,6 +36,7 @@ export default class RegistrationServiceProvider extends Component {
     confirmPassword: "",
     nameBrand: "",
     Descripiton: "",
+    category:"",
     errorMessage: null,
     errors: false,
   };
@@ -48,6 +50,8 @@ export default class RegistrationServiceProvider extends Component {
     
   };
 
+
+ 
   /*onNextStep = () => {
     console.log("onNextStep");
     //step two
@@ -136,8 +140,8 @@ export default class RegistrationServiceProvider extends Component {
     }
     auth
       .createUserWithEmailAndPassword(this.state.email, this.state.password)
-      .then(() => this.props.navigation.navigate("Homescreen"))
-      .catch((error) =>
+      .then(() => this.writeUserData() )
+      .catch(() =>
         this.setState({
           errorMessage:
             "يرجى التأكد من ادخال البريد الالكتروني و كلمة المرور الصحيح",
@@ -146,8 +150,21 @@ export default class RegistrationServiceProvider extends Component {
 
     this.state.errorMessage = "";
   };
-  // firebase not sure !
-/*
+ 
+  writeUserData = () => {
+
+    userid = auth.currentUser.uid;
+    
+    database.ref().child('users').child(userid).set({
+      name: this.state.name,
+      email: this.state.email,
+      password: this.state.password,
+      accountType : 'serviceProvider', 
+    }).then(this.writeServiceProvider() 
+    ).catch(error => console.log(error)
+    );
+  }
+
   writeServiceProvider = () => {
     console.log("here in service provider");
     database
@@ -163,7 +180,7 @@ export default class RegistrationServiceProvider extends Component {
       })
       .then(this.props.navigation.navigate("SPhomescreen"))
       .catch((error) => console.log(error));
-  };*/
+  };
 
   handleEmailChange = (email) => {
     // parent class change handler is always called with field name and value
@@ -199,17 +216,37 @@ export default class RegistrationServiceProvider extends Component {
     const response = await fatch(uri);
     const blob = await response.blob();
 
-    var ref = firbase
-      .storage()
-      .re()
+    var ref =
+      storage.
+      ref()
       .child("images/" + imgName);
     return ref.put(blob);
   };
 
   render() {
     const showNotification = this.state.formValid ? false : true;
+    console.disableYellowBox = true; 
+
+    let categories = [{
+      
+      value: 'المطاعم',
+    }, {
+      value: 'المستلزمات',
+    }, {
+      value: 'الصحة',
+    },{
+      value: 'الدورات',
+    }, {
+      value: 'التسوق',
+    }, {
+      value: 'الخدمات',
+    }
+  ];
+
     return (
       <View style={styles.container}>
+        <Entypo name='chevron-left' size={30} color= {colors.primaryBlue } style={{alignSelf:'flex-start'}} onPress={()=> this.props.navigation.navigate('Registration')} />
+
         <View style={styles.header}>
           <Text style={styles.header}>تسجيل مزود الخدمة</Text>
         </View>
@@ -239,7 +276,8 @@ export default class RegistrationServiceProvider extends Component {
             >
               <View>
                 <View style={styles.fields}>
-                  <Text style={styles.fieldLabels}>⚫ </Text>
+                  
+                  <MaterialCommunityIcons name="account" color={colors.primaryBlue} size={30} style={styles.fieldLabels} />
                   <TextInput
                     style={styles.TextInput}
                     placeholder="*الاسم"
@@ -249,7 +287,9 @@ export default class RegistrationServiceProvider extends Component {
                   />
                 </View>
                 <View style={styles.fields}>
-                  <Text style={styles.fieldLabels}>⚫</Text>
+                  
+                  <MaterialCommunityIcons name="email" color={colors.primaryBlue} size={30} style={styles.fieldLabels} />
+
                   <TextInput
                     style={styles.TextInput}
                     placeholder="*البريد الإلكتروني"
@@ -259,7 +299,8 @@ export default class RegistrationServiceProvider extends Component {
                   />
                 </View>
                 <View style={styles.fields}>
-                  <Text style={styles.fieldLabels}>⚫</Text>
+                <FontAwesome name="phone" color={colors.primaryBlue} size={30} style={styles.fieldLabels} />
+
                   <TextInput
                     style={styles.TextInput}
                     placeholder="  (*** **** *05) رقم الجوال"
@@ -270,7 +311,7 @@ export default class RegistrationServiceProvider extends Component {
                  
                 </View>
                 <View style={styles.fields}>
-                  <Text style={styles.fieldLabels}>⚫</Text>
+                <FontAwesome name="lock" color={colors.primaryBlue} size={30} style={styles.fieldLabels} />
                   <TextInput
                     style={styles.TextInput}
                     secureTextEntry
@@ -281,7 +322,7 @@ export default class RegistrationServiceProvider extends Component {
                   />
                 </View>
                 <View style={styles.fields}>
-                  <Text style={styles.fieldLabels}>⚫</Text>
+                <FontAwesome name="lock" color={colors.primaryBlue} size={30} style={styles.fieldLabels} />
                   <TextInput
                     style={styles.TextInput}
                     secureTextEntry
@@ -308,6 +349,7 @@ export default class RegistrationServiceProvider extends Component {
                     <RegButton
                       text={"choose photo"}
                       onPress={this.openImagePickerAsync}
+                      
                     ></RegButton>
                   </TouchableOpacity>
                 </View>
@@ -325,13 +367,14 @@ export default class RegistrationServiceProvider extends Component {
                   />
                 </View>
                 <View style={styles.fields}>
-                  {/* <Dropdown
+                   <Dropdown
                     label="الفئة"
                     data={categories}
                     onChangeText={(category) => this.setState({ category })}
+                    value={this.state.category}
                     containerStyle={{ width: 100, marginLeft: 150 }}
-                  /> */}
-                </View>
+                  /> 
+                   </View>
                 <View style={styles.fields}>{/*<Upload/> */}</View>
               </View>
             </ProgressStep>
@@ -344,7 +387,8 @@ export default class RegistrationServiceProvider extends Component {
               nextBtnStyle={styles.nextButton}
             >
               <View style={styles.fields}>
-                <Text style={styles.fieldLabels}>⚫</Text>
+              <FontAwesome name="tags" color={colors.primaryBlue} size={30}/>
+                    <Text style={styles.fieldLabels}> الفئة</Text>
                 <TextInput
                   style={styles.TextInput}
                   placeholder=" وصف العلامة التجارية"
