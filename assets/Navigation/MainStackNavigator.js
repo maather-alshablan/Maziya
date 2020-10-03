@@ -77,7 +77,7 @@ function MainStackNavigator() {
     // to login/sign up navigation
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Loading"
+        initialRouteName="Login"
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="Loading" component={Loading} />

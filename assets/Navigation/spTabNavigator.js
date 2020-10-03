@@ -17,30 +17,40 @@ const Tab = createBottomTabNavigator()
 
       <Tab.Navigator  initialRouteName ='HomescreenServiceProvider' tabBarOptions={{
         showLabel: false,
-        inactiveTintColor: colors.primaryGrey,
-        activeTintColor: colors.primaryBlue
+        activeTintColor: colors.primaryBlue,
+        activeBackgroundColor:'white'
       }}>
         
         <Tab.Screen name='HomescreenServiceProvider' component={HomescreenServiceProvider}
          options={{
           
-          tabBarIcon: () => (
-            <Entypo name="home" color={colors.primaryBlue} size={25} />
+          tabBarIcon:  ({ tintColor, focused }) => (
+            <MaterialCommunityIcons 
+            name={focused ? "home" : "home-outline"} 
+            color={colors.primaryBlue} 
+            size={30} />
           )
 
         }} />
         <Tab.Screen name='Page' component={ServiceProviderPage}
          options={{
           
-          tabBarIcon: () => (
-            <FontAwesome5 name="store" color={colors.primaryBlue} size={20} />
+          tabBarIcon: ({ tintColor, focused }) => (
+            <MaterialCommunityIcons 
+            name={focused ? "store" : "store-outline"} 
+            color={colors.primaryBlue} 
+            size={30} />
           )
+
         }} />
         <Tab.Screen name='Profile' component={ProfileServiceProvider}
          options={{
           
-          tabBarIcon: () => (
-            <MaterialCommunityIcons name="account" color={colors.primaryBlue} size={30} />
+          tabBarIcon: ({ tintColor, focused }) => (
+            <MaterialCommunityIcons 
+            name={focused ? "account" : "account-outline"} 
+            color={colors.primaryBlue} 
+            size={30} />
           )
         }} />
       </Tab.Navigator>

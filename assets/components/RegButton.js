@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
+import {Feather } from '../constants/icons'
 
 export default ({ text, onPress }) => {
   return (
@@ -23,17 +24,7 @@ export default ({ text, onPress }) => {
         }}
       >
         <TouchableOpacity onPress={onPress}>
-          <Text
-            style={{
-              fontFamily: "Bodoni 72 Smallcaps",
-              fontSize: 10,
-              color: "rgba(247, 247, 247, 255)",
-              alignSelf: "center",
-            }}
-          >
-            {" "}
-            {text}
-          </Text>
+          <Feather name ="upload" size={30} color='white'/>
         </TouchableOpacity>
       </View>
     </View>
