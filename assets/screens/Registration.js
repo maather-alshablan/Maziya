@@ -67,7 +67,6 @@ import { TouchableHighlight } from 'react-native-gesture-handler'
         auth.
          createUserWithEmailAndPassword(this.state.email, this.state.password)
         .then(() => 
-        //this.props.navigation.navigate('Homescreen')
         this.writeUserData()
         )
         .catch(

@@ -7,18 +7,18 @@ import spNavigator from '../Navigation/spTabNavigator'
 function AppContainer(){
 
 
-const userSwitch = createSwitchNavigator({
-    member: {screen: appDrawer},
-    sp: {screen: spNavigator}
-})
+
+
 const appSwitch = createSwitchNavigator({
     Authuntication: { screen: mainStack },
-    user: { screen: userSwitch}
+    user: { screen: appDrawer}
   });
-const AppContainer = createAppContainer(appSwitch);
+const Appcontainer = createAppContainer(appSwitch);
 
-export default AppContainer;
-   
+return (
+    <Appcontainer/>
+)
+
 }
 
 export default AppContainer;

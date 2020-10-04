@@ -18,8 +18,7 @@ import Homescreen from "../screens/Homescreen";
 import { Entypo } from "../constants/icons";
 
 import profile from "../screens/profile";
-import NewOffer from "../screens/NewOffer";
-import DrawerNavigator from "./DrawerNavigator";
+import NewOffer from "../screens/NewOffer.js";
 
 function MainStackNavigator() {
   const Stack = createStackNavigator();
@@ -78,7 +77,7 @@ function MainStackNavigator() {
     // to login/sign up navigation
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Loading"
+        initialRouteName="Login"
         screenOptions={{ headerShown: false }}
         initialRouteName="DrawerNavigator"
       >

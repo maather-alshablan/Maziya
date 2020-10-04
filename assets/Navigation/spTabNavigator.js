@@ -1,11 +1,12 @@
 import * as React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createStackNavigator } from '@react-navigation/stack'
+import {Entypo, Feather , MaterialCommunityIcons, MaterialIcons, FontAwesome5} from '../constants/icons'
+import colors from '../constants/colors'
 
 import HomescreenServiceProvider from '../screens/serviceProviderHomescreen'
 import ServiceProviderPage from '../screens/serviceProvider'
 import ProfileServiceProvider from '../screens/SPprofile'
-import Homescreen from '../screens/Homescreen'
 
 
 function spTabNavigator(){
@@ -14,11 +15,44 @@ function spTabNavigator(){
 const Tab = createBottomTabNavigator()
     return (
 
-      <Tab.Navigator  initialRouteName ='HomescreenServiceProvider'>
+      <Tab.Navigator  initialRouteName ='HomescreenServiceProvider' tabBarOptions={{
+        showLabel: false,
+        activeTintColor: colors.primaryBlue,
+        activeBackgroundColor:'white'
+      }}>
         
-        <Tab.Screen name='HomescreenServiceProvider' component={HomescreenServiceProvider} />
-        <Tab.Screen name='Page' component={ServiceProviderPage} />
-        <Tab.Screen name='Profile' component={ProfileServiceProvider} />
+        <Tab.Screen name='HomescreenServiceProvider' component={HomescreenServiceProvider}
+         options={{
+          
+          tabBarIcon:  ({ tintColor, focused }) => (
+            <MaterialCommunityIcons 
+            name={focused ? "home" : "home-outline"} 
+            color={colors.primaryBlue} 
+            size={30} />
+          )
+
+        }} />
+        <Tab.Screen name='Page' component={ServiceProviderPage}
+         options={{
+          
+          tabBarIcon: ({ tintColor, focused }) => (
+            <MaterialCommunityIcons 
+            name={focused ? "store" : "store-outline"} 
+            color={colors.primaryBlue} 
+            size={30} />
+          )
+
+        }} />
+        <Tab.Screen name='Profile' component={ProfileServiceProvider}
+         options={{
+          
+          tabBarIcon: ({ tintColor, focused }) => (
+            <MaterialCommunityIcons 
+            name={focused ? "account" : "account-outline"} 
+            color={colors.primaryBlue} 
+            size={30} />
+          )
+        }} />
       </Tab.Navigator>
     )
     }
