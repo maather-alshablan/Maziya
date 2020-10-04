@@ -20,7 +20,18 @@ export default class serviceProviderHomescreen extends Component{
        return name;
     }
         
-
+      listOffer = () => {
+        return (
+          <Card 
+        title="عرضي"
+        content="تفاصيل العرض"
+        iconName="local-offer"
+        iconType="MaterialIcons"
+        iconBackgroundColor= {colors.primaryBlue}
+        bottomRightText="30"
+        onPress={() => {}}/>
+        )
+      }
 
     render(){
     return(
@@ -29,7 +40,8 @@ export default class serviceProviderHomescreen extends Component{
           </Text>
 
           <View style={{flexDirection: "row", justifyContent:'space-between'}}>
-          <TouchableOpacity style ={styles.appButtonContainer} >
+          <TouchableOpacity style ={styles.appButtonContainer} 
+          onPress= {() => this.props.navigation.navigate('addOffer')} >
           <Entypo name ="plus" size={40} color='white'/>
 
             <Text style= {styles.appButtonText} > إضافة عرض </Text>
@@ -40,22 +52,18 @@ export default class serviceProviderHomescreen extends Component{
             <Text style= {styles.appButtonText} > إضافة عرض </Text>
             </TouchableOpacity>
             </View>
-            <Text style={styles.header}>عروضي </Text>
-         <Card 
-        title="عرضي"
-        content="تفاصيل العرض"
-        iconName="local-offer"
-        iconType="MaterialIcons"
-        iconBackgroundColor= {colors.primaryBlue}
-        bottomRightText="30"
-        onPress={() => {}}/>
             
+            <Text style={styles.header}>عروضي </Text>
+            {this.listOffer()}
+            
+            <View style={styles.footer}>
             <TouchableOpacity style={styles.buttonView} onPress={() => auth
             .signOut()
-            .then(() => this.props.navigation.navigate('Login'))}>
+            .then(() => this.props.navigation.popToTop())}>
             <Entypo name="log-out" size={25} color={colors.primaryBlue}/>
             <Button  type="outline" title="تسجيل الخروج"  color={colors.primaryBlue} border="solid" border-color="black" />
             </TouchableOpacity>
+            </View>
 
         </View>
     
@@ -99,10 +107,13 @@ const styles = StyleSheet.create({
       buttonView:{
         marginRight:200,
         marginTop:25,
-          flexDirection:'row-reverse',
-          alignContent:'center'
+       flexDirection:'row-reverse',
+        alignSelf:'flex-end'
       },
       offerContainer:{
           marginTop:50
+      },
+      footer:{
+     
       }
 })

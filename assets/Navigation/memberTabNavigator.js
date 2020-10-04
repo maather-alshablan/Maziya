@@ -13,10 +13,12 @@ import Profile from '../screens/Memberprofile'
 
 
 function memberTabNavigator(){
+  
 
 
 
 const Tab = createBottomTabNavigator()
+
 
     return (
 

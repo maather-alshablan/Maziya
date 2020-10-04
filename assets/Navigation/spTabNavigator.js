@@ -7,11 +7,12 @@ import colors from '../constants/colors'
 import HomescreenServiceProvider from '../screens/serviceProviderHomescreen'
 import ServiceProviderPage from '../screens/serviceProvider'
 import ProfileServiceProvider from '../screens/SPprofile'
-
+import addOffer from '../screens/NewOffer'
+import HomeStack from '../Navigation/SPHomeStack'
 
 function spTabNavigator(){
 
-  
+
 const Tab = createBottomTabNavigator()
     return (
 
@@ -21,7 +22,7 @@ const Tab = createBottomTabNavigator()
         activeBackgroundColor:'white'
       }}>
         
-        <Tab.Screen name='HomescreenServiceProvider' component={HomescreenServiceProvider}
+        <Tab.Screen name='HomescreenServiceProvider' component={HomeStack}
          options={{
           
           tabBarIcon:  ({ tintColor, focused }) => (
@@ -37,7 +38,7 @@ const Tab = createBottomTabNavigator()
           
           tabBarIcon: ({ tintColor, focused }) => (
             <MaterialCommunityIcons 
-            name={focused ? "store" : "store-outline"} 
+            name={focused ? "store" : "store"} 
             color={colors.primaryBlue} 
             size={30} />
           )

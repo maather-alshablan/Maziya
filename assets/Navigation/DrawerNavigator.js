@@ -58,6 +58,7 @@ function DrawerContent(props) {
           //   onPress={() => props.navigation.navigate("Login")}
           style={[styles.button, { marginTop: 12 }]}
         >
+          
           <Text style={styles.textButton}>Logout</Text>
         </TouchableOpacity>
       </ScrollView>

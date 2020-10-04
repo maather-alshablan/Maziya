@@ -7,6 +7,7 @@ import { Text,
     TextInput } from 'react-native'
 import {firebase, auth } from '../config/firebase'
 import {Entypo} from '../constants/icons'
+import colors from '../constants/colors'
 import {FontAwesome} from 
 "@expo/vector-icons";
 
@@ -82,6 +83,7 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       paddingHorizontal: 20,
+      backgroundColor:'white'
     },
     viewBox: {
       width: "80%",
@@ -96,10 +98,10 @@ const styles = StyleSheet.create({
       flex: 1,
       paddingHorizontal: 10,
       paddingVertical: 0,
-      color: "#fff",
+      color: 'black',
     },
     viewSearch: {
-      backgroundColor: "blue",
+      backgroundColor: colors.primaryGrey,
       width: 200,
       borderRadius: 30,
       height: 50,

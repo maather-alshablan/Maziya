@@ -4,6 +4,7 @@ import Tab from '../Navigation/memberTabNavigator'
 import {Entypo} from '../constants/icons'
 import Profile from '../screens/Memberprofile'
 import Courses from '../screens/courses'
+import Login from '../screens/LoginScreen'
 import usedOffers from '../screens/usedOffers'
 import colors from '../constants/colors';
 import {auth} from '../config/firebase'
@@ -19,7 +20,7 @@ function CustomDrawerContent(props) { // fix navigation issue: error > navigatio
       <DrawerItemList {...props} />
       <DrawerItem label='تسجيل الخروج' onPress={()=> auth
           .signOut()
-          .then(() => this.navigation.navigate('Login'))}
+          .then(() => this.props.navigation.navigate('Login'))}
           /> 
       
           </DrawerContentScrollView>
@@ -44,12 +45,13 @@ function CustomDrawerContent(props) { // fix navigation issue: error > navigatio
             drawerContentOptions={{
                 activeTintColor:'white',
                 activeBackgroundColor: 'transparent',
-                itemStyle: { marginVertical: 10 , marginLeft:70 },
-                labelStyle:{fontSize:15 }
-                
+                itemStyle: { marginVertical: 10 , marginRight:20 },
+                labelStyle:{fontSize:15 },
             }}
             overlayColor= '1'
-            drawerContent={props => <CustomDrawerContent {...props} />} >
+            
+            //drawerContent={props => <CustomDrawerContent {...props} />} 
+            >
               
             <Drawer.Screen name= 'home' component={Tab}
             options={{
@@ -72,6 +74,12 @@ function CustomDrawerContent(props) { // fix navigation issue: error > navigatio
                 color:'white',
     
               }}/>
+              <Drawer.Screen name= 'Logout' component={Login} options={{
+                title: 'تسجيل الخروج',
+                color:'white',
+                unmountOnBlur: true,
+              }}/>
+              
             
     
             </Drawer.Navigator>

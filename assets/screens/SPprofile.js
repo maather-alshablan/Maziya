@@ -1,5 +1,5 @@
-import React , {Component , useEffect} from 'react'
-import { Text, View, Button, TextInput, Dimensions ,StatusBar, StyleSheet,LogBox,YellowBox, TouchableOpacity} from 'react-native'
+import React , {Component , useEffect , useState} from 'react'
+import { Text, View,  TextInput, Dimensions , StyleSheet,ScrollView, TouchableOpacity} from 'react-native'
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import {Entypo, MaterialCommunityIcons,MaterialIcons, FontAwesome, Ionicons} from '../constants/icons'
 import {Dropdown }from 'react-native-material-dropdown';
@@ -18,44 +18,70 @@ const serviceProvider =({ navigation}) => {
     
     console.disableYellowBox = true;
     
-    const state = {
-    userName: "",
-    phoneNum: "",
-    email: "",
-    password: "",
-    nameBrand: "",
-    category:"",
-    Descripiton: "",
-    errorMessage: null,
-    errors: false,
-  };
 
+
+  const [userName, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [phoneNum, setphoneNum] = useState('')
+  const [password, setPassword] = useState('')
+  const [nameBrand, setnameBrand] = useState('')
+  const [category, setCategory] = useState('')
+  const [Descripiton, setDescripiton] = useState('')
+  const [website, setWebsite] = useState('')
+  const [twitter, setTwitter] = useState('')
+  const [instagram, setInstagram] = useState('')
 
 const userId = auth.currentUser.uid;
  let userRef = database.ref('users/'+ userId);
+ 
 
 
  useEffect(() => {
         userRef.once('value').then(function(snapshot) {
-        state.userName = (snapshot.val() && snapshot.val().name) ;
-        state.password = (snapshot.val() && snapshot.val().password) ;
-        state.email = (snapshot.val() && snapshot.val().email) ; 
-        state.nameBrand = (snapshot.val() && snapshot.val().trademark) ; 
+        setName((snapshot.val() && snapshot.val().name) )
+        setPassword((snapshot.val() && snapshot.val().password))
+        setEmail((snapshot.val() && snapshot.val().email))
+        setnameBrand((snapshot.val() && snapshot.val().trademark))
+  
+        
 
+        database.ref('serviceProvider/'+nameBrand).once('value').then(function(snapshotinner) {
+            setDescripiton((snapshotinner.val() && snapshotinner.val().Descripiton))
+            setphoneNum((snapshotinner.val() && snapshotinner.val().phone))
+            setCategory((snapshotinner.val() && snapshotinner.val().category))
 
-        database.ref('serviceProvider/'+state.nameBrand).once('value').then(function(snapshotinner) {
-            state.Descripiton= (snapshotinner.val() && snapshotinner.val().Descripiton) ;
-            state.phoneNum = (snapshotinner.val() && snapshotinner.val().phone) ;
-            state.category = (snapshotinner.val() && snapshotinner.val().category) ;
         });
 
- } )}, [])
+ } )})
 
-/*var userId = auth.currentUser.uid;
-return database.ref('/users/' + userId).once('value').then(function(snapshot) {
-var userName = (snapshot.val() && snapshot.val().username) || 'Anonymous'; 
-*/
+const handleUpdate  = ()=>{
 
+userRef.update(
+    {
+    'name': userName,
+    'email': email, 
+}
+).catch(error => alert(error));
+
+database.ref('serviceProvider/'+nameBrand).update({
+    'Descripiton': Descripiton,
+    'category': category,
+    'phone': phoneNum,
+    'webiste': website,
+    'twitter': twitter,
+    'instagram': instagram
+
+}).catch(error => alert(error));
+
+}
+
+
+const validateForm = () =>{
+
+
+
+    handleUpdate();
+}
     //Trademark 
     const FirstRoute = () => (
         <View style={[styles.scene, { backgroundColor: 'white' }]} >
@@ -69,8 +95,8 @@ var userName = (snapshot.val() && snapshot.val().username) || 'Anonymous';
                   <TextInput
                     style={[styless.TextInput],[styles.textArea]}
                     placeholder=" وصف العلامة التجارية"
-                  //  onChangeText={(Descripiton) =>this.setState({ Descripiton }) }
-                   value={state.Descripiton}
+                    onChangeText={(Descripiton) =>setDescripiton({ Descripiton }) }
+                    value={Descripiton}
                     multiline={true}
                     numberOfLines={4}
                     textAlignVertical
@@ -85,11 +111,44 @@ var userName = (snapshot.val() && snapshot.val().username) || 'Anonymous';
                    <Dropdown
                     label="الفئة"
                     data={categories}
-                  //  onChangeText={(category) => this.setState({ category })}
+                   onChangeText={(category) => setCategory({ category })}
                     containerStyle={{ width: 100, marginLeft: 155}}
-                   
+                   value={category}
                   /> 
                    </View>
+                   <View style={styless.fields}>
+                <MaterialCommunityIcons name="web" color={colors.primaryBlue} size={30} style={styless.fieldLabels} />
+                  <TextInput
+                    style={styless.TextInput}
+                    placeholder=" الموقع الإلكتروني"
+                    onChangeText={(website) => setWebsite({ website })}
+                    value={website}
+                    autoCapitalize="none"
+                  />
+                </View>
+
+                <View style={styless.fields}>
+                <MaterialCommunityIcons name="twitter" color={colors.primaryBlue} size={30} style={styless.fieldLabels} />
+                  <TextInput
+                    style={styless.TextInput}
+                    placeholder=" تويتر"
+                    onChangeText={(twitter) => setTwitter({ twitter })}
+                    value={twitter}
+                    autoCapitalize="none"
+                  />
+                </View>
+                
+                <View style={styless.fields}>
+                <MaterialCommunityIcons name="instagram" color={colors.primaryBlue} size={30} style={styless.fieldLabels} />
+                  <TextInput
+                    style={styless.TextInput}
+                    placeholder=" انستغرام"
+                    onChangeText={(instagram) => setInstagram({ instagram })}
+                    value={instagram}
+                    autoCapitalize="none"
+                  />
+                </View>
+
                 <View style={styles.fields}>{/*<Upload/> */}</View>
             </View>
       );
@@ -104,7 +163,7 @@ var userName = (snapshot.val() && snapshot.val().username) || 'Anonymous';
                     style={styless.TextInput}
                     placeholder="*الاسم"
                     //onChangeText={(userName) => this.setState({ userName })}
-                    value={state.userName}
+                    value={userName}
                     autoCapitalize="none"
                   />
                 </View>
@@ -115,8 +174,8 @@ var userName = (snapshot.val() && snapshot.val().username) || 'Anonymous';
                   <TextInput
                     style={styless.TextInput}
                     placeholder="*البريد الإلكتروني"
-                   // onChangeText={(email) => this.setState({ email })}
-                   value={state.email}
+                   onChangeText={(email) => setEmail({ email })}
+                   value={email}
                     autoCapitalize="none"
                   />
                 </View>
@@ -126,8 +185,8 @@ var userName = (snapshot.val() && snapshot.val().username) || 'Anonymous';
                   <TextInput
                     style={styless.TextInput}
                     placeholder="  (*** **** *05) رقم الجوال"
-                 //   onChangeText={(phoneNum) => this.setState({ phoneNum })}
-                    value={state.phoneNum}
+                    onChangeText={(phoneNum) => setphoneNum({ phoneNum })}
+                    value={phoneNum}
                     autoCapitalize="none"
                   />
                 </View>
@@ -137,9 +196,9 @@ var userName = (snapshot.val() && snapshot.val().username) || 'Anonymous';
                     style={styless.TextInput}
                     secureTextEntry
                     placeholder="*كلمة المرور"
-               //     onChangeText={(password) => this.setState({ password })}
-                //    value={this.state.password}
+                    value={password}
                     autoCapitalize="none"
+                    editable={false}
                   /></View>
                   <View style={[styless.fields]}>
                 <TouchableOpacity>
@@ -205,12 +264,15 @@ var userName = (snapshot.val() && snapshot.val().username) || 'Anonymous';
     return(
        
          <View style={{flex:1,backgroundColor:'white' }} > 
+       
+
          <View style={{flexDirection:'row' ,marginTop:20, alignItems:'flex-start'}}>
              <TouchableOpacity>
-         <Entypo name='chevron-left' size={30} color= {colors.primaryBlue }  onPress={()=> navigation.navigate('HomescreenServiceProvider')} />
+       {/*  <Entypo name='chevron-left' size={30} color= {colors.primaryBlue }  onPress={()=> navigation.pop()} /> */}
          </TouchableOpacity>
          <Text style={styles.header}>الحساب</Text>
          </View>
+         <ScrollView showsVerticalScrollIndicator={false}>
         <TabView
         navigationState={{ index, routes }}
         renderScene={renderScene}
@@ -223,9 +285,11 @@ var userName = (snapshot.val() && snapshot.val().username) || 'Anonymous';
       >
           
       </TabView>
+      </ScrollView>
       <TouchableOpacity style={styles.ButtonContainer}>
                         <Text style={styles.appButtonText} >حفظ</Text>
                     </TouchableOpacity>
+                    
       </View>
   
     );
@@ -254,8 +318,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 50,
         alignItems:'center',
         margin:20,
-        marginHorizontal:60,
-        marginTop:50
+        marginHorizontal:40,
+        marginTop:20
       },
       appButtonText: {
         fontSize: 18,

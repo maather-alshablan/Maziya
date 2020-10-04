@@ -245,7 +245,7 @@ export default class RegistrationServiceProvider extends Component {
 
     return (
       <View style={styles.container}>
-        <Entypo name='chevron-left' size={30} color= {colors.primaryBlue } style={{alignSelf:'flex-start'}} onPress={()=> this.props.navigation.navigate('Registration')} />
+        <Entypo name='chevron-left' size={30} color= {colors.primaryBlue } style={{alignSelf:'flex-start'}} onPress={()=> this.props.navigation.pop()} />
 
         <View style={styles.header}>
           <Text style={styles.header}>تسجيل مزود الخدمة</Text>

@@ -2,7 +2,8 @@ import React, { Component , useState } from "react";
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Dimensions, Platform, StatusBar ,Image,ImageBackground } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { database, auth,storage } from "../config/firebase";
-
+import {Entypo} from '../constants/icons'
+import colors from '../constants/colors'
  
  
  
@@ -30,25 +31,25 @@ export default class NewOffer extends Component  {
         this.setState({ cpo: cpo });
       };
 
-      // checkTextInput = () => {
+       checkTextInput = () => {
       //   //Check  TextInput
-      //   if (!handleNameChange.trim()) {
-      //     alert('Please Enter Name');
-      //     return;
-      //   }
+        if (!handleNameChange.trim()) {
+          alert('Please Enter Name');
+          return;
+         }
       //   //Check for TextInput
-      //   if (!handleDescripitonChange.trim()) {
-      //     alert('Please Enter Email');
-      //     return;
-      //   }
-      //   if (!handlecpoChange.trim()) {
-      //     alert('Please Enter Email');
-      //     return;
-      //   }
+         if (!handleDescripitonChange.trim()) {
+           alert('Please Enter Email');
+           return;
+         }
+         if (!handlecpoChange.trim()) {
+           alert('Please Enter Email');
+        return;
+        }
       //   //Checked Successfully
       //   //Do whatever you want
-      //   alert('Success');
-      // };
+       alert('Success');
+       };
 
       // firebase 
       // writeOfferSP = () => {
@@ -72,21 +73,32 @@ render(){
     return (
         <View style={styles.container}>
           <StatusBar backgroundColor='#0278ae' barStyle='light-content' />
+          <TouchableOpacity>
+         <Entypo name='chevron-left' size={30} color= {colors.primaryBlue }  onPress={()=> navigation.navigate('HomescreenServiceProvider')} />
+         </TouchableOpacity>
             <View style={styles.header}>
                 <Text style={styles.text_header}>اضافة عرض جديد</Text>
                 <Image source={require('../images/logoDis.jpg')} style={{width:100,height:100,marginLeft:120}}/>
             </View>
  
+         
                 <View style={styles.footer}>
-                <Text style={styles.text_footer}>الاسم</Text>
+                <Text style={styles.text_footer}>العنوان</Text>
                 <View style={styles.action}>
-                    <TextInput style={styles.textInput} autoCapitalize="none" onChangeText={(userName)=> this.handleNameChange(userName)}/>
+                    <TextInput style={styles.textInput} 
+                    autoCapitalize="none" 
+                    textAlign='right'
+                    onChangeText={(userName)=> this.handleNameChange(userName)}/>
                 </View>
-
+                
                <Text style={styles.text_footer}>الوصف</Text>
                 <View style={styles.action}>
-                  <TextInput style={styles.textInput} autoCapitalize="none" onChangeText={(Descripiton) => this.handleDescripitonChange(Descripiton)}/>
+                  <TextInput style={styles.textInput} 
+                  autoCapitalize="none" 
+                  onChangeText={(Descripiton) => this.handleDescripitonChange(Descripiton)}
+                  textAlign='right'/>
                 </View>
+                
  
                 <View>
                 <ImageBackground source={require('../images/image.png')} style={{width:200,height:200,marginLeft:50}}>
@@ -100,7 +112,7 @@ render(){
  
                 
                 <View style={styles.buttom}>
-                    <TouchableOpacity style={styles.signIn} onPress={checkTextInput}>
+                    <TouchableOpacity style={styles.signIn} >
                     <LinearGradient
                         colors={['#0278ae', '#0278ae']}
                         style={styles.signIn}
@@ -111,6 +123,10 @@ render(){
                     </TouchableOpacity>
                    
                 </View>
+
+                {
+                    /* https://www.npmjs.com/package/react-native-qrcode-generator */
+                }
             </View>
                 
         </View>
@@ -154,7 +170,8 @@ const styles = StyleSheet.create({
     text_footer: {
         color: '#05375a',
         fontSize: 18,
-        marginLeft:260
+        marginLeft:260,
+        marginTop:10
         
     },
     buttom:{
