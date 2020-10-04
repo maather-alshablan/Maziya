@@ -1,6 +1,8 @@
-import React, { Component } from "react";
+import React, { Component , useState } from "react";
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Dimensions, Platform, StatusBar ,Image,ImageBackground } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { database, auth,storage } from "../config/firebase";
+
  
  
  
@@ -27,6 +29,44 @@ export default class NewOffer extends Component  {
         // parent class change handler is always called with field name and value
         this.setState({ cpo: cpo });
       };
+
+      // checkTextInput = () => {
+      //   //Check  TextInput
+      //   if (!handleNameChange.trim()) {
+      //     alert('Please Enter Name');
+      //     return;
+      //   }
+      //   //Check for TextInput
+      //   if (!handleDescripitonChange.trim()) {
+      //     alert('Please Enter Email');
+      //     return;
+      //   }
+      //   if (!handlecpoChange.trim()) {
+      //     alert('Please Enter Email');
+      //     return;
+      //   }
+      //   //Checked Successfully
+      //   //Do whatever you want
+      //   alert('Success');
+      // };
+
+      // firebase 
+      // writeOfferSP = () => {
+      //   console.log("offers ");
+      //   database
+      //     .ref()
+      //     .child("Offers")
+      //     .child(this.state.OfferId)
+      //     .set({
+      //       Descripiton: this.state.Descripiton,
+      //       expDate: this.state.expDate ,
+      //       splId: this.state.splId,
+      //       title: this.state.title,
+      //     })
+      //     .then(this.props.navigation.navigate("SPhomescreen"))
+      //     .catch((error) => console.log(error));
+      // };
+      
  
 render(){
     return (
@@ -42,8 +82,7 @@ render(){
                 <View style={styles.action}>
                     <TextInput style={styles.textInput} autoCapitalize="none" onChangeText={(userName)=> this.handleNameChange(userName)}/>
                 </View>
- 
- 
+
                <Text style={styles.text_footer}>الوصف</Text>
                 <View style={styles.action}>
                   <TextInput style={styles.textInput} autoCapitalize="none" onChangeText={(Descripiton) => this.handleDescripitonChange(Descripiton)}/>
@@ -61,12 +100,13 @@ render(){
  
                 
                 <View style={styles.buttom}>
-                    <TouchableOpacity style={styles.signIn} onPress={()=>{}}>
+                    <TouchableOpacity style={styles.signIn} onPress={checkTextInput}>
                     <LinearGradient
                         colors={['#0278ae', '#0278ae']}
                         style={styles.signIn}
                     >
                         <Text style={[styles.textSign, { color: '#fff' }]}> إضافة عرض </Text>
+
                     </LinearGradient>
                     </TouchableOpacity>
                    
