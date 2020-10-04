@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createDrawerNavigator} from '@react-navigation/drawer';
-import {Entypo, Feather , Ionicons} from '../constants/icons'
+import {Entypo, Feather , Ionicons, MaterialCommunityIcons,FontAwesome} from '../constants/icons'
 import colors from '../constants/colors'
 
 import Homescreen from '../screens/Homescreen'
@@ -28,28 +28,39 @@ const Tab = createBottomTabNavigator()
         <Tab.Screen name='Homescreen' component={Homescreen}
         options={{
           
-          tabBarIcon: ({ color, size }) => (
-            <Entypo name="home" color={colors.primaryBlue} size={25} />
+          tabBarIcon: ({ tintColor, focused }) => (
+            <MaterialCommunityIcons 
+            name={focused ? "home" : "home-outline"}  
+            color={colors.primaryBlue} 
+            size={30} />
           )
 
         }} />
         <Tab.Screen name='Map' component={Map} 
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <Entypo name="map" color={colors.primaryBlue} size={25} />
+          tabBarIcon: ({ tintColor, focused }) => (
+            <FontAwesome 
+            name={focused ? "map" : "map-o"}  
+            color={colors.primaryBlue} 
+            size={25} />
           )
         }} />
         <Tab.Screen name='Favorite' component={Favorite} 
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <Feather name="heart" color={colors.primaryBlue} size={25} />
+          tabBarIcon: ({ tintColor, focused }) => (
+            <MaterialCommunityIcons 
+            name={focused ? "heart" : "heart-outline"}  
+            color={colors.primaryBlue} 
+            size={30} />
           )
         }}  />
         <Tab.Screen name='ScanQR' component={ScanQR} 
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <Entypo name="camera" 
-            color={colors.primaryBlue} size={25} />
+          tabBarIcon: ({ tintColor, focused }) => (
+            <MaterialCommunityIcons 
+            name={focused ? "qrcode-scan" : "qrcode-scan"}  
+            color={colors.primaryBlue} 
+            size={30} />
           )
         }} />
 
