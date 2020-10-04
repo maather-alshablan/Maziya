@@ -18,7 +18,7 @@ import Homescreen from "../screens/Homescreen";
 import { Entypo } from "../constants/icons";
 
 import profile from "../screens/profile";
-import NewOffer from "../screens/NewOffer";
+import NewOffer from "../screens/NewOffer.js";
 
 function MainStackNavigator() {
   const Stack = createStackNavigator();
@@ -79,6 +79,7 @@ function MainStackNavigator() {
       <Stack.Navigator
         initialRouteName="Login"
         screenOptions={{ headerShown: false }}
+        initialRouteName="DrawerNavigator"
       >
         <Stack.Screen name="Loading" component={Loading} />
 
@@ -86,8 +87,9 @@ function MainStackNavigator() {
         <Stack.Screen name="Forgot" component={Forgot} />
         <Stack.Screen name="Registration" component={Registration} />
         <Stack.Screen name="SPhomescreen" component={spTabNavigator} />
-        <Stack.Screen name="Homescreen" component={AppDrawer} />
-
+       <Stack.Screen name="Homescreen" component={AppDrawer} />
+       <Stack.Screen name="Tab1" component={Homescreen} />
+        
         <Stack.Screen
           name="RegistrationServiceProvider"
           component={RegistrationServiceProvider}

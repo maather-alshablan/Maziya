@@ -25,6 +25,8 @@ import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
 import {Dropdown }from 'react-native-material-dropdown';
 
+
+
 export default class RegistrationServiceProvider extends Component {
   state = {
     userName: "",
@@ -306,6 +308,7 @@ export default class RegistrationServiceProvider extends Component {
                     value={this.state.phoneNum}
                     autoCapitalize="none"
                   />
+                 
                 </View>
                 <View style={styles.fields}>
                 <FontAwesome name="lock" color={colors.primaryBlue} size={30} style={styles.fieldLabels} />

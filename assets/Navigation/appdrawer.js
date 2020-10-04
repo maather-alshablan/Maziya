@@ -3,6 +3,8 @@ import { createDrawerNavigator, DrawerItem,  DrawerContentScrollView, DrawerItem
 import Tab from '../Navigation/memberTabNavigator'
 import {Entypo} from '../constants/icons'
 import Profile from '../screens/Memberprofile'
+import Courses from '../screens/courses'
+import usedOffers from '../screens/usedOffers'
 import colors from '../constants/colors';
 import {auth} from '../config/firebase'
 
@@ -55,7 +57,21 @@ function CustomDrawerContent(props) { // fix navigation issue: error > navigatio
                 color:'white',
     
               }}/>
-            <Drawer.Screen name= 'profile' component={Profile}/>
+            <Drawer.Screen name= 'profile' component={Profile} options={{
+                title: 'صفحتي',
+                color:'white',
+    
+              }}/>
+            <Drawer.Screen name= 'courses' component={Courses} options={{
+                title: 'الدورات المسجلة',
+                color:'white',
+    
+              }}/>
+            <Drawer.Screen name= 'usedOffers' component={usedOffers} options={{
+                title: 'العروض المستخدمة',
+                color:'white',
+    
+              }}/>
             
     
             </Drawer.Navigator>
