@@ -1,4 +1,4 @@
-import React, { Component , useState} from "react";
+import React, { Component, useState } from "react";
 import {
   Image,
   Text,
@@ -11,58 +11,98 @@ import {
   Button,
   ColorPropType,
   Alert,
-  LogBox
+  LogBox,
 } from "react-native";
 import colors from "../constants/colors";
 import styles from "../constants/styles";
-import {Entypo, Ionicons,MaterialIcons,MaterialCommunityIcons, Fontisto, FontAwesome} from "../constants/icons";
+import {
+  Entypo,
+  Ionicons,
+  MaterialIcons,
+  MaterialCommunityIcons,
+  Fontisto,
+  FontAwesome,
+} from "../constants/icons";
 import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
 import SignUpButton from "../components/SignUpButton";
 import RegButton from "../components/RegButton";
-import { database, auth,storage } from "../config/firebase";
+import { database, auth, storage } from "../config/firebase";
 import Notification from "../components/Notification";
 import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
 //import {Dropdown }from 'react-native-material-dropdown';
 
-
-
 export default class RegistrationServiceProvider extends Component {
+  constructor(props) {
+    super(props);
+
+    this.onNextFirstStep = this.onNextFirstStep.bind(this);
+    this.handleSignUp = this.handleSignUp.bind(this);
+  }
+
   state = {
-    image: 'https://imgplaceholder.com/72x80',
+    image: "https://imgplaceholder.com/72x80",
     userName: "",
     phoneNum: "",
-    email: "",
-    password: "",
+    email: "na@ma.com",
+    password: "123456789",
     confirmPassword: "",
     nameBrand: "",
     Descripiton: "",
-    category:"",
+    category: "",
     errorMessage: null,
     isValid: false,
     errors: false,
   };
-
+  validateEmail = (email) => {
+    const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return regexp.test(email);
+  };
   onNextFirstStep = () => {
+    let valid = true;
+    if (this.state.phoneNum.length != 10) {
+      valid = false;
+      this.setState({
+        errors: true,
+        errorMessage: " يرجى التأكد من ادخال رقم التواصل يالصيغة  0XXXXXXXXX ",
+      });
+    }
 
-      if (!this.state.isValid) {
-        this.setState({ errors: true });
-      } else {
-        this.setState({ errors: false });
-      }
-  
-    console.log("onNextFirstStep");
-    //  step one
-    if (this.state.email === "" && this.state.password === "") {
-      isValid = false ;
-    return;
-    }}
+    if (this.state.password !== this.state.confirmPassword) {
+      valid = false;
+      this.setState({
+        errors: true,
+        errorMessage: "يرجى التأكد من مطابقة كلمة المرور",
+      });
+    }
 
+    if (this.state.email === "" && !this.validateEmail(this.state.email)) {
+      this.setState({
+        errors: true,
+        errorMessage: "يرجى كتابة بريد الكتروني صحيح",
+      });
+    }
 
-    
+    if (this.state.userName === "" && this.state.password === "") {
+      this.setState({
+        errors: true,
+        errorMessage: "يرجى ادخال جميع البيانات",
+      });
+    }
+    if (this.state.password.length < 8) {
+      valid = false;
+      this.setState({
+        errors: true,
+        errorMessage: "يرجى ادخال كلمة مرور مكونة من ٨ خانات او اكثر",
+      });
+    }
+    if (valid) {
+      this.setState({
+        errors: false,
+      });
+    }
+  };
 
-
- 
   /*onNextStep = () => {
     console.log("onNextStep");
     //step two
@@ -71,18 +111,15 @@ export default class RegistrationServiceProvider extends Component {
     }
   };*/
 
-  async componentDidMount() { 
+  async componentDidMount() {
     const permission = await Permissions.getAsync(Permissions.CAMERA_ROLL);
     if (permission.status !== "granted") {
       const newPermission = await Permissions.askAsync(Permissions.CAMERA_ROLL);
       if (newPermission.status === "granted") {
-        
       }
     } else {
     }
   }
-
- 
 
   openImagePickerAsync = async () => {
     await Permissions.askAsync(Permissions.CAMERA_ROLL);
@@ -105,68 +142,43 @@ export default class RegistrationServiceProvider extends Component {
   // };
 
   handleSignUp = () => {
-     if (this.state.phoneNum.length != 10 ) {
-      this.state.formValid = false;
-      alert ('Alert', ' يرجى التأكد من ادخال رقم التواصل يالصيغة  0XXXXXXXXX ')
-
-      return;
-    }
-
-    if (this.state.password !== this.state.confirmPassword) {
-      this.state.formValid = false;
-      alert("يرجى التأكد من مطابقة كلمة المرور");
-      return;
-    }
-    if (this.state.email === "" && this.state.password === "") {
-      this.state.formValid = false;
-      alert(" يرجى ادخال جميع البيانات");
-      return;
-    }
-    if (
-      this.state.email == "" ||
-      this.state.password == "" ||
-      this.state.confirmPassword == ""
-    ) {
-      this.state.formValid = false;
-      alert(" يرجى ادخال جميع البيانات");
-
-      return;
-    }
-
-    
-
-    if (this.state.password.length < 8) {
-      this.state.errorMessage = "the password should be 8 charecters or more";
-
-      alert("يرجى ادخال كلمة مرور مكونة من ٨ خانات او اكثر");
-      return;
-    }
+    console.log("handleSignUp", this.state);
     auth
       .createUserWithEmailAndPassword(this.state.email, this.state.password)
-      .then(() => this.writeUserData() )
-      .catch(() =>
+      .then((resp) => this.writeUserData(resp))
+      .catch((e) => {
+        console.log("error", e);
         this.setState({
-          errorMessage:
-            "يرجى التأكد من ادخال البريد الالكتروني و كلمة المرور الصحيح",
-        })
-      );
-
-    this.state.errorMessage = "";
+          errorMessage: e.message,
+          errors: true,
+        });
+      });
   };
- 
-  writeUserData = () => {
 
-    userid = auth.currentUser.uid;
-    
-    database.ref().child('users').child(userid).set({
-      name: this.state.name,
-      email: this.state.email,
-      password: this.state.password,
-      accountType : 'serviceProvider', 
-    }).then(this.writeServiceProvider() 
-    ).catch(error => console.log(error)
-    );
-  }
+  writeUserData = (resp) => {
+    console.log("writeUserData", resp);
+
+    const userid = resp.user.uid;
+    // first let us upload the image on storage, no need to insert it into database
+    // we will use the UID as image name for exmaple,
+    // let say uid is 1dsdsmn it will be 1dsdsmn.jpg on storage
+
+    this.UploadImage(this.state.image, userid);
+
+    database
+      .ref()
+      .child("users")
+      .child(userid)
+      .set({
+        name: this.state.userName,
+        email: this.state.email,
+        userid: userid,
+
+        accountType: "serviceProvider",
+      })
+      .then(this.writeServiceProvider())
+      .catch((error) => console.log(error));
+  };
 
   writeServiceProvider = () => {
     console.log("here in service provider");
@@ -179,67 +191,73 @@ export default class RegistrationServiceProvider extends Component {
         category: this.state.category,
         phone: this.state.phoneNum,
         email: this.state.email,
-        image: this.state.uri,
+        //image: this.state.uri,
       })
       .then(this.props.navigation.navigate("SPhomescreen"))
       .catch((error) => console.log(error));
   };
 
-  
+  UploadImage = async (uri, imgName) => {
+    console.log("UploadImage uri", uri);
+    console.log("UploadImage imgName", imgName);
+    const response = await fatch(uri);
+    const blob = await response.blob();
 
-  // not tested .
-  // UploadImage = async (uri, imgName) => {
-  //   const response = await fatch(uri);
-  //   const blob = await response.blob();
+    var ref = storage.ref().child("images/" + imgName);
+    // database
+    // .ref()
+    // .child("serviceProvider")
+    // .child(this.state.nameBrand)
+    // .set({imageref: ref.put(blob) }
 
-  //   var ref =
-  //     storage.
-  //     ref()
-  //     .child("images/" + imgName);
-  //   // database
-  //   // .ref()
-  //   // .child("serviceProvider")
-  //   // .child(this.state.nameBrand)
-  //   // .set({imageref: ref.put(blob) }
-
-  //   return ref.put(blob);
-  // }
+    return ref.put(blob);
+  };
 
   render() {
     const showNotification = this.state.formValid ? false : true;
-    console.disableYellowBox = true; 
+    console.disableYellowBox = true;
 
-    let categories = [{
-      
-      value: 'المطاعم',
-    }, {
-      value: 'المستلزمات',
-    }, {
-      value: 'الصحة',
-    },{
-      value: 'الدورات',
-    }, {
-      value: 'التسوق',
-    }, {
-      value: 'الخدمات',
-    }
-  ];
-
+    let categories = [
+      {
+        value: "المطاعم",
+      },
+      {
+        value: "المستلزمات",
+      },
+      {
+        value: "الصحة",
+      },
+      {
+        value: "الدورات",
+      },
+      {
+        value: "التسوق",
+      },
+      {
+        value: "الخدمات",
+      },
+    ];
+    console.log(this.validateEmail(this.state.email));
+    console.log("state", this.state);
     return (
       <View style={styles.container}>
-        <Entypo name='chevron-left' size={30} color= {colors.primaryBlue } style={{alignSelf:'flex-start'}} onPress={()=> this.props.navigation.navigate('Registration')} />
+        <Entypo
+          name="chevron-left"
+          size={30}
+          color={colors.primaryBlue}
+          style={{ alignSelf: "flex-start" }}
+          onPress={() => this.props.navigation.navigate("Registration")}
+        />
 
         <View style={styles.header}>
           <Text style={styles.header}>تسجيل مزود الخدمة</Text>
         </View>
+
         {this.state.errors && (
           <View style={styles.header}>
-            <Text style={styles.errors}>
-              لايمكن الانتقال الى الخطوة القادمة
-            </Text>
+            <Text style={styles.errors}>{this.state.errorMessage}</Text>
           </View>
         )}
-
         <View style={{ flex: 1 }}>
           <ProgressSteps
             activeStepIconBorderColor={colors.primaryBlue}
@@ -250,18 +268,20 @@ export default class RegistrationServiceProvider extends Component {
             <ProgressStep
               label="الحساب"
               nextBtnText="التالي"
-              nextBtnTextStyle={{ color: "#fff", fontSize: 20 }}
-              nextBtnStyle={{color: "#ddd" }}
-              onNext= {this.onNextStep}
+              nextBtnTextStyle={{ color: "#000000", fontSize: 20 }}
+              nextBtnStyle={{ color: "#ddd" }}
+              //onNext={this.onNextFirstStep}
               errors={this.state.errors}
-             
-              
             >
               <View>
                 <View style={styles.fields}>
-                  
-                  <MaterialCommunityIcons name="account" color={colors.primaryBlue} size={30} style={styles.fieldLabels} />
-                
+                  <MaterialCommunityIcons
+                    name="account"
+                    color={colors.primaryBlue}
+                    size={30}
+                    style={styles.fieldLabels}
+                  />
+
                   <TextInput
                     style={styles.TextInput}
                     placeholder="*الاسم"
@@ -271,11 +291,16 @@ export default class RegistrationServiceProvider extends Component {
                   />
                 </View>
                 <View style={styles.fields}>
-                  
-                  <MaterialCommunityIcons name="email" color={colors.primaryBlue} size={30} style={styles.fieldLabels} />
+                  <MaterialCommunityIcons
+                    name="email"
+                    color={colors.primaryBlue}
+                    size={30}
+                    style={styles.fieldLabels}
+                  />
 
                   <TextInput
                     style={styles.TextInput}
+                    keyboardType="email-address"
                     placeholder="*البريد الإلكتروني"
                     onChangeText={(email) => this.setState({ email })}
                     value={this.state.email}
@@ -283,7 +308,12 @@ export default class RegistrationServiceProvider extends Component {
                   />
                 </View>
                 <View style={styles.fields}>
-                <FontAwesome name="phone" color={colors.primaryBlue} size={30} style={styles.fieldLabels} />
+                  <FontAwesome
+                    name="phone"
+                    color={colors.primaryBlue}
+                    size={30}
+                    style={styles.fieldLabels}
+                  />
 
                   <TextInput
                     style={styles.TextInput}
@@ -292,10 +322,14 @@ export default class RegistrationServiceProvider extends Component {
                     value={this.state.phoneNum}
                     autoCapitalize="none"
                   />
-                 
                 </View>
                 <View style={styles.fields}>
-                <FontAwesome name="lock" color={colors.primaryBlue} size={30} style={styles.fieldLabels} />
+                  <FontAwesome
+                    name="lock"
+                    color={colors.primaryBlue}
+                    size={30}
+                    style={styles.fieldLabels}
+                  />
                   <TextInput
                     style={styles.TextInput}
                     secureTextEntry
@@ -306,7 +340,12 @@ export default class RegistrationServiceProvider extends Component {
                   />
                 </View>
                 <View style={styles.fields}>
-                <FontAwesome name="lock" color={colors.primaryBlue} size={30} style={styles.fieldLabels} />
+                  <FontAwesome
+                    name="lock"
+                    color={colors.primaryBlue}
+                    size={30}
+                    style={styles.fieldLabels}
+                  />
                   <TextInput
                     style={styles.TextInput}
                     secureTextEntry
@@ -318,34 +357,24 @@ export default class RegistrationServiceProvider extends Component {
                     autoCapitalize="none"
                   />
                 </View>
-                <View>
-                  <TouchableOpacity>
-                    <Text >Next</Text>
-                     
-                  </TouchableOpacity>
-                </View>
               </View>
             </ProgressStep>
             <ProgressStep
               label="الوصف"
               previousBtnText="السابق"
               nextBtnText="التالي"
-              nextBtnTextStyle={{ color: "#ffff", fontSize: 20 }}
+              nextBtnTextStyle={{ color: "#000000", fontSize: 20 }}
               nextBtnStyle={styles.nextButton}
             >
               <View style={{ alignItems: "center" }}>
                 <View style={styles.container}>
-                <Image
-            style={styles.image} source={{ uri: this.state.image }} />         
-                  <TouchableOpacity 
-                  onPress={this.openImagePickerAsync} >
-                    <RegButton
-                      text={"choose photo"}
-  
-                      
-                    ></RegButton>
+                  <Image
+                    style={styles.image}
+                    source={{ uri: this.state.image }}
+                  />
+                  <TouchableOpacity onPress={this.openImagePickerAsync}>
+                    <RegButton text={"choose photo"}></RegButton>
                   </TouchableOpacity>
-                  
                 </View>
 
                 <View style={styles.fields}>
@@ -361,14 +390,14 @@ export default class RegistrationServiceProvider extends Component {
                   />
                 </View>
                 <View style={styles.fields}>
-                   {/* <Dropdown
+                  {/* <Dropdown
                     label="الفئة"
                     data={categories}
                     onChangeText={(category) => this.setState({ category })}
                     value={this.state.category}
                     containerStyle={{ width: 100, marginLeft: 150 }}
                   />  */}
-                   </View>
+                </View>
                 <View style={styles.fields}>{/*<Upload/> */}</View>
               </View>
             </ProgressStep>
@@ -376,17 +405,18 @@ export default class RegistrationServiceProvider extends Component {
             <ProgressStep
               label="الموقع"
               previousBtnText="السابق"
-              nextBtnText="التالي"
-              nextBtnTextStyle={{ color: "#ffff", fontSize: 20 }}
+              finishBtnText="إنشاء حساب"
+              isComplete={true}
+              onSubmit={this.handleSignUp}
+              nextBtnTextStyle={{ color: "#000000", fontSize: 20 }}
               nextBtnStyle={styles.nextButton}
             >
               <View style={styles.fields}>
-              <FontAwesome name="tags" color={colors.primaryBlue} size={30}/>
-                    <Text style={styles.fieldLabels}> الفئة</Text>
-                
+                <FontAwesome name="tags" color={colors.primaryBlue} size={30} />
+                <Text style={styles.fieldLabels}> الفئة</Text>
               </View>
-              
-                <View >
+
+              <View>
                 <Image
                   source={require("../images/mapsmockup.png")}
                   style={{
@@ -394,21 +424,17 @@ export default class RegistrationServiceProvider extends Component {
                   }}
                   resizeMode="contain"
                 />
-                <TouchableOpacity onPress={this.handleSignUp}>
+                {/* <TouchableOpacity onPress={this.handleSignUp}>
                   <SignUpButton
                     text={"إنشاء حساب"}
                     onPress={this.handleSignUp}
                   ></SignUpButton>
-              
-
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </View>
             </ProgressStep>
-          
           </ProgressSteps>
         </View>
       </View>
     );
   }
 }
-
