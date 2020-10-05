@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component , useState} from "react";
 import {
   Image,
   Text,
@@ -23,12 +23,13 @@ import { database, auth,storage } from "../config/firebase";
 import Notification from "../components/Notification";
 import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
-import {Dropdown }from 'react-native-material-dropdown';
+//import {Dropdown }from 'react-native-material-dropdown';
 
 
 
 export default class RegistrationServiceProvider extends Component {
   state = {
+    image: 'https://imgplaceholder.com/72x80',
     userName: "",
     phoneNum: "",
     email: "",
@@ -38,17 +39,27 @@ export default class RegistrationServiceProvider extends Component {
     Descripiton: "",
     category:"",
     errorMessage: null,
+    isValid: false,
     errors: false,
   };
 
   onNextFirstStep = () => {
+
+      if (!this.state.isValid) {
+        this.setState({ errors: true });
+      } else {
+        this.setState({ errors: false });
+      }
+  
     console.log("onNextFirstStep");
     //  step one
     if (this.state.email === "" && this.state.password === "") {
-      this.setState({ errors: true });
-    }
+      isValid = false ;
+    return;
+    }}
+
+
     
-  };
 
 
  
@@ -71,40 +82,33 @@ export default class RegistrationServiceProvider extends Component {
     }
   }
 
+ 
+
   openImagePickerAsync = async () => {
-    console.log("openImagePickerAsync");
-    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-    console.log("status", status);
-
-    if (status === "granted") {
-      let permissionResult = await ImagePicker.requestCameraRollPermissionsAsync();
-
-      if (permissionResult.granted === false) {
-        alert("Permission to access camera roll is required!");
-        return;
-      }
-
-      let pickerResult = await ImagePicker.launchImageLibraryAsync();
-      console.log(pickerResult);
-    }
+    await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    const { cancelled, uri } = await ImagePicker.launchImageLibraryAsync({
+      aspect: 1,
+      allowsEditing: true,
+    });
+    if (!cancelled) this.setState({ image: uri });
   };
 
-  handleCloseNotification = () => {
-    this.setState({ formValid: true });
+  // handleCloseNotification = () => {
+  //   this.setState({ formValid: true });
 
-    if (!this.state.formValid) {
-      this.setState({ error: true });
-    } else {
-      this.setState({ error: false });
-      this.state.formValid = true;
-    }
-  };
+  //   if (!this.state.formValid) {
+  //     this.setState({ error: true });
+  //   } else {
+  //     this.setState({ error: false });
+  //     this.state.formValid = true;
+  //   }
+  // };
 
   handleSignUp = () => {
-    if (this.state.phoneNum != 10) {
+     if (this.state.phoneNum.length != 10 ) {
       this.state.formValid = false;
-      this.state.errorMessage =
-        "يرجى التأكد من ادخال رقم التواصل يالصيغة  0XXXXXXXXX ";
+      alert ('Alert', ' يرجى التأكد من ادخال رقم التواصل يالصيغة  0XXXXXXXXX ')
+
       return;
     }
 
@@ -133,7 +137,6 @@ export default class RegistrationServiceProvider extends Component {
 
     if (this.state.password.length < 8) {
       this.state.errorMessage = "the password should be 8 charecters or more";
-      this.state.formValid = false;
 
       alert("يرجى ادخال كلمة مرور مكونة من ٨ خانات او اكثر");
       return;
@@ -176,52 +179,31 @@ export default class RegistrationServiceProvider extends Component {
         category: this.state.category,
         phone: this.state.phoneNum,
         email: this.state.email,
-        imageref: "",
+        image: this.state.uri,
       })
       .then(this.props.navigation.navigate("SPhomescreen"))
       .catch((error) => console.log(error));
   };
 
-  handleEmailChange = (email) => {
-    // parent class change handler is always called with field name and value
-    this.setState({ email: email });
-  };
-  handlePasswordChange = (password) => {
-    // parent class change handler is always called with field name and value
-    this.setState({ password: password });
-  };
-
-  handleconfirmPasswordChange = (password) => {
-    // parent class change handler is always called with field name and value
-    this.setState({ confirmPassword: password });
-  };
-
-  // openImagePickerAsync = async () => {
-  //   console.log("openImagePickerAsync");
-  //   let result = await ImagePicker.launchCameraAsync();
-  //   //let result = await ImagePicker.launchImageLibraryAsync();
-  //   if (!result.cancelled) {
-  //     this.UploadImage(result.uri, "test-image ")
-  //       .then(() => {
-  //         Alert.alert("sucess ");
-  //       })
-  //       .catch((error) => {
-  //         Alert.alert(error);
-  //       });
-  //   }
-  // };
+  
 
   // not tested .
-  UploadImage = async (uri, imgName) => {
-    const response = await fatch(uri);
-    const blob = await response.blob();
+  // UploadImage = async (uri, imgName) => {
+  //   const response = await fatch(uri);
+  //   const blob = await response.blob();
 
-    var ref =
-      storage.
-      ref()
-      .child("images/" + imgName);
-    return ref.put(blob);
-  };
+  //   var ref =
+  //     storage.
+  //     ref()
+  //     .child("images/" + imgName);
+  //   // database
+  //   // .ref()
+  //   // .child("serviceProvider")
+  //   // .child(this.state.nameBrand)
+  //   // .set({imageref: ref.put(blob) }
+
+  //   return ref.put(blob);
+  // }
 
   render() {
     const showNotification = this.state.formValid ? false : true;
@@ -245,7 +227,7 @@ export default class RegistrationServiceProvider extends Component {
 
     return (
       <View style={styles.container}>
-        <Entypo name='chevron-left' size={30} color= {colors.primaryBlue } style={{alignSelf:'flex-start'}} onPress={()=> this.props.navigation.pop()} />
+        <Entypo name='chevron-left' size={30} color= {colors.primaryBlue } style={{alignSelf:'flex-start'}} onPress={()=> this.props.navigation.navigate('Registration')} />
 
         <View style={styles.header}>
           <Text style={styles.header}>تسجيل مزود الخدمة</Text>
@@ -268,16 +250,18 @@ export default class RegistrationServiceProvider extends Component {
             <ProgressStep
               label="الحساب"
               nextBtnText="التالي"
-              nextBtnTextStyle={{ color: "#ffff", fontSize: 20 }}
-              nextBtnStyle={styles.nextButton}
-              onNext={this.onNextFirstStep}
+              nextBtnTextStyle={{ color: "#fff", fontSize: 20 }}
+              nextBtnStyle={{color: "#ddd" }}
+              onNext= {this.onNextStep}
               errors={this.state.errors}
+             
               
             >
               <View>
                 <View style={styles.fields}>
                   
                   <MaterialCommunityIcons name="account" color={colors.primaryBlue} size={30} style={styles.fieldLabels} />
+                
                   <TextInput
                     style={styles.TextInput}
                     placeholder="*الاسم"
@@ -334,6 +318,12 @@ export default class RegistrationServiceProvider extends Component {
                     autoCapitalize="none"
                   />
                 </View>
+                <View>
+                  <TouchableOpacity>
+                    <Text >Next</Text>
+                     
+                  </TouchableOpacity>
+                </View>
               </View>
             </ProgressStep>
             <ProgressStep
@@ -345,13 +335,17 @@ export default class RegistrationServiceProvider extends Component {
             >
               <View style={{ alignItems: "center" }}>
                 <View style={styles.container}>
-                  <TouchableOpacity onPress={this.handleSignUp}>
+                <Image
+            style={styles.image} source={{ uri: this.state.image }} />         
+                  <TouchableOpacity 
+                  onPress={this.openImagePickerAsync} >
                     <RegButton
                       text={"choose photo"}
-                      onPress={this.openImagePickerAsync}
+  
                       
                     ></RegButton>
                   </TouchableOpacity>
+                  
                 </View>
 
                 <View style={styles.fields}>
@@ -367,13 +361,13 @@ export default class RegistrationServiceProvider extends Component {
                   />
                 </View>
                 <View style={styles.fields}>
-                   <Dropdown
+                   {/* <Dropdown
                     label="الفئة"
                     data={categories}
                     onChangeText={(category) => this.setState({ category })}
                     value={this.state.category}
                     containerStyle={{ width: 100, marginLeft: 150 }}
-                  /> 
+                  />  */}
                    </View>
                 <View style={styles.fields}>{/*<Upload/> */}</View>
               </View>
@@ -389,15 +383,10 @@ export default class RegistrationServiceProvider extends Component {
               <View style={styles.fields}>
               <FontAwesome name="tags" color={colors.primaryBlue} size={30}/>
                     <Text style={styles.fieldLabels}> الفئة</Text>
-                <TextInput
-                  style={styles.TextInput}
-                  placeholder=" وصف العلامة التجارية"
-                  onChangeText={(Descripiton) => this.setState({ Descripiton })}
-                  value={this.state.Descripiton}
-                  autoCapitalize="none"
-                />
+                
               </View>
-              <View style={{ alignItems: "center" }}>
+              
+                <View >
                 <Image
                   source={require("../images/mapsmockup.png")}
                   style={{
@@ -405,19 +394,6 @@ export default class RegistrationServiceProvider extends Component {
                   }}
                   resizeMode="contain"
                 />
-              </View>
-            </ProgressStep>
-            {/*remove step*/}
-            <ProgressStep
-              label="العروض"
-              previousBtnText="السابق"
-              finishBtnText="تسجيل"
-              nextBtnTextStyle={{ color: "#ffff", fontSize: 20 }}
-              nextBtnStyle={styles.nextButton}
-            >
-              <View style={{ alignItems: "center" }}>
-                <Text>This is the content within step 3!</Text>
-
                 <TouchableOpacity onPress={this.handleSignUp}>
                   <SignUpButton
                     text={"إنشاء حساب"}
@@ -428,9 +404,11 @@ export default class RegistrationServiceProvider extends Component {
                 </TouchableOpacity>
               </View>
             </ProgressStep>
+          
           </ProgressSteps>
         </View>
       </View>
     );
   }
 }
+

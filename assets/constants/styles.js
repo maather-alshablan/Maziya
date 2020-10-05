@@ -87,6 +87,7 @@ const styles = {
     borderColor: colors.primaryGrey,
     backgroundColor: colors.primaryBlue,
   },
+  image: { width: 300, height: 300, backgroundColor: 'gray' }, 
 
   errors: {
     color: "red",

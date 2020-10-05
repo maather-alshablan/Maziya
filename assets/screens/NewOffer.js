@@ -31,25 +31,25 @@ export default class NewOffer extends Component  {
         this.setState({ cpo: cpo });
       };
 
-       checkTextInput = () => {
-      //   //Check  TextInput
-        if (!handleNameChange.trim()) {
-          alert('Please Enter Name');
-          return;
-         }
-      //   //Check for TextInput
-         if (!handleDescripitonChange.trim()) {
-           alert('Please Enter Email');
-           return;
-         }
-         if (!handlecpoChange.trim()) {
-           alert('Please Enter Email');
-        return;
-        }
-      //   //Checked Successfully
-      //   //Do whatever you want
-       alert('Success');
-       };
+      //  checkTextInput = () => {
+      // //   //Check  TextInput
+      //   if (!handleNameChange.trim()) {
+      //     alert('Please Enter Name');
+      //     return;
+      //    }
+      // //   //Check for TextInput
+      //    if (!handleDescripitonChange.trim()) {
+      //      alert('Please Enter Email');
+      //      return;
+      //    }
+      //    if (!handlecpoChange.trim()) {
+      //      alert('Please Enter Email');
+      //   return;
+      //   }
+      // //   //Checked Successfully
+      // //   //Do whatever you want
+      //  alert('Success');
+      //  };
 
       // firebase 
       // writeOfferSP = () => {
@@ -116,7 +116,7 @@ render(){
                     <LinearGradient
                         colors={['#0278ae', '#0278ae']}
                         style={styles.signIn}
-                    >
+                    > 
                         <Text style={[styles.textSign, { color: '#fff' }]}> إضافة عرض </Text>
 
                     </LinearGradient>
