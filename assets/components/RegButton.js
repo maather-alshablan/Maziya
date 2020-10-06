@@ -7,15 +7,16 @@ export default ({ text, onPress }) => {
     <View
       style={{
         alignItems: "center",
+        marginTop:20 , 
       }}
     >
       <View
         style={{
           flexDirection: "row",
           alignItems: "center",
-          paddingStart: 65,
+          paddingStart: 35,
           paddingTop: 0,
-          width: 203,
+          width: 100,
           height: 45,
           borderRadius: 22.5,
           borderWidth: 1,
@@ -24,7 +25,7 @@ export default ({ text, onPress }) => {
         }}
       >
         <TouchableOpacity onPress={onPress}>
-          <Feather name ="upload" size={30} color='white'/>
+          <Feather name ="upload" size={30} color='white' />
         </TouchableOpacity>
       </View>
     </View>

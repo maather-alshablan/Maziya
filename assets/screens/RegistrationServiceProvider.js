@@ -31,6 +31,7 @@ import Notification from "../components/Notification";
 import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
 //import {Dropdown }from 'react-native-material-dropdown';
+
 export default class RegistrationServiceProvider extends Component {
   constructor(props) {
     super(props);
@@ -43,7 +44,7 @@ export default class RegistrationServiceProvider extends Component {
     image: "https://imgplaceholder.com/72x80",
     userName: "",
     phoneNum: "",
-    email: "na@adadma.com",
+    email: "na@ma.com",
     password: "123456789",
     confirmPassword: "",
     nameBrand: "",
@@ -52,7 +53,6 @@ export default class RegistrationServiceProvider extends Component {
     errorMessage: null,
     isValid: false,
     errors: false,
-    base64: "",
   };
   validateEmail = (email) => {
     const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -123,17 +123,11 @@ export default class RegistrationServiceProvider extends Component {
 
   openImagePickerAsync = async () => {
     await Permissions.askAsync(Permissions.CAMERA_ROLL);
-    const {
-      cancelled,
-      uri,
-      base64,
-    } = await ImagePicker.launchImageLibraryAsync({
+    const { cancelled, uri } = await ImagePicker.launchImageLibraryAsync({
       aspect: 1,
       allowsEditing: true,
-      quality: 0.5,
-      base64: true,
     });
-    if (!cancelled) this.setState({ image: uri, base64 });
+    if (!cancelled) this.setState({ image: uri });
   };
 
   // handleCloseNotification = () => {
@@ -169,8 +163,7 @@ export default class RegistrationServiceProvider extends Component {
     // we will use the UID as image name for exmaple,
     // let say uid is 1dsdsmn it will be 1dsdsmn.jpg on storage
 
-    const uploadedImage = this.UploadImage(this.state.base64, userid);
-    console.log("UploadImage uploadedImage", uploadedImage);
+    this.UploadImage(this.state.image, userid);
 
     database
       .ref()
@@ -204,14 +197,20 @@ export default class RegistrationServiceProvider extends Component {
       .catch((error) => console.log(error));
   };
 
-  UploadImage = async (base64, imgName) => {
+  UploadImage = async (uri, imgName) => {
+    console.log("UploadImage uri", uri);
     console.log("UploadImage imgName", imgName);
-    var ref = storage.ref().child("images/" + imgName);
-    console.log("UploadImage ref", ref);
+    const response = await fatch(uri);
+    const blob = await response.blob();
 
-    return ref.putString(base64).then(function (snapshot) {
-      console.log("Uploaded a data_url string!", snapshot);
-    });
+    var ref = storage.ref().child("images/" + imgName);
+    // database
+    // .ref()
+    // .child("serviceProvider")
+    // .child(this.state.nameBrand)
+    // .set({imageref: ref.put(blob) }
+
+    return ref.put(blob);
   };
 
   render() {
@@ -238,7 +237,8 @@ export default class RegistrationServiceProvider extends Component {
         value: "الخدمات",
       },
     ];
-
+    console.log(this.validateEmail(this.state.email));
+    console.log("state", this.state);
     return (
       <View style={styles.container}>
         <Entypo
@@ -271,7 +271,6 @@ export default class RegistrationServiceProvider extends Component {
               nextBtnTextStyle={{ color: "#000000", fontSize: 20 }}
               nextBtnStyle={{ color: "#ddd" }}
               //onNext={this.onNextFirstStep}
-              onPrevious={() => this.setState({ errors: false })}
               errors={this.state.errors}
             >
               <View>
@@ -366,7 +365,6 @@ export default class RegistrationServiceProvider extends Component {
               nextBtnText="التالي"
               nextBtnTextStyle={{ color: "#000000", fontSize: 20 }}
               nextBtnStyle={styles.nextButton}
-              onPrevious={() => this.setState({ errors: false })}
             >
               <View style={{ alignItems: "center" }}>
                 <View style={styles.container}>
@@ -409,7 +407,6 @@ export default class RegistrationServiceProvider extends Component {
               previousBtnText="السابق"
               finishBtnText="إنشاء حساب"
               isComplete={true}
-              onPrevious={() => this.setState({ errors: false })}
               onSubmit={this.handleSignUp}
               nextBtnTextStyle={{ color: "#000000", fontSize: 20 }}
               nextBtnStyle={styles.nextButton}
