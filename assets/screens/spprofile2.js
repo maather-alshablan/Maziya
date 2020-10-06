@@ -13,90 +13,153 @@ import { render } from 'react-dom';
 
 
 
-const serviceProvider =({ navigation}) => {
+export default class serviceProviderProfile extends Component {
 
     
    // console.disableYellowBox = true;
     
+state = {
+  userName: '',
+  email: '',
+  phoneNum:'',
+  password:'',
+  nameBrand:'',
+  category:'',
+  Description:'',
+  website:'',
+  twitter:'',
+  instagram:''
+}
 
 
-  const [userName, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [phoneNum, setphoneNum] = useState('')
-  const [password, setPassword] = useState('')
-  const [nameBrand, setnameBrand] = useState('')
-  const [category, setCategory] = useState('')
-  const [Descripiton, setDescripiton] = useState('')
-  const [website, setWebsite] = useState('')
-  const [twitter, setTwitter] = useState('')
-  const [instagram, setInstagram] = useState('')
+handleNameChange = name => {
+  this.setState({ userName: name  });
+};
 
-const userId = auth.currentUser.uid;
- let userRef = database.ref('users/'+ userId);
+handleEmailChange = email => {
+  this.setState({ email: email  });
+}
+
+handlePhoneChange = phone => {
+    this.setState({ phoneNum: phone  });
+  };
+
+handleBrandChange = brand => {
+    this.setState({ nameBrand: brand  });
+  };
+handleCategoryChange = category => {
+    this.setState({ category: category  });
+  };
+handleDescriptionChange = Description => {
+    this.setState({ Description: Description  });
+  };
+handlewebsiteChange = website => {
+    this.setState({ website: website  });
+  };
+  handleTwitterChange = twitter => {
+    this.setState({ twitter: twitter  });
+  };
+  handleInstagramChange = instagram => {
+    this.setState({ instagram: instagram  });
+  };
+  
+
+
+  // const [userName, setName] = useState('')
+  // const [email, setEmail] = useState('')
+  // const [phoneNum, setphoneNum] = useState('')
+  // const [password, setPassword] = useState('')
+  // const [nameBrand, setnameBrand] = useState('')
+  // const [category, setCategory] = useState('')
+  // const [Description, setDescription] = useState('')
+  // const [website, setWebsite] = useState('')
+  // const [twitter, setTwitter] = useState('')
+  // const [instagram, setInstagram] = useState('')
+
+ componentDidMount(){ 
  
-    //  var username=  (snapshot.val() && snapshot.val().name)
-    //  var email =  (snapshot.val() && snapshot.val().email)
-    //  var password= (snapshot.val() && snapshot.val().password)
-    //  var brand = ((snapshot.val() && snapshot.val().trademark))
+
+      //   userRef.once('value').then(function(snapshot) {
+      //   setName((snapshot.val() && snapshot.val().name) )
+      //   setPassword((snapshot.val() && snapshot.val().password))
+      //   setEmail((snapshot.val() && snapshot.val().email))
+      //   setnameBrand((snapshot.val() && snapshot.val().trademark))
+      //   })
+
+      //  database.ref('serviceProvider/'+nameBrand).once('value').then(function(snapshotinner) {
+      //       setDescription((snapshotinner.val() && snapshotinner.val().Description))
+      //       setphoneNum((snapshotinner.val() && snapshotinner.val().phone))
+      //       setCategory((snapshotinner.val() && snapshotinner.val().category))
+      //       setWebsite((snapshotinner.val() && snapshotinner.val().website))
+      //       setTwitter((snapshotinner.val() && snapshotinner.val().twitter))
+      //       setInstagram((snapshotinner.val() && snapshotinner.val().instagram))
+
+      //   })
+      
+
+
+    database.ref('users/'+ auth.currentUser.uid).once('value').then(function(snapshot){
+
+     var username=  (snapshot.val() && snapshot.val().name)
+     var email =  (snapshot.val() && snapshot.val().email)
+     var password= (snapshot.val() && snapshot.val().password)
+     var brand = ((snapshot.val() && snapshot.val().trademark))
 
     
- useEffect(() => {
-        userRef.once('value').then(function(snapshot) {
-        setName((snapshot.val() && snapshot.val().name) )
-        setPassword((snapshot.val() && snapshot.val().password))
-        setEmail((snapshot.val() && snapshot.val().email))
-        setnameBrand((snapshot.val() && snapshot.val().trademark))
-  
-        // readData(username,email, password,phone,brand,category,description,website,twitter,instagram)
+    database.ref('serviceProvider/'+brand).once('value').then(function(snapshotinner) {
+            var description = ((snapshotinner.val() && snapshotinner.val().Description))
+            var phone = ((snapshotinner.val() && snapshotinner.val().phone))
+            var category = ((snapshotinner.val() && snapshotinner.val().category))
+            var website = ((snapshotinner.val() && snapshotinner.val().website))
+            var twitter = ((snapshotinner.val() && snapshotinner.val().twitter))
+            var instagram = ((snapshotinner.val() && snapshotinner.val().instagram))
+           
+         readData(username,email, password,phone,brand,category,description,website,twitter,instagram)
 
      })
       
-        database.ref('serviceProvider/'+nameBrand).once('value').then(function(snapshotinner) {
-            setDescripiton((snapshotinner.val() && snapshotinner.val().Description))
-            setphoneNum((snapshotinner.val() && snapshotinner.val().phone))
-            setCategory((snapshotinner.val() && snapshotinner.val().category))
+    });
+    
+    const readData =  (username,email,password,phone,brand,category,description,website,twitter,instagram) => {
+    this.setState({
+      userName: username,
+      email: email,
+      password: password,
+      phoneNum:phone, 
+      nameBrand: brand,
+      category:category,
+      Description:description,
+      website: website,
+      twitter: twitter,
+      instagram:instagram
+    });
+  };
+}
 
-//     const readData =  (username,email,password,phone,brand,category,description,website,twitter,instagram) => {
-//     this.setState({
-//       userName: username,
-//       email: email,
-//       password: password,
-//       phoneNum:phone, 
-//       nameBrand: brand,
-//       category:category,
-//       Description:description,
-//       website: website,
-//       twitter: twitter,
-//       instagram:instagram
-//     });
-//   };
-// }
 
- } )})
-
-const handleUpdate  = ()=>{
-
-userRef.update(
+  handleUpdate= ()=>{
+    
+    database.ref('users/'+ auth.currentUser.uid).update(
     {
     'name': userName,
     'email': email, 
 }
 ).catch(error => alert(error));
 
-database.ref('serviceProvider/'+nameBrand).update({
-    'Description': Descripiton,
-    'category': category,
-    'phone': phoneNum,
-    'webiste': website,
-    'twitter': twitter,
-    'instagram': instagram
+database.ref('serviceProvider/'+this.state.nameBrand).update({
+    'Description': this.state.Description,
+    'category': this.state.category,
+    'phone': this.state.phoneNum,
+    'website': this.state.website,
+    'twitter': this.state.twitter,
+    'instagram': this.state.instagram
 
-}).catch(error => console.log(error)).then(console.log('successful update')).then(alert('successful update'))
+}).catch(error => console.log(error)).then(console.log('successful update'))
 
 }
 
 
-const validateForm = () =>{
+validateForm = () =>{
 
 
 
@@ -105,7 +168,8 @@ const validateForm = () =>{
 
 
     //Trademark 
-    const FirstRoute = () => (
+       FirstRoute = () => (
+       
         <View style={[styles.scene, { backgroundColor: 'white' }]} >
 
             <View style={{alignSelf:'flex-end',flexDirection:'row-reverse',marginTop:10,marginLeft:10}}>
@@ -117,8 +181,8 @@ const validateForm = () =>{
                   <TextInput
                     style={[styless.TextInput],[styles.textArea]}
                     placeholder=" وصف العلامة التجارية"
-                    onChangeText={(Descripiton) => setDescripiton( Descripiton ) }
-                    value={Descripiton}
+                    onChangeText={Description => this.handleDescriptionChange({Description})}
+                   value={Description} 
                     multiline={true}
                     numberOfLines={4}
                     textAlignVertical
@@ -133,8 +197,8 @@ const validateForm = () =>{
                    <Dropdown
                     label="الفئة"
                     data={categories}
-                   onChangeText={(category) => setCategory(category )}
-                    containerStyle={{ width: 100, marginLeft: 155}}
+                  onChangeText={(category) => this.handleCategoryChange(category)}
+                  containerStyle={{ width: 100, marginLeft: 155}}
                    value={category}
                   /> 
                    </View>
@@ -142,9 +206,9 @@ const validateForm = () =>{
                 <MaterialCommunityIcons name="web" color={colors.primaryBlue} size={30} style={styless.fieldLabels} />
                   <TextInput
                     style={styless.TextInput}
-                    
+                    name="websites"
                     placeholder=" الموقع الإلكتروني"
-                    onChangeText={(website) => setWebsite(website )}
+                    onChangeText= {(websites) => this.handlewebsiteChange(websites)}
                     value={website}
                     autoCapitalize="none"
                   />
@@ -155,8 +219,8 @@ const validateForm = () =>{
                   <TextInput
                     style={styless.TextInput}
                     placeholder=" تويتر"
-                    onChangeText={twitter => setTwitter(twitter )}
-                    value={twitter}
+                    onChangeText={(twitter) => this.handleTwitterChange(twitter)}
+                    value={ twitter}
                     autoCapitalize="none"
                   />
                 </View>
@@ -166,7 +230,7 @@ const validateForm = () =>{
                   <TextInput
                     style={styless.TextInput}
                     placeholder=" انستغرام"
-                    onChangeText={(instagram) => setInstagram( instagram )}
+                    onChangeText={(instagram) => this.handleInstagramChange(instagram)}
                     value={instagram}
                     autoCapitalize="none"
                   />
@@ -176,7 +240,7 @@ const validateForm = () =>{
             </View>
       );
       
-      const SecondRoute = () => (
+       SecondRoute = () => (
         <View style={[styles.scene, { backgroundColor: 'white' }]} >
              
                 <View style={styless.fields}>
@@ -185,8 +249,8 @@ const validateForm = () =>{
                   <TextInput
                     style={styless.TextInput}
                     placeholder="*الاسم"
-                    onChangeText={userName => setName(userName )}
-                    value={userName}
+                    onChangeText={ username => this.handleNameChange(username)}
+                    defaultValue={userName}
                     autoCapitalize="none"
                   />
                 </View>
@@ -197,8 +261,8 @@ const validateForm = () =>{
                   <TextInput
                     style={styless.TextInput}
                     placeholder="*البريد الإلكتروني"
-                   onChangeText={email => setEmail(email )}
-                   value={email}
+                     onChangeText = {email => this.handleEmailChange(email)}
+                    value={email}
                     
                   />
                 </View>
@@ -208,7 +272,7 @@ const validateForm = () =>{
                   <TextInput
                     style={styless.TextInput}
                     placeholder="  (*** **** *05) رقم الجوال"
-                    onChangeText={(phoneNum) => setphoneNum( phoneNum )}
+                    onChangeText= {phoneNums => this.handlePhoneChange(phoneNums)}
                     value={phoneNum}
                     autoCapitalize="none"
                   />
@@ -237,7 +301,7 @@ const validateForm = () =>{
             </View>
       );
       
-      const ThirdRoute = () =>{
+       ThirdRoute = () =>{
         return (
         <View style={[styles.scene, { backgroundColor: 'white' }]} >
             <Text>Locations</Text>
@@ -245,7 +309,7 @@ const validateForm = () =>{
         );
 
       }
-      //render() {
+      render() {
       const initialLayout = { width: Dimensions.get('window').width };
       
         const [index, setIndex] = React.useState(2);
@@ -319,7 +383,7 @@ const validateForm = () =>{
     );
     }
     
-
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -382,7 +446,6 @@ const styles = StyleSheet.create({
   
 
 
-export default serviceProvider;
 
 
 

@@ -45,9 +45,11 @@ class InputField extends Component {
       labelTextSize,
       labelColor,
       textColor,
+      value,
       borderBottomColor,
       inputType,
       customStyle,
+      editable,
       onChangeText,
       showCheckmark
     } = this.props;
@@ -92,6 +94,8 @@ class InputField extends Component {
           onChangeText={onChangeText}
           autoCapitalize="none"
           keyboardType={keyboardType}
+          value={value}
+          editable={editable}
         />
       </View>
     );

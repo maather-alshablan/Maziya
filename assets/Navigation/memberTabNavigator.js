@@ -12,10 +12,24 @@ import Profile from '../screens/Memberprofile'
 
 
 
+function ProfileStack(){
+  const ProfileStack = createStackNavigator()
+  return (
+<ProfileStack.Navigator
+initialRouteName="Home"
+screenOptions={{ headerShown: false }}
+>
+
+<ProfileStack.Screen name = 'Home' component= {HomescreenServiceProvider}
+option={{
+headerTransparent: true}} unmountOnBlur={true}/>
+<ProfileStack.Screen name= 'addOffer' component={addOffer}/>
+<ProfileStack.Screen name='logout' component={login} unmountOnBlur={true}/>
+  </ProfileStack.Navigator>
+  )
+}
+
 function memberTabNavigator(){
-  
-
-
 
 const Tab = createBottomTabNavigator()
 
@@ -67,8 +81,6 @@ const Tab = createBottomTabNavigator()
         }} />
 
       </Tab.Navigator>
-    )
+    )}
 
-   
-      }
     export default memberTabNavigator;

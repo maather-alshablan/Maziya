@@ -23,9 +23,9 @@ const Homescreen =({ navigation}) => {
                     navigation.toggleDrawer();
                 }}
                 >
-                <Entypo name="menu" size={30} />
+                <Entypo name="menu" size={30} style={{marginTop:15}} />
             </TouchableOpacity>
-            <Text style={{ fontSize: 22, color: "blue", alignSelf: "flex-end" }}>
+            <Text style={{ fontSize: 22, color: colors.primaryBlue, alignSelf: "flex-end" }}>
           اكتشف مميزاتك..
             </Text>
         <View
@@ -33,6 +33,7 @@ const Homescreen =({ navigation}) => {
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "space-around",
+            marginTop:8
           }}
         >
           <TouchableOpacity>
@@ -83,7 +84,7 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       paddingHorizontal: 20,
-      backgroundColor:'white'
+      backgroundColor:'white',
     },
     viewBox: {
       width: "80%",
@@ -111,6 +112,7 @@ const styles = StyleSheet.create({
       alignItems: "center",
       flexDirection: "row",
       paddingHorizontal: 15,
+      textAlign:"right"
     },
   });
 

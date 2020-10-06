@@ -10,7 +10,7 @@ import Notification from '../components/Notification';
 
 
 
-export default class ForgotPasswordScreen extends Component  {
+export default class resetPassword extends Component  {
   state = { email: '', errorMessage: null, textInput:'' ,formValid: true,}
    
 
@@ -30,7 +30,6 @@ export default class ForgotPasswordScreen extends Component  {
   forgotPassword = () => {
 
     const currentUser = auth.currentUser
-
 
        auth.sendPasswordResetEmail(this.state.email)
       .then(function () {
@@ -69,10 +68,10 @@ render() {
 
         <View style={pg.form}>
           <Text style={pg.ForgotPasswordHeading}>
-                نسيت كلمة المرور؟
+                تغيير كلمة المرور
           </Text>
           <Text style={pg.ForgotPasswordSubHeading}>
-              ادخل بريدك الإلكتروني لأستعادة كلمة المرور
+              
           </Text>
           <InputField
             customStyle={{ marginTop: 50 }}
@@ -83,7 +82,7 @@ render() {
             borderBottomColor='white'
             inputType="email"
             textAlign='right'
-            onChangeText={email => this.handleEmailChange(email)}
+            value={auth.currentUser.email}
           />
       </View> 
       

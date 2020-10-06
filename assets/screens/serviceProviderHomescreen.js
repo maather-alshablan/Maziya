@@ -10,15 +10,27 @@ import { Card } from "@paraboly/react-native-card";
 
 export default class serviceProviderHomescreen extends Component{
     
+state = {
+  name:'',
+  //userId:auth.currentUser.uid,
+  //trademark:''
 
+}
 
-       userName = () => {
-        const userId = firebase.auth().currentUser.uid;
-        const name =  firebase.database().ref('/users/' + userId).once('value').then(function(snapshot) {
-            (snapshot.val() && snapshot.val().trademark)}
-        )
-       return name;
-    }
+    //    userName = () => {
+
+      
+    //      database.ref('/users/' + this.state.userId).once('value').then(function(snapshot) {
+    //       var name = (snapshot.val() && snapshot.val().trademark)
+    //     }
+
+    //     )
+    //     this.state.trademark = name;
+    //    return (
+    //      <Text>{bra}</Text>
+
+    //    )
+    // }
         
       listOffer = () => {
         return (
@@ -34,22 +46,27 @@ export default class serviceProviderHomescreen extends Component{
       }
 
     render(){
+
+      const userId = auth.currentUser.uid;
+      
+     //this.state.name = this.userName()
+
+
     return(
         <View style={ { flex:1, alignItems: 'center', justifyContent:"flex-start" , backgroundColor:'white'}}>
-          <Text style={styles.header}>Service Provider
-          </Text>
+       <Text style={styles.header}> </Text>
 
-          <View style={{flexDirection: "row", justifyContent:'space-between'}}>
+          <View style={{flexDirection: "row", justifyContent:'space-between', marginTop:15}}>
           <TouchableOpacity style ={styles.appButtonContainer} 
           onPress= {() => this.props.navigation.navigate('addOffer')} >
           <Entypo name ="plus" size={40} color='white'/>
 
             <Text style= {styles.appButtonText} > إضافة عرض </Text>
             </TouchableOpacity>
-            <TouchableOpacity style ={styles.appButtonContainer} >
-          <Entypo name ="plus" size={40} color='white'/>
+            <TouchableOpacity style ={[styles.appButtonContainer]} >
+          <Entypo name ="chat" size={40} color='white'/>
 
-            <Text style= {styles.appButtonText} > إضافة عرض </Text>
+            <Text style= {styles.appButtonText} >       الرسائل    </Text>
             </TouchableOpacity>
             </View>
             
@@ -79,7 +96,8 @@ const styles = StyleSheet.create({
         color: colors.primaryBlue,
         fontSize:25,
         alignItems:'flex-start',
-       marginTop:20
+        textAlign:'right',
+       margin:20
     }, 
     appButtonContainer: {
         elevation: 8,

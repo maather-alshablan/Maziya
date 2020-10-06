@@ -9,6 +9,28 @@ import ServiceProviderPage from '../screens/serviceProvider'
 import ProfileServiceProvider from '../screens/SPprofile'
 import addOffer from '../screens/NewOffer'
 import HomeStack from '../Navigation/SPHomeStack'
+import resetPassword from '../screens/resetPasswordLoggedIn'
+import login from '../screens/LoginScreen'
+
+
+
+function EditProfileStack(){
+  const SPProfileStack = createStackNavigator()
+  return (
+<SPProfileStack.Navigator
+initialRouteName="Home"
+screenOptions={{ headerShown: false }}
+>
+
+<SPProfileStack.Screen name = 'Home' component= {ProfileServiceProvider}
+option={{
+headerTransparent: true}}/>
+<SPProfileStack.Screen name='resetPassword' component={resetPassword} />
+<SPProfileStack.Screen name='Login' component={login} unmountOnBlur={true}/>
+  </SPProfileStack.Navigator>
+  )
+}
+
 
 function spTabNavigator(){
 
@@ -44,7 +66,7 @@ const Tab = createBottomTabNavigator()
           )
 
         }} />
-        <Tab.Screen name='Profile' component={ProfileServiceProvider}
+        <Tab.Screen name='Profile' component={EditProfileStack}
          options={{
           
           tabBarIcon: ({ tintColor, focused }) => (

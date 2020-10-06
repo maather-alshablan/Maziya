@@ -37,6 +37,9 @@ export default class RegistrationServiceProvider extends Component {
     nameBrand: "",
     Descripiton: "",
     category:"",
+    website:"",
+    twitter:"",
+    instagram:"",
     errorMessage: null,
     errors: false,
   };
@@ -177,6 +180,9 @@ export default class RegistrationServiceProvider extends Component {
         phone: this.state.phoneNum,
         email: this.state.email,
         imageref: "",
+        website:"",
+        twitter:"",
+        instagram:"",
       })
       .then(this.props.navigation.navigate("SPhomescreen"))
       .catch((error) => console.log(error));
@@ -376,6 +382,39 @@ export default class RegistrationServiceProvider extends Component {
                   /> 
                    </View>
                 <View style={styles.fields}>{/*<Upload/> */}</View>
+                <View style={styless.fields}>
+                <MaterialCommunityIcons name="web" color={colors.primaryBlue} size={30} style={styless.fieldLabels} />
+                  <TextInput
+                    style={styless.TextInput}
+                    name="websites"
+                    placeholder=" الموقع الإلكتروني"
+                    onChangeText= {(websites) => this.setState({websites})}
+                    value={website}
+                    autoCapitalize="none"
+                  />
+                </View>
+
+                <View style={styless.fields}>
+                <MaterialCommunityIcons name="twitter" color={colors.primaryBlue} size={30} style={styless.fieldLabels} />
+                  <TextInput
+                    style={styless.TextInput}
+                    placeholder=" تويتر"
+                    onChangeText={(twitter) => this.setState({ twitter })}
+                    value={ twitter}
+                    autoCapitalize="none"
+                  />
+                </View>
+                
+                <View style={styless.fields}>
+                <MaterialCommunityIcons name="instagram" color={colors.primaryBlue} size={30} style={styless.fieldLabels} />
+                  <TextInput
+                    style={styless.TextInput}
+                    placeholder=" انستغرام"
+                    onChangeText={(instagram) => this.setState( {instagram} )}
+                    value={(instagram)}
+                    autoCapitalize="none"
+                  />
+                </View>
               </View>
             </ProgressStep>
 
