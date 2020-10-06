@@ -7,15 +7,58 @@ import InputField from '../components/InputField'
 import { TouchableHighlight } from 'react-native-gesture-handler'
 
 export default class Profile extends Component{
+ state = { 
+  username:'',
+  email:'',
+  password:''
+}
+
+componentDidMount(){
+   
+   const readData =  (username,email,password) => {
+    this.setState({
+      username: username,
+      email: email,
+      password: password
+    });
+  };
+    database.ref('users/'+ auth.currentUser.uid).once('value').
+   then(function(snapshot){
+     
+     var username=  (snapshot.val() && snapshot.val().name)
+     var email =  (snapshot.val() && snapshot.val().email)
+    var password= (snapshot.val() && snapshot.val().password)
+    readData(username,email, password);
+     });
+     
+
+}
+  
+   
+    
+
+  handleUpdate = () => { 
+    var userId = auth.currentUser.uid;
+
+    database.ref('users/'+userId).update(
+      {
+      'name': this.state.username,
+      
+  }
+  ).catch(error => alert(error)).then(Alert.alert('successful update'))
+  }
+
 
 render(){
+  
+  
     return(
       <KeyboardAvoidingView
       style={[ pg.wrapper]}
       behavior="padding"
        >
            
-          <Entypo name='chevron-left' size={30} color='white'  style={{marginTop:40}} onPress={()=> this.props.navigation.navigate('Tab')} />
+          <Entypo name='chevron-left' size={30} color='white'  style={{marginTop:40}} onPress={()=> this.props.navigation.goBack()} />
            
            <View style={pg.form}>
           <Text style={pg.ForgotPasswordHeading }>
@@ -27,10 +70,12 @@ render(){
             textColor='white'
             labelText="الإسم"
             labelTextSize={14}
+            onChangeText={name =>this.setState( { username: name} ) }
             labelColor='white'
             borderBottomColor='white'
             inputType="email"
             textAlign='right'
+            value={this.state.username}
             
           />
           <InputField
@@ -42,7 +87,8 @@ render(){
             borderBottomColor='white'
             inputType="email"
             textAlign='right'
-            
+            value={this.state.email}
+            editable={false}
           />
           <InputField
           customStyle={{ marginTop: 40 }}
@@ -54,8 +100,12 @@ render(){
           secureTextEntry
           inputType="password"
           textAlign='right'
+          value={this.state.password}
+          editable={false}
         
         />
+
+        <Button title='update' onPress={this.handleUpdate} color='white'/>
         </View>
 
       </KeyboardAvoidingView> 

@@ -1,6 +1,5 @@
 import React, { Component, useState } from "react";
 import {
-  ImageEditor,
   Image,
   Text,
   TextInput,
@@ -13,8 +12,6 @@ import {
   ColorPropType,
   Alert,
   LogBox,
-  KeyboardAvoidingView ,
-
 } from "react-native";
 import colors from "../constants/colors";
 import styles from "../constants/styles";
@@ -33,10 +30,7 @@ import { database, auth, storage } from "../config/firebase";
 import Notification from "../components/Notification";
 import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
-// import ModalDropdown from 'react-native-modal-dropdown';
-
-// import DropDownPicker from 'react-native-dropdown-picker';
-
+//import {Dropdown }from 'react-native-material-dropdown';
 
 export default class RegistrationServiceProvider extends Component {
   constructor(props) {
@@ -48,18 +42,17 @@ export default class RegistrationServiceProvider extends Component {
 
   state = {
     image: "https://imgplaceholder.com/72x80",
-    userName: "reem",
-    phoneNum: "0553524206",
-    email: "reo@gmail.com",
-    password: "rEEm1997",
-    confirmPassword: "rEEm1997",
+    userName: "",
+    phoneNum: "",
+    email: "na@ma.com",
+    password: "123456789",
+    confirmPassword: "",
     nameBrand: "",
     Descripiton: "",
     category: "",
     errorMessage: null,
     isValid: false,
     errors: false,
-    category: "المطاعم"
   };
   validateEmail = (email) => {
     const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -84,22 +77,13 @@ export default class RegistrationServiceProvider extends Component {
     }
 
     if (this.state.email === "" && !this.validateEmail(this.state.email)) {
-      valid = false; // reem
       this.setState({
         errors: true,
         errorMessage: "يرجى كتابة بريد الكتروني صحيح",
       });
     }
 
-    if (this.state.userName === ""){ 
-      valid = false;
-      this.setState({
-        errors: true,
-        errorMessage: "يرجى ادخال جميع البيانات",
-      });
-    }
-    if (this.state.password === "" ) {
-      valid = false;
+    if (this.state.userName === "" && this.state.password === "") {
       this.setState({
         errors: true,
         errorMessage: "يرجى ادخال جميع البيانات",
@@ -119,37 +103,13 @@ export default class RegistrationServiceProvider extends Component {
     }
   };
 
-  onNextsecondtStep = () => {
-    let valid = true; 
-    if (this.state.nameBrand === "" ) {
-      valid = false;
-      this.setState({
-        errors: true,
-        errorMessage: "يرجى ادخال جميع البيانات",
-      });
+  /*onNextStep = () => {
+    console.log("onNextStep");
+    //step two
+    if (this.state.email === "" && this.state.password === "") {
+      this.setState({ errors: true });
     }
-    if (this.state.Descripiton === "" ) {
-      valid = false;
-      this.setState({
-        errors: true,
-        errorMessage: "يرجى ادخال جميع البيانات",
-      });
-    }
-    if (this.state.uri === "" && this.state.uri === "https://imgplaceholder.com/72x80" ) {
-      valid = false;
-      this.setState({
-        errors: true,
-        errorMessage: "يرجى إختيار صورة"
-      });
-    }
-    if (valid) {
-      this.setState({
-        errors: false,
-      });
-    }
-  
-  }
-
+  };*/
 
   async componentDidMount() {
     const permission = await Permissions.getAsync(Permissions.CAMERA_ROLL);
@@ -254,7 +214,7 @@ export default class RegistrationServiceProvider extends Component {
   };
 
   render() {
-    const showNotification = this.state.Valid ? false : true;
+    const showNotification = this.state.formValid ? false : true;
     console.disableYellowBox = true;
 
     let categories = [
@@ -308,9 +268,9 @@ export default class RegistrationServiceProvider extends Component {
             <ProgressStep
               label="الحساب"
               nextBtnText="التالي"
-              nextBtnTextStyle={{ color: "white", fontSize: 20 }}
-              nextBtnStyle={styles.nextButton}
-              onNext={this.onNextFirstStep}
+              nextBtnTextStyle={{ color: "#000000", fontSize: 20 }}
+              nextBtnStyle={{ color: "#ddd" }}
+              //onNext={this.onNextFirstStep}
               errors={this.state.errors}
             >
               <View>
@@ -403,52 +363,40 @@ export default class RegistrationServiceProvider extends Component {
               label="الوصف"
               previousBtnText="السابق"
               nextBtnText="التالي"
-              onNext={this.onNextsecondtStep} 
-              errors={this.state.errors} 
-              nextBtnTextStyle={{ color: "white", fontSize: 20 }}
+              nextBtnTextStyle={{ color: "#000000", fontSize: 20 }}
               nextBtnStyle={styles.nextButton}
             >
               <View style={{ alignItems: "center" }}>
-                <View style={style.container}
-                 >
+                <View style={styles.container}>
                   <Image
                     style={styles.image}
                     source={{ uri: this.state.image }}
                   />
                   <TouchableOpacity onPress={this.openImagePickerAsync}>
-                    <RegButton text={"choose photo"} ></RegButton>
+                    <RegButton text={"choose photo"}></RegButton>
                   </TouchableOpacity>
                 </View>
-                
-                  
-    
+
                 <View style={styles.fields}>
-                <FontAwesome name="tags" color={colors.primaryBlue} size={30} />
+                  <Text style={styles.fieldLabels}>⚫</Text>
                   <TextInput
                     style={styles.TextInput}
-                    placeholder=" اسم العلامة التجارية"
-                    onChangeText={(nameBrand) =>
-                      this.setState({ nameBrand })
+                    placeholder=" وصف العلامة التجارية"
+                    onChangeText={(Descripiton) =>
+                      this.setState({ Descripiton })
                     }
-                    value={this.state.nameBrand}
+                    value={this.state.Descripiton}
                     autoCapitalize="none"
                   />
                 </View>
-                
-
-                <View style={styles.action}>
-                    <TextInput style={{ height: 100 ,width : 200, borderColor: 'gray', borderWidth: 1 }} 
-                    autoCapitalize="none" 
-                    textAlign='right'
-                    placeholder=" وصف العلامة التجارية"
-                    value={this.state.Descripiton}
-                    onChangeText={(Descripiton) =>
-                      this.setState({ Descripiton })}/>
-                </View>
-                
-                
                 <View style={styles.fields}>
-                  
+                  {/* <Dropdown
+                    label="الفئة"
+                    data={categories}
+                    onChangeText={(category) => this.setState({ category })}
+                    value={this.state.category}
+                    containerStyle={{ width: 100, marginLeft: 150 }}
+                  />  */}
                 </View>
                 <View style={styles.fields}>{/*<Upload/> */}</View>
               </View>
@@ -460,19 +408,21 @@ export default class RegistrationServiceProvider extends Component {
               finishBtnText="إنشاء حساب"
               isComplete={true}
               onSubmit={this.handleSignUp}
-              nextBtnTextStyle={{ color: "white", fontSize: 20 }}
+              nextBtnTextStyle={{ color: "#000000", fontSize: 20 }}
               nextBtnStyle={styles.nextButton}
             >
+              <View style={styles.fields}>
+                <FontAwesome name="tags" color={colors.primaryBlue} size={30} />
+                <Text style={styles.fieldLabels}> الفئة</Text>
+              </View>
 
               <View>
                 <Image
                   source={require("../images/mapsmockup.png")}
-    
-                    style={{
-                      height: 400,
-                      width: 300
-
-                    }}
+                  style={{
+                    width: Dimensions.get("window").height * 0.35,
+                  }}
+                  resizeMode="contain"
                 />
                 {/* <TouchableOpacity onPress={this.handleSignUp}>
                   <SignUpButton
@@ -488,11 +438,3 @@ export default class RegistrationServiceProvider extends Component {
     );
   }
 }
-
-const style = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.primaryBlue,
-    padding: 20,
-    margin: 10,}
-  }) 

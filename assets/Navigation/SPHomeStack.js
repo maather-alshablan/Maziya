@@ -2,6 +2,7 @@ import * as React from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import addOffer from '../screens/NewOffer'
 import HomescreenServiceProvider from '../screens/serviceProviderHomescreen'
+import ProfileServiceProvider from '../screens/SPprofile'
 import login from '../screens/LoginScreen'
 
 function HomeStack(){
@@ -16,7 +17,7 @@ screenOptions={{ headerShown: false }}
 option={{
 headerTransparent: true}} unmountOnBlur={true}/>
 <HomeStack.Screen name= 'addOffer' component={addOffer}/>
-<HomeStack.Screen name='logout' component={login} />
+<HomeStack.Screen name='logout' component={login} unmountOnBlur={true}/>
     </HomeStack.Navigator>
     )
 }

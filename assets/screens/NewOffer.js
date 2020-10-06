@@ -114,7 +114,7 @@ render(){
             <ScrollView style={styles.scrollView}>
           <StatusBar backgroundColor='#0278ae' barStyle='light-content' />
           <TouchableOpacity>
-         <Entypo name='chevron-left' size={30} color= {colors.primaryBlue }  onPress={()=> navigation.navigate('HomescreenServiceProvider')} />
+         <Entypo name='chevron-left' size={30} color= {colors.primaryBlue }  onPress={()=> this.props.navigation.pop()} />
          </TouchableOpacity>
             <View style={styless.header}>
                 <Text style={styless.text_header}>اضافة عرض جديد</Text>

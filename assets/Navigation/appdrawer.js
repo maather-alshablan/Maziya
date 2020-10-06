@@ -80,8 +80,6 @@ function CustomDrawerContent(props) { // fix navigation issue: error > navigatio
                 unmountOnBlur: true,
               }}/>
               
-            
-    
             </Drawer.Navigator>
         )
     
