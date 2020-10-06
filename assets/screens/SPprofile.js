@@ -2,9 +2,7 @@ import React , {Component , useEffect , useState   } from 'react'
 import { Text, View,  TextInput, Dimensions , StyleSheet,ScrollView, TouchableOpacity} from 'react-native'
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import {Entypo, MaterialCommunityIcons,MaterialIcons, FontAwesome, Ionicons} from '../constants/icons'
-import {Dropdown }from 'react-native-material-dropdown';
-
-
+// import {Dropdown }from 'react-native-material-dropdown';
 import {auth, database } from '../config/firebase'
 import colors from '../constants/colors';
 import styless from "../constants/styles";
@@ -130,13 +128,13 @@ const validateForm = () =>{
           
                 <FontAwesome name="tags" color={colors.primaryBlue} size={25}/>
                     <Text style={[styless.fieldLabels],[{fontSize:17,marginRight:10}]}> الفئة</Text>
-                   <Dropdown
+                   {/* <Dropdown
                     label="الفئة"
                     data={categories}
                    onChangeText={(category) => setCategory(category )}
                     containerStyle={{ width: 100, marginLeft: 155}}
                    value={category}
-                  /> 
+                  />  */}
                    </View>
                    <View style={styless.fields}>
                 <MaterialCommunityIcons name="web" color={colors.primaryBlue} size={30} style={styless.fieldLabels} />
