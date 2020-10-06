@@ -1,36 +1,74 @@
 import React, { Component , useState } from "react";
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Dimensions, Platform, StatusBar ,Image,ImageBackground } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Dimensions, Platform, StatusBar ,Image,ImageBackground , ScrollView} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { database, auth,storage } from "../config/firebase";
-import {Entypo} from '../constants/icons'
+import {Entypo, MaterialCommunityIcons,MaterialIcons, FontAwesome, Ionicons} from '../constants/icons'
 import colors from '../constants/colors'
+import styles from "../constants/styles";
+// import { QRCode } from 'react-native-custom-qr-codes';
+
+
  
- 
+
+    
+  
+
  
 export default class NewOffer extends Component  {
- 
+
     state = {
-        userName: "",
+        title: "",
         Descripiton: "",
-        cpo:"",
+        OfferId:"",
+        date:"",
+        // splId:"",
         errorMessage: null,
         errors: false,
       };
- 
-      handleNameChange = (userName) => {
-        // parent class change handler is always called with field name and value
-        this.setState({ userName: userName });
-      };
-      handleDescripitonChange = (Descripiton) => {
-        // parent class change handler is always called with field name and value
-        this.setState({ Descripiton: Descripiton });
-      };
-    
-      handlecpoChange = (cpo) => {
-        // parent class change handler is always called with field name and value
-        this.setState({ cpo: cpo });
-      };
+      
 
+      
+
+      checkvalid = () => {
+        let valid = true;
+        if (this.state.title === "" ) {
+            valid = false;
+            this.setState({
+              errors: true,
+              errorMessage: "يرجى ادخال جميع البيانات",
+            });
+          }
+    
+          if (this.state.Descripiton === "" ) {
+            valid = false;
+            this.setState({
+              errors: true,
+              errorMessage: "يرجى ادخال جميع البيانات",
+            });
+          }
+
+          if (this.state.OfferId === "" ) {
+            valid = false;
+            this.setState({
+              errors: true,
+              errorMessage: "يرجى ادخال جميع البيانات",
+            });
+          }
+          if (this.state.date === "" ) {
+            valid = false;
+            this.setState({
+              errors: true,
+              errorMessage: "يرجى ادخال جميع البيانات",
+            });
+          }
+
+        if (valid) {
+          this.setState({
+            errors: false,
+          });
+        }
+      
+      }
       //  checkTextInput = () => {
       // //   //Check  TextInput
       //   if (!handleNameChange.trim()) {
@@ -42,7 +80,7 @@ export default class NewOffer extends Component  {
       //      alert('Please Enter Email');
       //      return;
       //    }
-      //    if (!handlecpoChange.trim()) {
+      //    if (!handleOfferIdChange.trim()) {
       //      alert('Please Enter Email');
       //   return;
       //   }
@@ -71,39 +109,62 @@ export default class NewOffer extends Component  {
  
 render(){
     return (
-        <View style={styles.container}>
+        
+        <View style={styless.container}>
+            <ScrollView style={styles.scrollView}>
           <StatusBar backgroundColor='#0278ae' barStyle='light-content' />
           <TouchableOpacity>
          <Entypo name='chevron-left' size={30} color= {colors.primaryBlue }  onPress={()=> navigation.navigate('HomescreenServiceProvider')} />
          </TouchableOpacity>
-            <View style={styles.header}>
-                <Text style={styles.text_header}>اضافة عرض جديد</Text>
+            <View style={styless.header}>
+                <Text style={styless.text_header}>اضافة عرض جديد</Text>
+                   {/* error message appear here */}
+                {this.state.errors && (
+          <View style={styles.header}>
+            <Text style={styles.errors}>{this.state.errorMessage}</Text>
+          </View>
+        )}
+                <View >
                 <Image source={require('../images/logoDis.jpg')} style={{width:100,height:100,marginLeft:120}}/>
+                </View> 
             </View>
  
-         
-                <View style={styles.footer}>
-                <Text style={styles.text_footer}>العنوان</Text>
-                <View style={styles.action}>
-                    <TextInput style={styles.textInput} 
+            
+                <View style={styless.footer}>
+                <Text style={styless.text_footer}>العنوان</Text>
+                <View style={styless.action}>
+                    <TextInput style={styless.textInput} 
                     autoCapitalize="none" 
                     textAlign='right'
-                    onChangeText={(userName)=> this.handleNameChange(userName)}/>
+                    onChangeText={(title) => this.setState({ title })}/>
                 </View>
                 
-               <Text style={styles.text_footer}>الوصف</Text>
-                <View style={styles.action}>
-                  <TextInput style={styles.textInput} 
+             
+
+                <Text style={styless.text_footer}>الوصف</Text>
+                <View style={styless.action}>
+                  <TextInput style={styless.textInput} 
                   autoCapitalize="none" 
-                  onChangeText={(Descripiton) => this.handleDescripitonChange(Descripiton)}
+                  onChangeText={(Descripiton) => this.setState({ Descripiton })}
+                  textAlign='right'/>
+                </View>
+
+                
+
+                <Text style={styless.text_footer}>التاريخ</Text>
+                <View style={styless.action}>
+                  <TextInput style={styless.textInput} 
+                  autoCapitalize="none" 
+                  onChangeText={(date) => this.setState({ date })}
                   textAlign='right'/>
                 </View>
                 
  
                 <View>
                 <ImageBackground source={require('../images/image.png')} style={{width:200,height:200,marginLeft:50}}>
-                  <View style={styles.action}>
-                    <TextInput placeholder='ادخل الرمز' style={styles.textInput,{paddingTop:100,marginLeft:100}} autoCapitalize="none" onChangeText={(cpo)=>this.handlecpoChange(cpo)}/>
+                  <View style={styless.action}>
+                    <TextInput placeholder='ادخل الرمز' style={styles.textInput,{paddingTop:100,marginLeft:100}} autoCapitalize="none" onChangeText={(OfferId) => this.setState({ OfferId })}/>
+                    {/* <QRCode content='https://reactnative.com'/> */}
                    </View>
  
                 </ImageBackground>
@@ -111,13 +172,13 @@ render(){
  
  
                 
-                <View style={styles.buttom}>
-                    <TouchableOpacity style={styles.signIn} >
+                <View style={styless.buttom}>
+                    <TouchableOpacity style={styless.signIn} onPress={this.checkvalid} >
                     <LinearGradient
                         colors={['#0278ae', '#0278ae']}
-                        style={styles.signIn}
+                        style={styless.signIn}
                     > 
-                        <Text style={[styles.textSign, { color: '#fff' }]}> إضافة عرض </Text>
+                        <Text style={[styless.textSign, { color: '#fff' }]}> إضافة عرض </Text>
 
                     </LinearGradient>
                     </TouchableOpacity>
@@ -129,8 +190,9 @@ render(){
                 }
             </View>
                 
-        </View>
- 
+        
+        </ScrollView>
+    </View>
     )
 }
  
@@ -140,7 +202,7 @@ render(){
 const { height } = Dimensions.get('screen');
 const height_logo = height * 0.28;
  
-const styles = StyleSheet.create({
+const styless = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor : 'white'
