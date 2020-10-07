@@ -2,7 +2,8 @@ import React , {Component , useEffect , useState   } from 'react'
 import { Text, View,  TextInput, Dimensions , StyleSheet,ScrollView, TouchableOpacity} from 'react-native'
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import {Entypo, MaterialCommunityIcons,MaterialIcons, FontAwesome, Ionicons} from '../constants/icons'
-import {Dropdown }from 'react-native-material-dropdown';
+//import {Dropdown }from 'react-native-material-dropdown';
+//import DropDownPicker from 'react-native-dropdown-picker';
 
 
 import {auth, database } from '../config/firebase'
@@ -19,6 +20,12 @@ export default class serviceProviderProfile extends Component {
    // console.disableYellowBox = true;
     
 state = {
+  index:2,
+  routes:[
+  { key: 'third', title: 'المواقع' },
+  { key: 'first', title: 'التفاصيل' },
+  { key: 'second', title: 'حسابي' },
+],
   userName: '',
   email: '',
   phoneNum:'',
@@ -30,6 +37,7 @@ state = {
   twitter:'',
   instagram:''
 }
+
 
 
 handleNameChange = name => {
@@ -46,7 +54,7 @@ handlePhoneChange = phone => {
 
 handleBrandChange = brand => {
     this.setState({ nameBrand: brand  });
-  };
+};
 handleCategoryChange = category => {
     this.setState({ category: category  });
   };
@@ -65,38 +73,8 @@ handlewebsiteChange = website => {
   
 
 
-  // const [userName, setName] = useState('')
-  // const [email, setEmail] = useState('')
-  // const [phoneNum, setphoneNum] = useState('')
-  // const [password, setPassword] = useState('')
-  // const [nameBrand, setnameBrand] = useState('')
-  // const [category, setCategory] = useState('')
-  // const [Description, setDescription] = useState('')
-  // const [website, setWebsite] = useState('')
-  // const [twitter, setTwitter] = useState('')
-  // const [instagram, setInstagram] = useState('')
-
  componentDidMount(){ 
  
-
-      //   userRef.once('value').then(function(snapshot) {
-      //   setName((snapshot.val() && snapshot.val().name) )
-      //   setPassword((snapshot.val() && snapshot.val().password))
-      //   setEmail((snapshot.val() && snapshot.val().email))
-      //   setnameBrand((snapshot.val() && snapshot.val().trademark))
-      //   })
-
-      //  database.ref('serviceProvider/'+nameBrand).once('value').then(function(snapshotinner) {
-      //       setDescription((snapshotinner.val() && snapshotinner.val().Description))
-      //       setphoneNum((snapshotinner.val() && snapshotinner.val().phone))
-      //       setCategory((snapshotinner.val() && snapshotinner.val().category))
-      //       setWebsite((snapshotinner.val() && snapshotinner.val().website))
-      //       setTwitter((snapshotinner.val() && snapshotinner.val().twitter))
-      //       setInstagram((snapshotinner.val() && snapshotinner.val().instagram))
-
-      //   })
-      
-
 
     database.ref('users/'+ auth.currentUser.uid).once('value').then(function(snapshot){
 
@@ -137,7 +115,7 @@ handlewebsiteChange = website => {
 }
 
 
-  handleUpdate= ()=>{
+handleUpdate= ()=>{
     
     database.ref('users/'+ auth.currentUser.uid).update(
     {
@@ -165,10 +143,10 @@ validateForm = () =>{
 
     handleUpdate();
   }
-
+  
 
     //Trademark 
-       FirstRoute = () => (
+     FirstRoute = () => (
        
         <View style={[styles.scene, { backgroundColor: 'white' }]} >
 
@@ -194,13 +172,33 @@ validateForm = () =>{
           
                 <FontAwesome name="tags" color={colors.primaryBlue} size={25}/>
                     <Text style={[styless.fieldLabels],[{fontSize:17,marginRight:10}]}> الفئة</Text>
-                   <Dropdown
-                    label="الفئة"
-                    data={categories}
-                  onChangeText={(category) => this.handleCategoryChange(category)}
-                  containerStyle={{ width: 100, marginLeft: 155}}
-                   value={category}
-                  /> 
+                {/*<Dropdown
+                label="الفئة"
+                data={categories}
+              onChangeText={(category) => this.handleCategoryChange(category)}
+              containerStyle={{ width: 100, marginLeft: 155}}
+                value={category}
+                />*/ }
+{/* 
+<DropDownPicker
+          items={[
+        {label: 'المطاعم', value: 'المطاعم'},
+        {label: 'المستلزمات', value: 'المستلزمات'},
+        {label: 'الصحة', value: 'الصحة'},
+        {label: 'الدورات', value: 'الدورات'},
+        {label: 'التسوق', value: 'التسوق'},
+        {label: 'الخدمات', value: 'الخدمات'},
+          ]}
+          multiple={false}
+          defaultValue={''}
+          containerStyle={{height: 40}}
+          style={{backgroundColor: '#fafafa'}}
+          itemStyle={{
+              justifyContent: 'flex-start'
+          }}
+          dropDownStyle={{backgroundColor: '#fafafa'}}
+          onChangeItem={item => setCategory(item)}
+/> */}
                    </View>
                    <View style={styless.fields}>
                 <MaterialCommunityIcons name="web" color={colors.primaryBlue} size={30} style={styless.fieldLabels} />
@@ -240,7 +238,7 @@ validateForm = () =>{
             </View>
       );
       
-       SecondRoute = () => (
+      SecondRoute = () => (
         <View style={[styles.scene, { backgroundColor: 'white' }]} >
              
                 <View style={styless.fields}>
@@ -301,28 +299,36 @@ validateForm = () =>{
             </View>
       );
       
-       ThirdRoute = () =>{
+      ThirdRoute = () =>{
         return (
         <View style={[styles.scene, { backgroundColor: 'white' }]} >
-            <Text>Locations</Text>
+           <Image
+                  source={require("../images/mapsmockup.png")}
+    
+                    style={{
+                      height: 400,
+                      width: 300
+
+                    }}/>
         </View>
         );
 
       }
+   
       render() {
       const initialLayout = { width: Dimensions.get('window').width };
       
-        const [index, setIndex] = React.useState(2);
-        const [routes] = React.useState([
-          { key: 'third', title: 'المواقع' },
-          { key: 'first', title: 'التفاصيل' },
-          { key: 'second', title: 'حسابي' },
-        ])
+        // const [index, setIndex] = React.useState(2);
+        // const [routes] = React.useState([
+        //   { key: 'third', title: 'المواقع' },
+        //   { key: 'first', title: 'التفاصيل' },
+        //   { key: 'second', title: 'حسابي' },
+        // ])
       
         const renderScene = SceneMap({
-            first: FirstRoute,
-            second: SecondRoute,
-            third: ThirdRoute,
+            first: this.FirstRoute,
+            second: this.SecondRoute,
+            third: this.ThirdRoute,
           });
         
           let categories = [{
@@ -358,13 +364,13 @@ validateForm = () =>{
              <TouchableOpacity>
        {/*  <Entypo name='chevron-left' size={30} color= {colors.primaryBlue }  onPress={()=> navigation.pop()} /> */}
          </TouchableOpacity>
-         <Text style={styles.header}>الحساب</Text>
+         <Text style={styles.header}></Text>
          </View>
          <ScrollView showsVerticalScrollIndicator={false}>
         <TabView
-        navigationState={{ index, routes }}
+        navigationState={ this.state.index, this.state.routes }
         renderScene={renderScene}
-        onIndexChange={setIndex}
+        onIndexChange={this.state.index}
         initialLayout={initialLayout}
         style={styles.tab}
         renderTabBar={renderTabBar}
@@ -374,7 +380,7 @@ validateForm = () =>{
           
       </TabView>
       </ScrollView>
-      <TouchableOpacity style={styles.ButtonContainer} onPress={handleUpdate} >
+      <TouchableOpacity style={styles.ButtonContainer} onPress={this.handleUpdate} >
                         <Text style={styles.appButtonText} >حفظ</Text>
                     </TouchableOpacity>
                     

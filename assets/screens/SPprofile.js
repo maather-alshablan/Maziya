@@ -1,12 +1,16 @@
 import React , {Component , useEffect , useState   } from 'react'
-import { Text, View,  TextInput, Dimensions , StyleSheet,ScrollView, TouchableOpacity} from 'react-native'
+import { Text, View,  TextInput, Dimensions , StyleSheet,Image, ScrollView, TouchableOpacity} from 'react-native'
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import {Entypo, MaterialCommunityIcons,MaterialIcons, FontAwesome, Ionicons} from '../constants/icons'
-// import {Dropdown }from 'react-native-material-dropdown';
+//import {Dropdown }from 'react-native-material-dropdown';
 import {auth, database } from '../config/firebase'
+//import DropDownPicker from 'react-native-dropdown-picker';
 import colors from '../constants/colors';
 import styless from "../constants/styles";
 import { render } from 'react-dom';
+import * as ImagePicker from "expo-image-picker";
+import * as Permissions from "expo-permissions";
+import RegButton from "../components/RegButton";
 
 
 
@@ -24,10 +28,12 @@ const serviceProvider =({ navigation}) => {
   const [password, setPassword] = useState('')
   const [nameBrand, setnameBrand] = useState('')
   const [category, setCategory] = useState('')
+  const [image, setImage] = useState('https://imgplaceholder.com/72x80')
   const [Descripiton, setDescripiton] = useState('')
   const [website, setWebsite] = useState('')
   const [twitter, setTwitter] = useState('')
   const [instagram, setInstagram] = useState('')
+
 
 const userId = auth.currentUser.uid;
  let userRef = database.ref('users/'+ userId);
@@ -37,9 +43,21 @@ const userId = auth.currentUser.uid;
     //  var password= (snapshot.val() && snapshot.val().password)
     //  var brand = ((snapshot.val() && snapshot.val().trademark))
 
-    
+   const checkPer = async()=> {
+    const permission = await Permissions.getAsync(Permissions.CAMERA_ROLL);
+    if (permission.status !== "granted") {
+    const newPermission = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    if (newPermission.status === "granted") {
+    }
+    }  
+    } 
+  
+  
  useEffect(() => {
-        userRef.once('value').then(function(snapshot) {
+  checkPer()
+
+
+        const subscribe1 = userRef.once('value').then(function(snapshot) {
         setName((snapshot.val() && snapshot.val().name) )
         setPassword((snapshot.val() && snapshot.val().password))
         setEmail((snapshot.val() && snapshot.val().email))
@@ -49,10 +67,15 @@ const userId = auth.currentUser.uid;
 
      })
       
-        database.ref('serviceProvider/'+nameBrand).once('value').then(function(snapshotinner) {
+       const subscribe2=  database.ref('serviceProvider/'+nameBrand).once('value').then(function(snapshotinner) {
             setDescripiton((snapshotinner.val() && snapshotinner.val().Description))
             setphoneNum((snapshotinner.val() && snapshotinner.val().phone))
             setCategory((snapshotinner.val() && snapshotinner.val().category))
+            setWebsite((snapshotinner.val() && snapshotinner.val().website))
+            setTwitter((snapshotinner.val() && snapshotinner.val().twitter))
+            setInstagram((snapshotinner.val() && snapshotinner.val().instagram))
+
+
 
 //     const readData =  (username,email,password,phone,brand,category,description,website,twitter,instagram) => {
 //     this.setState({
@@ -69,8 +92,25 @@ const userId = auth.currentUser.uid;
 //     });
 //   };
 // }
-
+          return()=>{
+            // unmount
+            subscribe1()
+            subscribe2()
+          }
  } )})
+
+
+ const openImagePickerAsync = async () => {
+  await Permissions.askAsync(Permissions.CAMERA_ROLL);
+  const { cancelled, uri } = await ImagePicker.launchImageLibraryAsync({
+    aspect: 1,
+    allowsEditing: true,
+  });
+  if (!cancelled) setImage(uri);
+};
+
+
+
 
 const handleUpdate  = ()=>{
 
@@ -85,7 +125,7 @@ database.ref('serviceProvider/'+nameBrand).update({
     'Description': Descripiton,
     'category': category,
     'phone': phoneNum,
-    'webiste': website,
+    'website': website,
     'twitter': twitter,
     'instagram': instagram
 
@@ -128,14 +168,54 @@ const validateForm = () =>{
           
                 <FontAwesome name="tags" color={colors.primaryBlue} size={25}/>
                     <Text style={[styless.fieldLabels],[{fontSize:17,marginRight:10}]}> الفئة</Text>
-                   {/* <Dropdown
+                    <TextInput
+                    style={styless.TextInput}
+                    placeholder=" الفئة"
+                    onChangeText={(category) => setCategory(category )}
+                    value={category}
+                    autoCapitalize="none"
+                  />
+                </View>
+                  {/* <Dropdown
                     label="الفئة"
                     data={categories}
                    onChangeText={(category) => setCategory(category )}
                     containerStyle={{ width: 100, marginLeft: 155}}
                    value={category}
-                  />  */}
-                   </View>
+                  /> 
+                  */}
+                  
+                  {/* <DropDownPicker
+          items={[
+        {label: 'المطاعم', value: 'المطاعم'},
+        {label: 'المستلزمات', value: 'المستلزمات'},
+        {label: 'الصحة', value: 'الصحة'},
+        {label: 'الدورات', value: 'الدورات'},
+        {label: 'التسوق', value: 'التسوق'},
+        {label: 'الخدمات', value: 'الخدمات'},
+          ]}
+          multiple={false}
+          defaultValue={''}
+          containerStyle={{height: 40}}
+          style={{backgroundColor: '#fafafa'}}
+          itemStyle={{
+              justifyContent: 'flex-start'
+          }}
+          dropDownStyle={{backgroundColor: '#fafafa'}}
+          onChangeItem={item => setCategory(item)}
+/> */}
+                  <View style={{ alignItems: "center" }}>
+                <View style={styles.image}
+                 >
+                  <Image
+                    style={styless.image}
+                    source={{ uri: image  }}
+                  />
+                  <TouchableOpacity onPress={openImagePickerAsync}>
+                    <RegButton text={"choose photo"} ></RegButton>
+                  </TouchableOpacity>
+                </View>
+                </View>
                    <View style={styless.fields}>
                 <MaterialCommunityIcons name="web" color={colors.primaryBlue} size={30} style={styless.fieldLabels} />
                   <TextInput
@@ -170,7 +250,7 @@ const validateForm = () =>{
                   />
                 </View>
 
-                <View style={styles.fields}>{/*<Upload/> */}</View>
+              
             </View>
       );
       
@@ -206,7 +286,7 @@ const validateForm = () =>{
                   <TextInput
                     style={styless.TextInput}
                     placeholder="  (*** **** *05) رقم الجوال"
-                    onChangeText={(phoneNum) => setphoneNum( phoneNum )}
+                    onChangeText={phoneNum => setphoneNum( phoneNum )}
                     value={phoneNum}
                     autoCapitalize="none"
                   />
@@ -238,7 +318,18 @@ const validateForm = () =>{
       const ThirdRoute = () =>{
         return (
         <View style={[styles.scene, { backgroundColor: 'white' }]} >
-            <Text>Locations</Text>
+            <View>
+                <Image
+                  source={require("../images/mapsmockup.png")}
+    
+                    style={{
+                      height: 400,
+                      width: 300
+
+                    }}
+                />
+               
+              </View>
         </View>
         );
 
@@ -290,9 +381,8 @@ const validateForm = () =>{
 
          <View style={{flexDirection:'row' ,marginTop:20, alignItems:'flex-start'}}>
              <TouchableOpacity>
-       {/*  <Entypo name='chevron-left' size={30} color= {colors.primaryBlue }  onPress={()=> navigation.pop()} /> */}
          </TouchableOpacity>
-         <Text style={styles.header}>الحساب</Text>
+         <Text style={styles.header}></Text>
          </View>
          <ScrollView showsVerticalScrollIndicator={false}>
         <TabView
@@ -375,6 +465,12 @@ const styles = StyleSheet.create({
         marginTop:10, 
         color: colors.primaryBlue,
         fontSize: 25
+      },
+      image:{
+        flex: 1,
+        backgroundColor: colors.primaryBlue,
+        padding: 20,
+        margin: 10,
       }
   });
   

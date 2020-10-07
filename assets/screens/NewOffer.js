@@ -5,7 +5,7 @@ import { database, auth,storage } from "../config/firebase";
 import {Entypo, MaterialCommunityIcons,MaterialIcons, FontAwesome, Ionicons} from '../constants/icons'
 import colors from '../constants/colors'
 import styles from "../constants/styles";
-// import { QRCode } from 'react-native-custom-qr-codes';
+//import { QRCode } from 'react-native-custom-qr-codes';
 
 
  
@@ -164,7 +164,7 @@ render(){
                 <ImageBackground source={require('../images/image.png')} style={{width:200,height:200,marginLeft:50}}>
                   <View style={styless.action}>
                     <TextInput placeholder='ادخل الرمز' style={styles.textInput,{paddingTop:100,marginLeft:100}} autoCapitalize="none" onChangeText={(OfferId) => this.setState({ OfferId })}/>
-                    {/* <QRCode content='https://reactnative.com'/> */}
+                     {/*<QRCode content='https://reactnative.com'/> */ }
                    </View>
  
                 </ImageBackground>

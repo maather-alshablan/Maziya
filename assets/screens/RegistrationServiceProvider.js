@@ -54,15 +54,15 @@ export default class RegistrationServiceProvider extends Component {
     password: "",
     confirmPassword: "",
     nameBrand: "",
-    Descripiton: "",
+    Description: "",
     category:"",
+    imageref:'',
     website:"",
     twitter:"",
     instagram:"",
     errorMessage: null,
     isValid: false,
     errors: false,
-    category: "المطاعم"
   };
   validateEmail = (email) => {
     const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -138,7 +138,7 @@ export default class RegistrationServiceProvider extends Component {
         errorMessage: "يرجى ادخال جميع البيانات",
       });
     }
-    if (this.state.uri === "" && this.state.uri === "https://imgplaceholder.com/72x80" ) {
+    if (this.state.image === "" && this.state.image === "https://imgplaceholder.com/72x80" ) {
       valid = false;
       this.setState({
         errors: true,
@@ -160,8 +160,7 @@ export default class RegistrationServiceProvider extends Component {
       const newPermission = await Permissions.askAsync(Permissions.CAMERA_ROLL);
       if (newPermission.status === "granted") {
       }
-    } else {
-    }
+    } 
   }
 
   openImagePickerAsync = async () => {
@@ -185,7 +184,7 @@ export default class RegistrationServiceProvider extends Component {
   // };
 
   handleSignUp = () => {
-    console.log("handleSignUp", this.state);
+   // console.log("handleSignUp", this.state);
     auth
       .createUserWithEmailAndPassword(this.state.email, this.state.password)
       .then((resp) => this.writeUserData(resp))
@@ -198,24 +197,24 @@ export default class RegistrationServiceProvider extends Component {
       });
   };
 
-  writeUserData = (resp) => {
-    console.log("writeUserData", resp);
+  writeUserData = () => {
+  //  console.log("writeUserData");
 
-    const userid = resp.user.uid;
+    
     // first let us upload the image on storage, no need to insert it into database
     // we will use the UID as image name for exmaple,
     // let say uid is 1dsdsmn it will be 1dsdsmn.jpg on storage
 
-    // this.UploadImage(this.state.image, userid);
+    this.UploadImage(this.state.image, this.state.nameBrand);
 
     database
       .ref()
       .child("users")
-      .child(userid)
+      .child(auth.currentUser.uid)
       .set({
         name: this.state.userName,
         email: this.state.email,
-        userid: userid,
+        trademark: this.state.nameBrand,
         accountType: "serviceProvider",
       })
       .then(this.writeServiceProvider())
@@ -229,35 +228,40 @@ export default class RegistrationServiceProvider extends Component {
       .child("serviceProvider")
       .child(this.state.nameBrand)
       .set({
-        Descripiton: this.state.Descripiton,
+        Descripiton: this.state.Description,
         category: this.state.category,
         phone: this.state.phoneNum,
-        email: this.state.email,
-        imageref: "",
-        website:"",
-        twitter:"",
-        instagram:"",
-        //image: this.state.uri,
-      })
-      .then(this.props.navigation.navigate("SPhomescreen"))
+        website:this.state.website,
+        twitter:this.state.twitter,
+        instagram:this.state.instagram,
+        //image: this.state.image,
+      }).then(this.props.navigation.navigate("SPhomescreen"))
       .catch((error) => console.log(error));
   };
 
-  // UploadImage = async (uri, imgName) => {
-  //   console.log("UploadImage uri", uri);
-  //   console.log("UploadImage imgName", imgName);
-  //   const response = await fatch(uri);
-  //   const blob = await response.blob();
+  UploadImage = async (uri, imgName) => {
 
-  //   var ref = storage.ref().child("images/" + imgName);
-  //   // database
-  //   // .ref()
-  //   // .child("serviceProvider")
-  //   // .child(this.state.nameBrand)
-  //   // .set({imageref: ref.put(blob) }
+    const metadata = {
+      contentType: 'image/jpeg',
+    };
+    const imageRef = "images/"+imgName+'.png';
+    const StorageRef = storage.ref().child(imageRef)
+    const task = StorageRef.put(uri,metadata).then(console.log('successfully uploaded to firebase' )).catch(console.log('failure image upload'))
+    const reference = (await task).downloadURL;
 
-  //   return ref.put(blob);
-  // };
+    const subscrition= database
+    .ref()
+    .child("serviceProvider")
+    .child(this.state.nameBrand)
+    .set({imageref: reference  })
+
+    //incase of memory leak error
+    // return() =>{
+    //   StorageRef();
+    //   task()
+    //   subscrition()
+    }
+  
 
   render() {
     const showNotification = this.state.Valid ? false : true;
@@ -265,7 +269,7 @@ export default class RegistrationServiceProvider extends Component {
 
 
     console.log(this.validateEmail(this.state.email));
-    console.log("state", this.state);
+  //  console.log("state", this.state);
     return (
       <View style={styles.container}>
         <Entypo
@@ -273,7 +277,7 @@ export default class RegistrationServiceProvider extends Component {
           size={30}
           color={colors.primaryBlue}
           style={{ alignSelf: "flex-start" }}
-          onPress={() => this.props.navigation.navigate("Registration")}
+          onPress={() => this.props.navigation.pop()}
         />
 
         <View style={styles.header}>
@@ -439,6 +443,39 @@ export default class RegistrationServiceProvider extends Component {
                   
                 </View>
                 <View style={styles.fields}>{/*<Upload/> */}</View>
+                <View style={styles.fields}>
+                <MaterialCommunityIcons name="web" color={colors.primaryBlue} size={30} style={styles.fieldLabels} />
+                  <TextInput
+                    style={styles.TextInput}
+                    
+                    placeholder=" الموقع الإلكتروني"
+                    onChangeText={website => this.setState({ website })}
+                    value={this.state.website}
+                    autoCapitalize="none"
+                  />
+                </View>
+
+                <View style={styles.fields}>
+                <MaterialCommunityIcons name="twitter" color={colors.primaryBlue} size={30} style={styles.fieldLabels} />
+                  <TextInput
+                    style={styles.TextInput}
+                    placeholder=" تويتر"
+                    onChangeText={twitter => this.setState({ twitter })}
+                    value={this.state.twitter}
+                    autoCapitalize="none"
+                  />
+                </View>
+                
+                <View style={styles.fields}>
+                <MaterialCommunityIcons name="instagram" color={colors.primaryBlue} size={30} style={styles.fieldLabels} />
+                  <TextInput
+                    style={styles.TextInput}
+                    placeholder=" انستغرام"
+                    onChangeText={instagram => this.setState({ instagram })}
+                    value={this.state.instagram}
+                    autoCapitalize="none"
+                  />
+                </View>
               </View>
             </ProgressStep>
 
