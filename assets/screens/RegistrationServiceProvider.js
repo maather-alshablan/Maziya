@@ -55,14 +55,10 @@ export default class RegistrationServiceProvider extends Component {
     confirmPassword: "rEEm1997",
     nameBrand: "",
     Descripiton: "",
-<<<<<<< HEAD
     category:"",
     website:"",
     twitter:"",
     instagram:"",
-=======
-    category: "",
->>>>>>> a8fc9e84af62bcf661f06f700e0196935e40e5c8
     errorMessage: null,
     isValid: false,
     errors: false,
@@ -238,14 +234,11 @@ export default class RegistrationServiceProvider extends Component {
         category: this.state.category,
         phone: this.state.phoneNum,
         email: this.state.email,
-<<<<<<< HEAD
         imageref: "",
         website:"",
         twitter:"",
         instagram:"",
-=======
         //image: this.state.uri,
->>>>>>> a8fc9e84af62bcf661f06f700e0196935e40e5c8
       })
       .then(this.props.navigation.navigate("SPhomescreen"))
       .catch((error) => console.log(error));
