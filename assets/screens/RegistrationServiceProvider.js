@@ -48,11 +48,11 @@ export default class RegistrationServiceProvider extends Component {
 
   state = {
     image: "https://imgplaceholder.com/72x80",
-    userName: "reem",
-    phoneNum: "0553524206",
-    email: "reo@gmail.com",
-    password: "rEEm1997",
-    confirmPassword: "rEEm1997",
+    userName: "",
+    phoneNum: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
     nameBrand: "",
     Descripiton: "",
     category:"",
@@ -206,7 +206,7 @@ export default class RegistrationServiceProvider extends Component {
     // we will use the UID as image name for exmaple,
     // let say uid is 1dsdsmn it will be 1dsdsmn.jpg on storage
 
-    this.UploadImage(this.state.image, userid);
+    // this.UploadImage(this.state.image, userid);
 
     database
       .ref()
@@ -216,7 +216,6 @@ export default class RegistrationServiceProvider extends Component {
         name: this.state.userName,
         email: this.state.email,
         userid: userid,
-
         accountType: "serviceProvider",
       })
       .then(this.writeServiceProvider())
@@ -244,46 +243,27 @@ export default class RegistrationServiceProvider extends Component {
       .catch((error) => console.log(error));
   };
 
-  UploadImage = async (uri, imgName) => {
-    console.log("UploadImage uri", uri);
-    console.log("UploadImage imgName", imgName);
-    const response = await fatch(uri);
-    const blob = await response.blob();
+  // UploadImage = async (uri, imgName) => {
+  //   console.log("UploadImage uri", uri);
+  //   console.log("UploadImage imgName", imgName);
+  //   const response = await fatch(uri);
+  //   const blob = await response.blob();
 
-    var ref = storage.ref().child("images/" + imgName);
-    // database
-    // .ref()
-    // .child("serviceProvider")
-    // .child(this.state.nameBrand)
-    // .set({imageref: ref.put(blob) }
+  //   var ref = storage.ref().child("images/" + imgName);
+  //   // database
+  //   // .ref()
+  //   // .child("serviceProvider")
+  //   // .child(this.state.nameBrand)
+  //   // .set({imageref: ref.put(blob) }
 
-    return ref.put(blob);
-  };
+  //   return ref.put(blob);
+  // };
 
   render() {
     const showNotification = this.state.Valid ? false : true;
     console.disableYellowBox = true;
 
-    let categories = [
-      {
-        value: "المطاعم",
-      },
-      {
-        value: "المستلزمات",
-      },
-      {
-        value: "الصحة",
-      },
-      {
-        value: "الدورات",
-      },
-      {
-        value: "التسوق",
-      },
-      {
-        value: "الخدمات",
-      },
-    ];
+
     console.log(this.validateEmail(this.state.email));
     console.log("state", this.state);
     return (
@@ -305,6 +285,7 @@ export default class RegistrationServiceProvider extends Component {
             <Text style={styles.errors}>{this.state.errorMessage}</Text>
           </View>
         )}
+        
         <View style={{ flex: 1 }}>
           <ProgressSteps
             activeStepIconBorderColor={colors.primaryBlue}
@@ -458,39 +439,6 @@ export default class RegistrationServiceProvider extends Component {
                   
                 </View>
                 <View style={styles.fields}>{/*<Upload/> */}</View>
-                <View style={styless.fields}>
-                <MaterialCommunityIcons name="web" color={colors.primaryBlue} size={30} style={styless.fieldLabels} />
-                  <TextInput
-                    style={styless.TextInput}
-                    name="websites"
-                    placeholder=" الموقع الإلكتروني"
-                    onChangeText= {(websites) => this.setState({websites})}
-                    value={website}
-                    autoCapitalize="none"
-                  />
-                </View>
-
-                <View style={styless.fields}>
-                <MaterialCommunityIcons name="twitter" color={colors.primaryBlue} size={30} style={styless.fieldLabels} />
-                  <TextInput
-                    style={styless.TextInput}
-                    placeholder=" تويتر"
-                    onChangeText={(twitter) => this.setState({ twitter })}
-                    value={ twitter}
-                    autoCapitalize="none"
-                  />
-                </View>
-                
-                <View style={styless.fields}>
-                <MaterialCommunityIcons name="instagram" color={colors.primaryBlue} size={30} style={styless.fieldLabels} />
-                  <TextInput
-                    style={styless.TextInput}
-                    placeholder=" انستغرام"
-                    onChangeText={(instagram) => this.setState( {instagram} )}
-                    value={(instagram)}
-                    autoCapitalize="none"
-                  />
-                </View>
               </View>
             </ProgressStep>
 
