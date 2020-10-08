@@ -70,6 +70,7 @@ export default class RegistrationServiceProvider extends Component {
   };
   onNextFirstStep = () => {
     let valid = true;
+
     if (this.state.phoneNum.length != 10) {
       valid = false;
       this.setState({
@@ -144,6 +145,27 @@ export default class RegistrationServiceProvider extends Component {
         errors: true,
         errorMessage: "يرجى إختيار صورة"
       });
+
+
+  //  const twitterExp = /^@([A-Za-z0-9_]+{1,15}$)/;
+  // if (!twitterExp.test(this.state.twitter) ){
+
+  //   valid = false;
+  //   this.setState({
+  //     errors: true,
+  //     errorMessage: ("يرجى ادخال حساب تويتر بالشكل الصحيح")
+  //   });
+  // }
+
+  // const instagramExp = /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/;
+  // if (!instagramExp.test(this.state.instagram) ){
+  //   valid = false;
+  //   this.setState({
+  //     errors: true,
+  //     errorMessage: ("يرجى ادخال حساب الإنستغرام بالشكل الصحيح")
+  //   });
+  // }
+
     }
     if (valid) {
       this.setState({
@@ -214,7 +236,7 @@ export default class RegistrationServiceProvider extends Component {
       .set({
         name: this.state.userName,
         email: this.state.email,
-        trademark: this.state.nameBrand,
+        serviceProvider: this.state.nameBrand,
         accountType: "serviceProvider",
       })
       .then(this.writeServiceProvider())
@@ -264,11 +286,11 @@ export default class RegistrationServiceProvider extends Component {
   
 
   render() {
-    const showNotification = this.state.Valid ? false : true;
+    //const showNotification = this.state.Valid ? false : true;
     console.disableYellowBox = true;
 
 
-    console.log(this.validateEmail(this.state.email));
+   // console.log(this.validateEmail(this.state.email));
   //  console.log("state", this.state);
     return (
       <View style={styles.container}>

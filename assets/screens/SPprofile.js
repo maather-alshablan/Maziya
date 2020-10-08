@@ -33,6 +33,8 @@ const serviceProvider =({ navigation}) => {
   const [website, setWebsite] = useState('')
   const [twitter, setTwitter] = useState('')
   const [instagram, setInstagram] = useState('')
+  const [valid, setValid]= useState(true)
+  const [errorMessage,setErrorMessage]=useState(null)
 
 
 const userId = auth.currentUser.uid;
@@ -61,7 +63,7 @@ const userId = auth.currentUser.uid;
         setName((snapshot.val() && snapshot.val().name) )
         setPassword((snapshot.val() && snapshot.val().password))
         setEmail((snapshot.val() && snapshot.val().email))
-        setnameBrand((snapshot.val() && snapshot.val().trademark))
+        setnameBrand((snapshot.val() && snapshot.val().serviceProvider))
   
         // readData(username,email, password,phone,brand,category,description,website,twitter,instagram)
 
@@ -136,10 +138,56 @@ database.ref('serviceProvider/'+nameBrand).update({
 
 const validateForm = () =>{
 
+  setValid(true)
 
+  if (phoneNum.length != 10) {
+   setValid(false);
+    setErrorMessage(" يرجى التأكد من ادخال رقم التواصل يالصيغة  0XXXXXXXXX ")
+}
 
-    handleUpdate();
+const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+  if (email === "" && !regexp.test(email)) {
+ 
+    setValid(false);
+    setErrorMessage("يرجى كتابة بريد الكتروني صحيح")
+   
   }
+
+  if ( userName === ""){ 
+    setValid(false);
+    setErrorMessage("يرجى ادخال جميع البيانات")
+  }
+
+  if (Descripiton === "" ) { // provide better description
+    setValid(false);
+    setErrorMessage("يرجى ادخال جميع البيانات")
+  }
+
+  if (image === ""  ) {
+    setValid(false);
+    setErrorMessage("يرجى إختيار صورة")
+  }
+ 
+  // const twitterExp = /^@([A-Za-z0-9_]+{1,15}$)/;
+  // if (!twitterExp.test(twitter) ){
+  //   setValid(false);
+  //   setErrorMessage("يرجى ادخال حساب تويتر بالشكل الصحيح")
+  // }
+
+  // const instagramExp = /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/;
+  // if (!instagramExp.test(instagram) ){
+  //   setValid(false);
+  //   setErrorMessage("يرجى ادخال حساب الإنستغرام بالشكل الصحيح")
+  // }
+
+  if (valid) {
+    setErrorMessage('')
+    handleUpdate();
+    }
+};
+
+  
 
 
     //Trademark 
@@ -155,7 +203,7 @@ const validateForm = () =>{
                   <TextInput
                     style={[styless.TextInput],[styles.textArea]}
                     placeholder=" وصف العلامة التجارية"
-                    onChangeText={(Descripiton) => setDescripiton( Descripiton ) }
+                    onChangeText={Descripiton => setDescripiton( Descripiton ) }
                     value={Descripiton}
                     multiline={true}
                     numberOfLines={4}
@@ -382,7 +430,13 @@ const validateForm = () =>{
          <View style={{flexDirection:'row' ,marginTop:20, alignItems:'flex-start'}}>
              <TouchableOpacity>
          </TouchableOpacity>
-         <Text style={styles.header}></Text>
+         
+         { !valid && (
+          <View style={styles.header}>
+            <Text style={styless.errors}>{errorMessage}</Text>
+          </View>
+        )}
+
          </View>
          <ScrollView showsVerticalScrollIndicator={false}>
         <TabView

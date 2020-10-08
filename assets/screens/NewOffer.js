@@ -1,10 +1,11 @@
 import React, { Component , useState } from "react";
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Dimensions, Platform, StatusBar ,Image,ImageBackground , ScrollView} from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Dimensions, Platform, StatusBar ,Image,ImageBackground , ScrollView, Alert} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { database, auth,storage } from "../config/firebase";
 import {Entypo, MaterialCommunityIcons,MaterialIcons, FontAwesome, Ionicons} from '../constants/icons'
 import colors from '../constants/colors'
 import styles from "../constants/styles";
+import serviceProvider from "./SPprofile";
 //import { QRCode } from 'react-native-custom-qr-codes';
 
 
@@ -20,8 +21,8 @@ export default class NewOffer extends Component  {
         title: "",
         Descripiton: "",
         OfferId:"",
-        date:"",
-        // splId:"",
+        expiration:"",
+        code:"",
         errorMessage: null,
         errors: false,
       };
@@ -54,12 +55,18 @@ export default class NewOffer extends Component  {
               errorMessage: "يرجى ادخال جميع البيانات",
             });
           }
-          if (this.state.date === "" ) {
+          if (this.state.expiration === "" ) {
             valid = false;
             this.setState({
               errors: true,
               errorMessage: "يرجى ادخال جميع البيانات",
             });
+            if (this.state.code === "" ) {
+              valid = false;
+              this.setState({
+                errors: true,
+                errorMessage: "يرجى ادخال جميع البيانات",
+              });
           }
 
         if (valid) {
@@ -91,20 +98,44 @@ export default class NewOffer extends Component  {
 
       // firebase 
       // writeOfferSP = () => {
-      //   console.log("offers ");
+   
+
+            const serviceProvider=''
+            var currentUser = auth.currentUser.uid
+            var ref = database.ref().child("users/"+currentUser).once('value').then(function(snapshot) {
+              serviceProvider= (snapshot.val() && snapshot.val().serviceProvider) })
+            
+            var OfferId =  database.ref().child("offer").push().key
+
+            var newOffer = {
+              serviceProvider:serviceProvider,
+              Descripiton: this.state.Descripiton,
+              expiration: this.state.expDate ,
+              title: this.state.title,
+              code:this.state.code
+            }
+            var updates = {};
+            updates['/offers/' + OfferId] = newOffer;
+            updates['/serviceProvider/' + serviceProvider + '/offers/' + OfferId] = newOffer;
+          
+            return firebase.database().ref().update(updates).then(Alert.alert('successful upload'));
+
+
+      //     .ref()
+      //     .child("Offers")
       //   database
       //     .ref()
       //     .child("Offers")
-      //     .child(this.state.OfferId)
+      //     .child(OfferId)
       //     .set({
       //       Descripiton: this.state.Descripiton,
-      //       expDate: this.state.expDate ,
-      //       splId: this.state.splId,
+      //       expiration: this.state.expDate ,
       //       title: this.state.title,
+       //      code:this.state.code
       //     })
       //     .then(this.props.navigation.navigate("SPhomescreen"))
       //     .catch((error) => console.log(error));
-      // };
+       };
       
  
 render(){
