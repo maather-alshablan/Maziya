@@ -1,5 +1,5 @@
 import React , {Component , useEffect , useState   } from 'react'
-import { Text, View,  TextInput, Dimensions , StyleSheet,Image, ScrollView, TouchableOpacity} from 'react-native'
+import { Text, View,  TextInput, Dimensions , StyleSheet,Image, ScrollView, TouchableOpacity, Alert} from 'react-native'
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import {Entypo, MaterialCommunityIcons,MaterialIcons, FontAwesome, Ionicons} from '../constants/icons'
 //import {Dropdown }from 'react-native-material-dropdown';
@@ -24,6 +24,7 @@ const serviceProvider =({ navigation}) => {
 
   const [userName, setName] = useState('')
   const [email, setEmail] = useState('')
+  
   const [phoneNum, setphoneNum] = useState('')
   const [password, setPassword] = useState('')
   const [nameBrand, setnameBrand] = useState('')
@@ -36,14 +37,8 @@ const serviceProvider =({ navigation}) => {
   const [valid, setValid]= useState(true)
   const [errorMessage,setErrorMessage]=useState(null)
 
-
 const userId = auth.currentUser.uid;
  let userRef = database.ref('users/'+ userId);
- 
-    //  var username=  (snapshot.val() && snapshot.val().name)
-    //  var email =  (snapshot.val() && snapshot.val().email)
-    //  var password= (snapshot.val() && snapshot.val().password)
-    //  var brand = ((snapshot.val() && snapshot.val().trademark))
 
    const checkPer = async()=> {
     const permission = await Permissions.getAsync(Permissions.CAMERA_ROLL);
@@ -54,52 +49,58 @@ const userId = auth.currentUser.uid;
     }  
     } 
   
-  
- useEffect(() => {
-  checkPer()
-
-
-        const subscribe1 = userRef.once('value').then(function(snapshot) {
+  const fetchData= () =>{
+    setEmail(auth.currentUser.email)
+          
+        const subscribe1 = userRef.on('value').then(function(snapshot) {
         setName((snapshot.val() && snapshot.val().name) )
         setPassword((snapshot.val() && snapshot.val().password))
-        setEmail((snapshot.val() && snapshot.val().email))
+        //setEmail((snapshot.val() && snapshot.val().email))
         setnameBrand((snapshot.val() && snapshot.val().serviceProvider))
-  
-        // readData(username,email, password,phone,brand,category,description,website,twitter,instagram)
-
-     })
-      
-       const subscribe2=  database.ref('serviceProvider/'+nameBrand).once('value').then(function(snapshotinner) {
-            setDescripiton((snapshotinner.val() && snapshotinner.val().Description))
+          }
+        ,database.ref('serviceProvider/'+nameBrand).on('value').then(function(snapshotinner) {
+            setDescripiton((snapshotinner.val() && snapshotinner.val().description))
             setphoneNum((snapshotinner.val() && snapshotinner.val().phone))
             setCategory((snapshotinner.val() && snapshotinner.val().category))
             setWebsite((snapshotinner.val() && snapshotinner.val().website))
             setTwitter((snapshotinner.val() && snapshotinner.val().twitter))
             setInstagram((snapshotinner.val() && snapshotinner.val().instagram))
+       }))
+       return(
+        subscribe1
+        
+      )
+      }
+    
+  
+  
 
 
-
-//     const readData =  (username,email,password,phone,brand,category,description,website,twitter,instagram) => {
-//     this.setState({
-//       userName: username,
-//       email: email,
-//       password: password,
-//       phoneNum:phone, 
-//       nameBrand: brand,
-//       category:category,
-//       Description:description,
-//       website: website,
-//       twitter: twitter,
-//       instagram:instagram
-//     });
-//   };
-// }
-          return()=>{
-            // unmount
-            subscribe1()
-            subscribe2()
-          }
- } )})
+ useEffect(() => {
+  checkPer()
+     
+  fetchData();          
+      //   const subscribe1 = userRef.once('value').then(function(snapshot) {
+      //   setName((snapshot.val() && snapshot.val().name) )
+      //   setPassword((snapshot.val() && snapshot.val().password))
+      //   //setEmail((snapshot.val() && snapshot.val().email))
+      //   setnameBrand((snapshot.val() && snapshot.val().serviceProvider))
+      //     }
+      
+      //     const subscribe2 = database.ref('serviceProvider/'+nameBrand).once('value').then(function(snapshotinner) {
+      //       setDescripiton((snapshotinner.val() && snapshotinner.val().description))
+      //       setphoneNum((snapshotinner.val() && snapshotinner.val().phone))
+      //       setCategory((snapshotinner.val() && snapshotinner.val().category))
+      //       setWebsite((snapshotinner.val() && snapshotinner.val().website))
+      //       setTwitter((snapshotinner.val() && snapshotinner.val().twitter))
+      //       setInstagram((snapshotinner.val() && snapshotinner.val().instagram))
+      //  }))
+      //  return()=>{
+      //   // unmount
+      //   subscribe1
+      //   subscribe2
+      // }  
+        },[])
 
 
  const openImagePickerAsync = async () => {
@@ -124,17 +125,16 @@ userRef.update(
 ).catch(error => alert(error));
 
 database.ref('serviceProvider/'+nameBrand).update({
-    'Description': Descripiton,
+    'description': Descripiton,
     'category': category,
     'phone': phoneNum,
     'website': website,
     'twitter': twitter,
     'instagram': instagram
 
-}).catch(error => console.log(error)).then(console.log('successful update')).then(alert('successful update'))
+}).catch(error => console.log(error)).then(console.log('successful update')).then(alert('successful update')).then(auth.currentUser.updateEmail(email))
 
 }
-
 
 const validateForm = () =>{
 
@@ -187,13 +187,27 @@ const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[
     }
 };
 
-  
-
 
     //Trademark 
     const FirstRoute = () => (
-        <View style={[styles.scene, { backgroundColor: 'white' }]} >
-
+      
+      <View style={[styles.scene, { backgroundColor: 'white' }]} >
+             <View style={{alignSelf:'flex-end',flexDirection:'row-reverse',marginTop:10,marginLeft:10}}>
+            <MaterialCommunityIcons name="image-search-outline" color={colors.primaryBlue} size={30} />
+                  <Text style={[styless.fieldLabels],[{fontSize:17}]}>  صورة العلامة التجارية</Text>
+                  </View>
+              <View style={{ alignItems: "center" }}>
+                <View style={styles.image}
+                 >
+                  <Image
+                    style={styless.image}
+                    source={{ uri: image  }}
+                  />
+                  <TouchableOpacity onPress={openImagePickerAsync}>
+                    <RegButton text={"choose photo"} ></RegButton>
+                  </TouchableOpacity>
+                </View>
+                </View>
             <View style={{alignSelf:'flex-end',flexDirection:'row-reverse',marginTop:10,marginLeft:10}}>
             <MaterialCommunityIcons name="tooltip-text-outline" color={colors.primaryBlue} size={30} />
                   <Text style={[styless.fieldLabels],[{fontSize:17}]}> الوصف</Text>
@@ -252,25 +266,14 @@ const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[
           dropDownStyle={{backgroundColor: '#fafafa'}}
           onChangeItem={item => setCategory(item)}
 /> */}
-                  <View style={{ alignItems: "center" }}>
-                <View style={styles.image}
-                 >
-                  <Image
-                    style={styless.image}
-                    source={{ uri: image  }}
-                  />
-                  <TouchableOpacity onPress={openImagePickerAsync}>
-                    <RegButton text={"choose photo"} ></RegButton>
-                  </TouchableOpacity>
-                </View>
-                </View>
+                 
                    <View style={styless.fields}>
                 <MaterialCommunityIcons name="web" color={colors.primaryBlue} size={30} style={styless.fieldLabels} />
                   <TextInput
                     style={styless.TextInput}
                     
                     placeholder=" الموقع الإلكتروني"
-                    onChangeText={(website) => setWebsite(website )}
+                    onChangeText={ website => setWebsite(website )}
                     value={website}
                     autoCapitalize="none"
                   />
@@ -292,7 +295,7 @@ const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[
                   <TextInput
                     style={styless.TextInput}
                     placeholder=" انستغرام"
-                    onChangeText={(instagram) => setInstagram( instagram )}
+                    onChangeText={instagram => setInstagram(instagram)}
                     value={instagram}
                     autoCapitalize="none"
                   />
@@ -335,7 +338,7 @@ const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[
                     style={styless.TextInput}
                     placeholder="  (*** **** *05) رقم الجوال"
                     onChangeText={phoneNum => setphoneNum( phoneNum )}
-                    value={phoneNum}
+                    defaultValue={phoneNum}
                     autoCapitalize="none"
                   />
                 </View>
@@ -382,7 +385,6 @@ const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[
         );
 
       }
-      //render() {
       const initialLayout = { width: Dimensions.get('window').width };
       
         const [index, setIndex] = React.useState(2);
@@ -452,7 +454,7 @@ const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[
           
       </TabView>
       </ScrollView>
-      <TouchableOpacity style={styles.ButtonContainer} onPress={handleUpdate} >
+      <TouchableOpacity style={styles.ButtonContainer} onPress={validateForm} >
                         <Text style={styles.appButtonText} >حفظ</Text>
                     </TouchableOpacity>
                     

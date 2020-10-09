@@ -11,8 +11,9 @@ import Notification from '../components/Notification';
 
 
 export default class resetPassword extends Component  {
-  state = { email: '', errorMessage: null, textInput:'' ,formValid: true,}
+  state = { enteredPassword:'', ConfirmPassword:'',errorMessage: null, textInput:'' ,formValid: true,}
    
+  
 
   static navigationOptions = ({ navigation }) => ({
     headerStyle: {
@@ -29,24 +30,38 @@ export default class resetPassword extends Component  {
 
   forgotPassword = () => {
 
-    const currentUser = auth.currentUser
+    if (this.state.enteredPassword === "" ) {
+      valid = false;
+      this.setState({
+        errors: true,
+        errorMessage: "يرجى ادخال جميع البيانات",
+      });
+    }
+    if (this.state.enteredPassword.length < 8 || this.state.enteredPassword.length > 15) {
+      
+      this.setState({ errorMessage: 'يرجى التأكد من ادخال كلمة المرور من ٨ - ١٥ خانة ', formValid: false })
+      return;
+    }
 
-       auth.sendPasswordResetEmail(this.state.email)
+    if (this.state.enteredPassword !== this.state.ConfirmPassword) {
+    
+      this.setState({ errorMessage:     "يرجى التأكد من مطابقة كلمة المرور"
+      , formValid: false })
+      return;
+    }
+
+
+       auth.currentUser.updatePassword(this.state.enteredPassword)
       .then(function () {
-        Alert.alert('تم ارسال طلب تعديل كلمة المرور على بريدك الإلكتروني')
+        Alert.alert('تم  تعديل كلمة المرور ')
         
       }).catch(error => this.setState({ errorMessage: 'يرجى التأكد من ادخال البيانات بالشكل الصحيح', formValid: false })
       )
-      // if(currentUser){
-      //   database.ref('users/'+currentUser.uid).update({
-      //     'password': 
-      //   })
-      // }
+    
 
       if (this.state.formValid)
-      this.props.navigation.navigation('login')
+      this.props.navigation.pop()
 
-      this.state.email="";
     };
   
 
@@ -70,19 +85,32 @@ render() {
           <Text style={pg.ForgotPasswordHeading}>
                 تغيير كلمة المرور
           </Text>
-          <Text style={pg.ForgotPasswordSubHeading}>
-              
-          </Text>
+        
+          
           <InputField
             customStyle={{ marginTop: 50 }}
             textColor='white'
-            labelText="البريد الإلكتروني"
+            labelText=" كلمة المرور الجديدة"
             labelTextSize={14}
             labelColor='white'
             borderBottomColor='white'
-            inputType="email"
+            inputType="password"
+            secureTextEntry
             textAlign='right'
-            value={auth.currentUser.email}
+            onChangeText={pass => this.setState({enteredPassword: pass}) }
+          />
+
+<InputField
+            customStyle={{ marginTop: 50 }}
+            textColor='white'
+            labelText=" تأكيد كلمة المرور "
+            labelTextSize={14}
+            labelColor='white'
+            secureTextEntry
+            borderBottomColor='white'
+            inputType="password"
+            textAlign='right'
+            onChangeText={pass => this.setState({ConfirmPassword: pass}) }
           />
       </View> 
       

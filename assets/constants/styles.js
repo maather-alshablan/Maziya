@@ -91,6 +91,36 @@ const styles = {
 
   errors: {
     color: "red",
+  }, ButtonContainer: {
+    elevation: 8,
+    backgroundColor: colors.primaryBlue,
+    borderRadius: 25,
+    paddingVertical: 15,
+    paddingHorizontal: 50,
+    alignItems:'center',
+    margin:20,
+    marginHorizontal:40,
+    marginTop:20
+  },
+  appButtonText: {
+    fontSize: 18,
+    color: "#fff",
+    alignSelf: "center",
+    textTransform: "uppercase"
+  },
+  textArea:{
+    width:250,
+    paddingTop: 30,
+    borderColor:'black',
+    borderBottomWidth:1,
+    textAlign: 'center',
+    height: 50,
+    borderWidth: 2,
+    borderColor: '#9E9E9E',
+    borderRadius: 20 ,
+    backgroundColor : "#FFFFFF",
+    height: 150,
+marginRight:20,
   },
 };
 

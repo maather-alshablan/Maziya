@@ -7,6 +7,8 @@ import colors from '../constants/colors'
 import HomescreenServiceProvider from '../screens/serviceProviderHomescreen'
 import ServiceProviderPage from '../screens/serviceProvider'
 import ProfileServiceProvider from '../screens/SPprofile'
+//import ProfileServiceProvider from '../screens/spprofile2'
+
 import addOffer from '../screens/NewOffer'
 import HomeStack from '../Navigation/SPHomeStack'
 import resetPassword from '../screens/resetPasswordLoggedIn'

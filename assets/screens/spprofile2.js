@@ -1,5 +1,5 @@
 import React , {Component , useEffect , useState   } from 'react'
-import { Text, View,  TextInput, Dimensions , StyleSheet,ScrollView, TouchableOpacity} from 'react-native'
+import { Text, View,  TextInput, Dimensions , StyleSheet,ScrollView, Image, TouchableOpacity} from 'react-native'
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import {Entypo, MaterialCommunityIcons,MaterialIcons, FontAwesome, Ionicons} from '../constants/icons'
 //import {Dropdown }from 'react-native-material-dropdown';
@@ -13,10 +13,8 @@ import { render } from 'react-dom';
 
 
 
-
 export default class serviceProviderProfile extends Component {
 
-    
    // console.disableYellowBox = true;
     
 state = {
@@ -32,13 +30,13 @@ state = {
   password:'',
   nameBrand:'',
   category:'',
-  Description:'',
+  description:'',
   website:'',
   twitter:'',
   instagram:''
 }
 
-
+ 
 
 handleNameChange = name => {
   this.setState({ userName: name  });
@@ -58,8 +56,8 @@ handleBrandChange = brand => {
 handleCategoryChange = category => {
     this.setState({ category: category  });
   };
-handleDescriptionChange = Description => {
-    this.setState({ Description: Description  });
+handleDescriptionChange = description => {
+    this.setState({ description: description  });
   };
 handlewebsiteChange = website => {
     this.setState({ website: website  });
@@ -72,11 +70,9 @@ handlewebsiteChange = website => {
   };
   
 
-
  componentDidMount(){ 
  
-
-    database.ref('users/'+ auth.currentUser.uid).once('value').then(function(snapshot){
+  const subscribe1 =database.ref('users/'+ auth.currentUser.uid).once('value').then(function(snapshot){
 
      var username=  (snapshot.val() && snapshot.val().name)
      var email =  (snapshot.val() && snapshot.val().email)
@@ -84,8 +80,8 @@ handlewebsiteChange = website => {
      var brand = ((snapshot.val() && snapshot.val().trademark))
 
     
-    database.ref('serviceProvider/'+brand).once('value').then(function(snapshotinner) {
-            var description = ((snapshotinner.val() && snapshotinner.val().Description))
+     const subscribe2=  database.ref('serviceProvider/'+brand).once('value').then(function(snapshotinner) {
+            var description = ((snapshotinner.val() && snapshotinner.val().description))
             var phone = ((snapshotinner.val() && snapshotinner.val().phone))
             var category = ((snapshotinner.val() && snapshotinner.val().category))
             var website = ((snapshotinner.val() && snapshotinner.val().website))
@@ -93,7 +89,6 @@ handlewebsiteChange = website => {
             var instagram = ((snapshotinner.val() && snapshotinner.val().instagram))
            
          readData(username,email, password,phone,brand,category,description,website,twitter,instagram)
-
      })
       
     });
@@ -106,11 +101,15 @@ handlewebsiteChange = website => {
       phoneNum:phone, 
       nameBrand: brand,
       category:category,
-      Description:description,
+      description:description,
       website: website,
       twitter: twitter,
       instagram:instagram
     });
+    return()=>{
+      // unmount
+      subscribe1()
+      subscribe2()}
   };
 }
 
@@ -119,13 +118,14 @@ handleUpdate= ()=>{
     
     database.ref('users/'+ auth.currentUser.uid).update(
     {
-    'name': userName,
-    'email': email, 
+    'name': this.state.userName,
+    'email': this.state.email, 
+    
 }
 ).catch(error => alert(error));
 
 database.ref('serviceProvider/'+this.state.nameBrand).update({
-    'Description': this.state.Description,
+    'description': this.state.description,
     'category': this.state.category,
     'phone': this.state.phoneNum,
     'website': this.state.website,
@@ -159,8 +159,8 @@ validateForm = () =>{
                   <TextInput
                     style={[styless.TextInput],[styles.textArea]}
                     placeholder=" وصف العلامة التجارية"
-                    onChangeText={Description => this.handleDescriptionChange({Description})}
-                   value={Description} 
+                    onChangeText={description => this.handleDescriptionChange({description})}
+                   value={this.state.description} 
                     multiline={true}
                     numberOfLines={4}
                     textAlignVertical
@@ -207,7 +207,7 @@ validateForm = () =>{
                     name="websites"
                     placeholder=" الموقع الإلكتروني"
                     onChangeText= {(websites) => this.handlewebsiteChange(websites)}
-                    value={website}
+                    value={this.state.website}
                     autoCapitalize="none"
                   />
                 </View>
@@ -218,7 +218,7 @@ validateForm = () =>{
                     style={styless.TextInput}
                     placeholder=" تويتر"
                     onChangeText={(twitter) => this.handleTwitterChange(twitter)}
-                    value={ twitter}
+                    value={ this.state.twitter}
                     autoCapitalize="none"
                   />
                 </View>
@@ -229,7 +229,7 @@ validateForm = () =>{
                     style={styless.TextInput}
                     placeholder=" انستغرام"
                     onChangeText={(instagram) => this.handleInstagramChange(instagram)}
-                    value={instagram}
+                    value={this.state.instagram}
                     autoCapitalize="none"
                   />
                 </View>
@@ -248,7 +248,7 @@ validateForm = () =>{
                     style={styless.TextInput}
                     placeholder="*الاسم"
                     onChangeText={ username => this.handleNameChange(username)}
-                    defaultValue={userName}
+                    defaultValue={this.state.userName}
                     autoCapitalize="none"
                   />
                 </View>
@@ -259,8 +259,8 @@ validateForm = () =>{
                   <TextInput
                     style={styless.TextInput}
                     placeholder="*البريد الإلكتروني"
-                     onChangeText = {email => this.handleEmailChange(email)}
-                    value={email}
+                    onChangeText = {email => this.handleEmailChange(email)}
+                    value={this.state.email}
                     
                   />
                 </View>
@@ -271,7 +271,7 @@ validateForm = () =>{
                     style={styless.TextInput}
                     placeholder="  (*** **** *05) رقم الجوال"
                     onChangeText= {phoneNums => this.handlePhoneChange(phoneNums)}
-                    value={phoneNum}
+                    value={this.state.phoneNum}
                     autoCapitalize="none"
                   />
                 </View>
@@ -281,7 +281,7 @@ validateForm = () =>{
                     style={styless.TextInput}
                     secureTextEntry
                     placeholder="*كلمة المرور"
-                    value={password}
+                    value={this.state.password}
                     autoCapitalize="none"
                     editable={false}
                   /></View>
@@ -316,14 +316,10 @@ validateForm = () =>{
       }
    
       render() {
+        this.componentDidMount()
       const initialLayout = { width: Dimensions.get('window').width };
       
-        // const [index, setIndex] = React.useState(2);
-        // const [routes] = React.useState([
-        //   { key: 'third', title: 'المواقع' },
-        //   { key: 'first', title: 'التفاصيل' },
-        //   { key: 'second', title: 'حسابي' },
-        // ])
+       const rout = {index: this.state.index, routes: this.state.routes}
       
         const renderScene = SceneMap({
             first: this.FirstRoute,
@@ -368,9 +364,9 @@ validateForm = () =>{
          </View>
          <ScrollView showsVerticalScrollIndicator={false}>
         <TabView
-        navigationState={ this.state.index, this.state.routes }
+        navigationState={rout}
         renderScene={renderScene}
-        onIndexChange={this.state.index}
+        onIndexChange={index => this.setState({index: index})}
         initialLayout={initialLayout}
         style={styles.tab}
         renderTabBar={renderTabBar}
