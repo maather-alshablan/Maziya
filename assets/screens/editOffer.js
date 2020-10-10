@@ -55,7 +55,7 @@ componentDidMount(){
 handleUpdate= ()=>{
   var userId = auth.currentUser.uid;
 
-  database.ref('serviceprovider/'+ auth.currentUser.uid + "offers/").update({ 
+  database.ref('serviceProvider/'+ auth.currentUser.uid + "offers/").update({ 
   'Descripiton': this.state.Descripiton, 
   'expdate': this.state.expdate,
   'title': this.state.title,
