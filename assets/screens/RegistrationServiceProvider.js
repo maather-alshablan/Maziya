@@ -146,26 +146,50 @@ export default class RegistrationServiceProvider extends Component {
         errorMessage: "يرجى إختيار صورة"
       });
 
+    }
+    if (this.state.website ===""){
+      valid = false;
+      this.setState({
+        errors: true,
+        errorMessage: "يرجى إختيار صورة"
+      });
+    }
 
-  //  const twitterExp = /^@([A-Za-z0-9_]+{1,15}$)/;
-  // if (!twitterExp.test(this.state.twitter) ){
-
-  //   valid = false;
-  //   this.setState({
-  //     errors: true,
-  //     errorMessage: ("يرجى ادخال حساب تويتر بالشكل الصحيح")
-  //   });
-  // }
-
-  // const instagramExp = /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/;
-  // if (!instagramExp.test(this.state.instagram) ){
-  //   valid = false;
-  //   this.setState({
-  //     errors: true,
-  //     errorMessage: ("يرجى ادخال حساب الإنستغرام بالشكل الصحيح")
-  //   });
-  // }
-
+    if (!this.state.website.endsWith('.com')){
+      valid = false;
+      this.setState({
+        errors: true,
+        errorMessage: "يرجى إختيار صورة"
+      });
+    }
+  
+    var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+    '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+     
+    if (!pattern.test(this.state.website)){
+      setValid(false);
+      setErrorMessage("يرجى ادخال الموقع الإلكتروني بالشكل الصحيح")
+      return; 
+    }
+    
+  
+   
+    if (!this.state.twitter.startsWith('@')){
+      setValid(false);
+      setErrorMessage("يرجى ادخال حساب تويتر بالصيغة @example")
+      return; 
+    }
+  
+  
+    const twitterExp =  /^(?:@)([A-Za-z0-9_]){1,15}$/
+    if (!twitterExp.test(this.state.twitter) ){
+      setValid(false);
+      setErrorMessage("يرجى ادخال حساب تويتر بالشكل الصحيح")
+      return;
     }
     if (valid) {
       this.setState({

@@ -1,4 +1,4 @@
-import React , {Component , useEffect , useState   } from 'react'
+import React , {Component , useEffect , useState, useMemo   } from 'react'
 import { Text, View,  TextInput, Dimensions  , StyleSheet,Image, ScrollView,Button, TouchableOpacity, Alert, AsyncStorage} from 'react-native'
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import {Entypo, MaterialCommunityIcons,MaterialIcons, FontAwesome, Ionicons} from '../constants/icons'
@@ -58,10 +58,9 @@ const userId = auth.currentUser.uid;
     setEmail(auth.currentUser.email)
           
         const subscribe1 = userRef.once('value').then(function(snapshot) {
+        setnameBrand((snapshot.val() && snapshot.val().serviceProvider))
         setName((snapshot.val() && snapshot.val().name) )
         setPassword((snapshot.val() && snapshot.val().password))
-        //setEmail((snapshot.val() && snapshot.val().email))
-        setnameBrand((snapshot.val() && snapshot.val().serviceProvider))
          
         database.ref('serviceProvider/'+nameBrand).once('value').then(function(snapshotinner) {
             setDescripiton((snapshotinner.val() && snapshotinner.val().description))
@@ -71,15 +70,6 @@ const userId = auth.currentUser.uid;
             setTwitter((snapshotinner.val() && snapshotinner.val().twitter))
             setInstagram((snapshotinner.val() && snapshotinner.val().instagram))
        })})
-       //setFetchingUser(false)
-
-      //  try {
-      //   await AsyncStorage.setItem(
-      //     'brand' ,nameBrand
-      //   );
-      // } catch (error) {
-      //   // Error saving data
-      
        
       }
     
@@ -125,56 +115,101 @@ database.ref('serviceProvider/'+nameBrand).update({
     'twitter': twitter,
     'instagram': instagram
 
-}).catch(error => console.log(error)).then(console.log('successful update')).then(alert('successful update')).then(auth.currentUser.updateEmail(email))
+}).catch(setWrongEmailFormat).then(alert('تم حفظ التغييرات بنجاح')).then(auth.currentUser.updateEmail(email)).catch(setWrongEmailFormat)
+
 
 }
 
+const setWrongEmailFormat=()=>{
+  setValid(false);
+  setErrorMessage("يرجى كتابة بريد الكتروني صحيح")
+}
 const validateForm = () =>{
-
   setValid(true)
 
   if (phoneNum.length != 10) {
    setValid(false);
     setErrorMessage(" يرجى التأكد من ادخال رقم التواصل يالصيغة  0XXXXXXXXX ")
+    return;
 }
 
 const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-  if (email === "" && !regexp.test(email)) {
+  if (email === "" || !regexp.test(email)) {
  
     setValid(false);
     setErrorMessage("يرجى كتابة بريد الكتروني صحيح")
+    return;
+
    
   }
 
   if ( userName === ""){ 
     setValid(false);
-    setErrorMessage("يرجى ادخال جميع البيانات")
+    setErrorMessage("يرجى ادخال الاسم")
+    return;
   }
 
   if (Descripiton === "" ) { // provide better description
     setValid(false);
-    setErrorMessage("يرجى ادخال جميع البيانات")
+    setErrorMessage("يرجى ادخال الوصف")
+    return;
   }
 
   if (image === ""  ) {
     setValid(false);
     setErrorMessage("يرجى إختيار صورة")
+    return;
   }
- 
-  if (twitter.startsWith('@'))
-  twitter.substring(1,twitter.length-1 )
-  // const twitterExp = /^@([A-Za-z0-9_]+{1,15}$)/;
-  // if (!twitterExp.test(twitter) ){
-  //   setValid(false);
-  //   setErrorMessage("يرجى ادخال حساب تويتر بالشكل الصحيح")
-  // }
 
-  // const instagramExp = /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/;
-  // if (!instagramExp.test(instagram) ){
-  //   setValid(false);
-  //   setErrorMessage("يرجى ادخال حساب الإنستغرام بالشكل الصحيح")
-  // }
+  if (website ===""){
+    setValid(false);
+    setErrorMessage("يرجى ادخال الموقع الإلكتروني بالشكل الصحيح")
+    return;
+  }
+
+  if(!website.endsWith('.com')){
+    setValid(false);
+    setErrorMessage("يرجى ادخال الموقع الإلكتروني بالشكل الصحيح")
+    return;
+  }
+
+  var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+  '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+  '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+  '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+  '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+  '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+   
+  if (!pattern.test(website)){
+    setValid(false);
+    setErrorMessage("يرجى ادخال الموقع الإلكتروني بالشكل الصحيح")
+    return; 
+  }
+  
+
+ 
+  if (!twitter.startsWith('@')){
+    setValid(false);
+    setErrorMessage("يرجى ادخال حساب تويتر بالصيغة @example")
+    return; 
+  }
+
+
+  const twitterExp =  /^(?:@)([A-Za-z0-9_]){1,15}$/
+  if (!twitterExp.test(twitter) ){
+    setValid(false);
+    setErrorMessage("يرجى ادخال حساب تويتر بالشكل الصحيح")
+    return;
+  }
+
+  const instagramExp = new RegExp('^([A-Za-z0-9_](?:(?:[A-Za-z0-9_]|(?:\.(?!\.))){0,28}(?:[A-Za-z0-9_]))?)$')
+  if (instagram != '' && !instagramExp.test(instagram) ){
+    setValid(false);
+    setErrorMessage("يرجى ادخال حساب الإنستغرام بالشكل الصحيح")
+    return;
+
+  }
 
   if (valid) {
     setErrorMessage('')
@@ -423,12 +458,12 @@ const handleBranches = (location)=>{
            
 
                     <Entypo name="location" color={colors.primaryBlue} size={40} style={styless.fieldLabels} style={{alignSelf:'center',marginTop:20}}/> 
-                     <TouchableOpacity >
-                    <View style={{alignSelf:'flex-end',margin:10 , alignItems:'flex-end',flexDirection:'row-reverse' , padding:10}}>
-                    <Entypo name="plus" size={20} color={'black'}  />
-                    <Text  style={{fontSize:20}} >إضافة فرع </Text>
+                    
+                    <View style={{alignSelf:'center',margin:10 , alignItems:'flex-end',flexDirection:'row-reverse' , padding:10}}>
+                    {/* <Entypo name="plus" size={20} color={'black'}  /> */}
+                    <Text  style={{fontSize:20}} > فرع </Text>
                     </View>
-                    </TouchableOpacity>
+                    {/* </TouchableOpacity>
                     <View style={styless.fields}>  
 
                    
@@ -438,7 +473,7 @@ const handleBranches = (location)=>{
                         onChangeText={location => handleBranches(location) }
                         value={branch}
                         autoCapitalize="none"
-                      /> 
+                      />  */}
                       </View>
                          <Image
                   source={require("../images/mapsmockup.png")}
@@ -466,7 +501,6 @@ const handleBranches = (location)=>{
         <Button title='Get Values' onPress={() =>getValues()} />
       </View>
     */} 
-                    </View> 
                
         </View>
         );
@@ -525,6 +559,7 @@ const handleBranches = (location)=>{
             <Text style={styless.errors}>{errorMessage}</Text>
           </View>
         )}
+       
 
          </View>
          <ScrollView showsVerticalScrollIndicator={false}>
@@ -606,7 +641,7 @@ const styles = StyleSheet.create({
       header:{
         marginHorizontal:140,
         marginTop:10, 
-        color: colors.primaryBlue,
+        
         fontSize: 25
       },
       image:{

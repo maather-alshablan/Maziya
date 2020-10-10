@@ -72,7 +72,7 @@ export default class serviceProvider extends Component{
            })
         } 
 
-        this.fetchOffers;
+        this.fetchOffers();
           }
 
 
@@ -80,13 +80,15 @@ export default class serviceProvider extends Component{
        
         
         database.ref().child("serviceProvider/"+this.state.brand+'/Offers').on('child_added', data => {
-        this.state.offers.push({
+        var list=[]
+            list.push({
     
           title: data.val().title,
           description: data.val().description,
           code: data.val().code,
           expiration:data.val().expiration
         });
+         this.setState({offers:list});
         });    
     }
 
@@ -136,14 +138,14 @@ UNSAFE_componentWillMount(){
 
                     <View style={styless.header}>
                    
-                    <TouchableOpacity style={{alignSelf:'flex-end' ,marginTop:10}}
+                    {/* <TouchableOpacity style={{alignSelf:'flex-end' ,marginTop:10}}
                     onPress={this.toggleFavorite}>
                     <MaterialCommunityIcons 
                     name={ this.state.favorite? "heart" : "heart-outline"}  
                      color={colors.primaryBlue} 
                      size={30} 
                      />
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                     <Text style={[styles.header]}>{this.state.brand}</Text>
                         <View >
                         <Image source={require('../images/logoDis.jpg')} style={{width:100,height:100,marginLeft:120}}/>
@@ -216,7 +218,7 @@ UNSAFE_componentWillMount(){
 
                         <Text style={styless.text_footer}>الفروع</Text>
                         <View style={styless.action}>
-                        {this.listOffers}
+                        {this.listOffers()}
                         </View>
 
                 

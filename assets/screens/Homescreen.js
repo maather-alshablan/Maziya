@@ -16,14 +16,47 @@ import serviceProvider from './SPprofile'
 
 // add bottom navigation 
 // drawer navigation 
-const Homescreen =({ navigation}) => {
+export default class Homescreen extends React.Component{
+  state={
+    brand:'',
+    description:''
+  }
+
+
+
+   Cards=()=>{
+    // const name='zara'
+    
+    // database.ref().child('serviceProviders/zara').once('value', function(data){
+    //  setData(data.val().description)
+      
+    // })
+
+    // const setData = (data)=>{
+    // this.setState( {description: data })}
+    return(
+      
+    <Card
+    title={this.props.brand}
+    content={'Service Provider description'}
+    iconName="local-offer"
+    iconType="MaterialIcons"
+    iconBackgroundColor= {colors.primaryBlue}
+    style={{marginTop:5}}
+    //bottomRightText={offer.expiration}
+    onPress={() => navigation.navigate(serviceProvider)}
+    /> )
+  }
+  render(){
+
+    
     return(
         <View style={styles.container}>
             <ScrollView showsVerticalScrollIndicator={false}>
             <TouchableOpacity
                 style={{ alignSelf: "flex-end" }}
                 onPress={() => {
-                    navigation.toggleDrawer();
+                    this.props.navigation.toggleDrawer();
                 }}
                 >
                 <Entypo name="menu" size={30} style={{marginTop:15}} />
@@ -59,40 +92,23 @@ const Homescreen =({ navigation}) => {
             <FontAwesome name="search" color="#fff" size={20} />
           </TouchableOpacity>
         </View>
+        {/* {this.Cards()} */}
        <Card 
-        title={'title'}
-        content={'offer.description'}
+        title={'Zara'}
+        //content={'offer.description'}
         iconName="local-offer"
         iconType="MaterialIcons"
         iconBackgroundColor= {colors.primaryBlue}
-        bottomRightText={'offer.expiration'}
-        onPress={() => {}}
+        //bottomRightText={'offer.expiration'}
+        onPress={() => {this.props.navigation.navigate(serviceProvider)}}
         />
       </ScrollView>
     </View>
   );
-}
+}}
 
 
-const serviceProviders=()=>{
-  const name=''
-  const description=''
-  database.ref().child('serviceProvider/zara').once('value', function(data){
-    name=  'zara'// data.val().s
-     description = data.val().description
-    
-  })
-  return(
-  <Card
-  title={name}
-  content={description}
-  iconName="local-offer"
-  iconType="MaterialIcons"
-  iconBackgroundColor= {colors.primaryBlue}
-  //bottomRightText={offer.expiration}
-  //onPress={() => {}}
-  /> )
-}
+
 
 const styles = StyleSheet.create({
     container: {
@@ -132,4 +148,3 @@ const styles = StyleSheet.create({
 
 
 
-export default Homescreen;

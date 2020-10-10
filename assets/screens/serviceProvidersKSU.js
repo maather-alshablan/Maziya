@@ -39,11 +39,10 @@ export default class serviceProvider extends Component{
 
      fetchData= () =>{
         
+                this.setState({brand:'zara'})
         
-        database.ref().child('users/'+auth.currentUser.uid).once("value").then(function(snapshot) {
-                  const name= ((snapshot.val() && snapshot.val().serviceProvider))                  
-                   
-                database.ref().child('serviceProvider/'+name).once("value").then(function(snapshot) {
+                database.ref().child('serviceProvider/zara').once("value").then(function(snapshot) {
+                    
                     var description=((snapshot.val() && snapshot.val().description))
                     var email = ((snapshot.val() && snapshot.val().email))
                    var  phone=((snapshot.val() && snapshot.val().phone))
@@ -54,10 +53,7 @@ export default class serviceProvider extends Component{
                   readData(name,email,description,phone,website,twitter,instagram);
                 
                 })
-            }
-             
-            )
-
+        
 
             const readData= (name,email,description,phone,website,twitter,instagram) => {
            this.setState({
@@ -72,7 +68,7 @@ export default class serviceProvider extends Component{
            })
         } 
 
-        this.fetchOffers;
+      //  this.fetchOffers;
           }
 
 
@@ -80,13 +76,14 @@ export default class serviceProvider extends Component{
        
         
         database.ref().child("serviceProvider/"+this.state.brand+'/Offers').on('child_added', data => {
-        this.state.offers.push({
-    
+            var list = []
+        list.push({
           title: data.val().title,
           description: data.val().description,
           code: data.val().code,
           expiration:data.val().expiration
         });
+        this.setState({offers:list});
         });    
     }
 
@@ -102,7 +99,7 @@ export default class serviceProvider extends Component{
         iconName="local-offer"
         iconType="MaterialIcons"
         iconBackgroundColor= {colors.primaryBlue}
-        bottomRightText={offer.expiration}
+        //bottomRightText={offer.expiration}
         //onPress={() => {}}
         />
         ))
@@ -110,7 +107,7 @@ export default class serviceProvider extends Component{
 
 UNSAFE_componentWillMount(){
  
-    this.fetchData();    
+  //  this.fetchData();    
 
     }
 
@@ -135,7 +132,8 @@ UNSAFE_componentWillMount(){
                  <ScrollView style={styles.scrollView}>
 
                     <View style={styless.header}>
-                   
+                    <Entypo name='chevron-left' size={30} color={colors.primaryBlue}  style={{marginTop:40}} onPress={()=> this.props.navigation.pop()} />
+
                     <TouchableOpacity style={{alignSelf:'flex-end' ,marginTop:10}}
                     onPress={this.toggleFavorite}>
                     <MaterialCommunityIcons 
@@ -169,7 +167,6 @@ UNSAFE_componentWillMount(){
                         color={colors.primaryBlue}
                         size={30}
                         style={styles.fieldLabels}
-                        accessibilityValue={this.state.email}
                         onPress={() => {Linking.openURL('mailto:'+this.state.email)}} />
                              </TouchableOpacity>
 
@@ -216,7 +213,6 @@ UNSAFE_componentWillMount(){
 
                         <Text style={styless.text_footer}>الفروع</Text>
                         <View style={styless.action}>
-                        {this.listOffers}
                         </View>
 
                 
@@ -230,7 +226,7 @@ UNSAFE_componentWillMount(){
 
 
 
-                    <TouchableOpacity style={styles.ButtonContainer} onPress={this.toggleModal}  >
+                    <TouchableOpacity style={styles.ButtonContainer} onPress={this.toggleModal()}  >
                         <Text style={styles.appButtonText} >استخدم العرض</Text>
                         <Modal 
                         isVisible={this.state.modal}

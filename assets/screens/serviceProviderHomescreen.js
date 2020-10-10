@@ -23,17 +23,22 @@ state = {
       serviceProvider = data.val().serviceProvider
     })
     
-    database.ref().child("serviceProvider/"+serviceProvider+'/Offers').on('child_added', data => {
-    this.state.offers.push({
-
+     database.ref().child("serviceProvider/"+serviceProvider).child('Offers').on('child_added',  data => {
+      var offer =[]
+    offer.push({
       title: data.val().title,
       description: data.val().description,
       code: data.val().code,
       expiration:data.val().expiration
     });
-    });    
- 
+    
+    this.setState({offers: offer})
+    }
+    );    
+   // return subscribe;
   }
+
+ 
         
       listOffer = () => {
 
@@ -78,7 +83,7 @@ state = {
             </View>
             
             <Text style={styles.header}>عروضي </Text>
-            {this.listOffer}
+            {this.listOffer()}
           
             
             <View style={styles.footer}>
