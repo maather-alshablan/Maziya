@@ -35,6 +35,7 @@ export default class NewOffer extends Component  {
               errors: true,
               errorMessage: "يرجى ادخال العنوان",
             });
+            return;
           }
     
           if (this.state.Descripiton === "" ) {
@@ -43,37 +44,55 @@ export default class NewOffer extends Component  {
               errors: true,
               errorMessage: "يرجى ادخال الوصف",
             });
+            return;
           }
 
-          if (this.state.OfferId === "" ) {
-            valid = false;
-            this.setState({
-              errors: true,
-              errorMessage: "يرجى ادخال جميع البيانات",
-            });
-          }
-          if (this.state.expiration === "" ) {
-            valid = false;
-            this.setState({
-              errors: true,
-              errorMessage: "يرجى ادخال جميع البيانات",
-            });
-            if (this.state.code === "" ) {
-              valid = false;
-              this.setState({
-                errors: true,
-                errorMessage: "يرجى ادخال جميع البيانات",
-              });
-              //return?
-          }
+
+
+          // if (this.state.expiration === "" ) {
+          //   valid = false;
+          //   this.setState({
+          //     errors: true,
+          //     errorMessage: "يرجى ادخال جميع البيانات",
+          //   });
+          //   return; }
+          //   if (this.state.code === "" ) {
+          //     valid = false;
+          //     this.setState({
+          //       errors: true,
+          //       errorMessage: "يرجى ادخال جميع البيانات",
+          //     });
+          //     return;
+        //  }
 
         if (valid) {
           this.setState({
             errors: false,
           });
+        
+        
+        const serviceProvider=''
+            var currentUser = auth.currentUser.uid
+            var ref = database.ref().child("users/"+currentUser).once('value').then(function(snapshot) {
+              serviceProvider= (snapshot.val() && snapshot.val().serviceProvider) })
+           
+              this.setState({serviceProvider: serviceProvider})
+            
+            var OfferId =  database.ref().child("Offers").push().key
+
+            var newOffer = {
+              serviceProvider:this.state.serviceProvider,
+              descripiton: this.state.Descripiton,
+              expiration: this.state.expDate ,
+              title: this.state.title,
+              code:this.state.code
+            }
+            var updates = {};
+            updates['/Offers/' + OfferId] = newOffer;
+            updates['/serviceProvider/' + this.state.serviceProvider + '/Offers/' + OfferId] = newOffer;
           
-        }
-        writeOfferSP();
+             database.ref().update(updates).then(Alert.alert('successful upload')).then(this.props.navigation.pop());
+          
         
       }
       //  checkTextInput = () => {
@@ -97,7 +116,8 @@ export default class NewOffer extends Component  {
       //  };
 
       //firebase 
-       const writeOfferSP = () => {
+    
+        const writeOfferSP = () => {
   
             const serviceProvider=''
             var currentUser = auth.currentUser.uid

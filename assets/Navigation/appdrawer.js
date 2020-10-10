@@ -5,12 +5,30 @@ import {Entypo} from '../constants/icons'
 import Profile from '../screens/Memberprofile'
 import Courses from '../screens/courses'
 import Login from '../screens/LoginScreen'
+import resetPassword from '../screens/resetPasswordLoggedIn'
 import usedOffers from '../screens/usedOffers'
 import colors from '../constants/colors';
 import {auth} from '../config/firebase'
+import { createStackNavigator } from "@react-navigation/stack";
 
 
 
+function ProfileStack(){
+  const ProfileStack = createStackNavigator()
+  return (
+<ProfileStack.Navigator
+initialRouteName="Profile"
+screenOptions={{ headerShown: false }}
+>
+
+<ProfileStack.Screen name = 'Profile' component= {Profile}
+option={{
+headerTransparent: true}} />
+<ProfileStack.Screen name= 'resetPassword' component={resetPassword} unmountOnBlur={true}/>
+<ProfileStack.Screen name='logout' component={Login} unmountOnBlur={true}/>
+  </ProfileStack.Navigator>
+  )
+}
 function drawer(){
 
 function CustomDrawerContent(props) { // fix navigation issue: error > navigation cant be found
@@ -59,7 +77,7 @@ function CustomDrawerContent(props) { // fix navigation issue: error > navigatio
                 color:'white',
     
               }}/>
-            <Drawer.Screen name= 'profile' component={Profile} options={{
+            <Drawer.Screen name= 'profile' component={ProfileStack} options={{
                 title: 'صفحتي',
                 color:'white',
     

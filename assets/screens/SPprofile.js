@@ -34,11 +34,13 @@ const serviceProvider =({ navigation}) => {
   const [website, setWebsite] = useState('')
   const [twitter, setTwitter] = useState('')
   const [instagram, setInstagram] = useState('')
+  const [branch,setBranch]=useState('')
+
   const [valid, setValid]= useState(true)
   const [errorMessage,setErrorMessage]=useState(null)
-  const [ fetchingUser, setFetchingUser ] = useState(true);
-  const [textInput,setTextInput]=useState([])
-  const [inputData,setInputData]=useState([])
+  // const [ fetchingUser, setFetchingUser ] = useState(true);
+  // const [textInput,setTextInput]=useState([])
+  // const [inputData,setInputData]=useState([])
 
 const userId = auth.currentUser.uid;
  let userRef = database.ref('users/'+ userId);
@@ -222,7 +224,7 @@ const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[
                 </View>
                 <View style={[styless.fields]}>
           
-                <FontAwesome name="tags" color={colors.primaryBlue} size={25}/>
+                {/* <FontAwesome name="tags" color={colors.primaryBlue} size={25}/>
                     <Text style={[styless.fieldLabels],[{fontSize:17,marginRight:10}]}> الفئة</Text>
                     <TextInput
                     style={styless.TextInput}
@@ -230,7 +232,7 @@ const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[
                     onChangeText={(category) => setCategory(category )}
                     value={category}
                     autoCapitalize="none"
-                  />
+                  /> */}
                 </View>
                   {/* <Dropdown
                     label="الفئة"
@@ -407,21 +409,20 @@ const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[
 //     console.log('Data',inputData);
 //   }
       
+const handleBranches = (location)=>{
+  // let loc = branch;
+  // loc.push(location);
+  setBranch(location);
+
+}
       const ThirdRoute = () =>{
         return (
         <View style={[styles.scene, { backgroundColor: 'white' }]} >
             <View>
-                 <Image
-                  source={require("../images/mapsmockup.png")}
-    
-                    style={{
-                      height: 400,
-                      width: 300
+         
+           
 
-                    }}
-                /> 
-
-                   {/* <Entypo name="location" color={colors.primaryBlue} size={40} style={styless.fieldLabels} style={{alignSelf:'center',marginTop:20}}/> 
+                    <Entypo name="location" color={colors.primaryBlue} size={40} style={styless.fieldLabels} style={{alignSelf:'center',marginTop:20}}/> 
                      <TouchableOpacity >
                     <View style={{alignSelf:'flex-end',margin:10 , alignItems:'flex-end',flexDirection:'row-reverse' , padding:10}}>
                     <Entypo name="plus" size={20} color={'black'}  />
@@ -434,11 +435,22 @@ const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[
                       <TextInput
                         style={styless.TextInput}
                         placeholder=" مثال: فرع التحلية"
-                        //onChangeText={twitter => this.setState({ twitter })}
-                        //value={this.state.twitter}
+                        onChangeText={location => handleBranches(location) }
+                        value={branch}
                         autoCapitalize="none"
                       /> 
-                       {textInput.map((value) => {
+                      </View>
+                         <Image
+                  source={require("../images/mapsmockup.png")}
+    
+                    style={{
+                      height: 400,
+                      width: 300,
+                      marginHorizontal:50
+
+                    }}
+                /> 
+                      {/* {textInput.map((value) => {
                           return value
                               })} 
 {/* <View>
@@ -456,7 +468,6 @@ const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[
     */} 
                     </View> 
                
-              
         </View>
         );
 
