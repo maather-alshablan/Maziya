@@ -4,6 +4,7 @@ import {firebase, auth, database } from '../config/firebase'
 import colors from '../constants/colors';
 import {Entypo,MaterialIcons} from '../constants/icons'
 import NewOffer from './NewOffer'
+import editOffer from '../screens/editOffer'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 // ref: https://github.com/Paraboly/react-native-card
 import { Card } from "@paraboly/react-native-card";
@@ -41,7 +42,7 @@ state = {
         iconType="MaterialIcons"
         iconBackgroundColor= {colors.primaryBlue}
         bottomRightText="30"
-        onPress={() => {}}/>
+        onPress= {() => this.props.navigation.navigate('editOffer')}/>
         )
       }
 

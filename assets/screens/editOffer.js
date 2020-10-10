@@ -8,11 +8,13 @@ import styles from "../constants/styles";
 import { QRCode } from 'react-native-custom-qr-codes';
 
 
+ 
 
+    
   
 
  
-export default class NewOffer extends Component  {
+export default class editOffer extends Component  {  
 
     state = {
         title: "",
@@ -20,92 +22,63 @@ export default class NewOffer extends Component  {
         OfferId:"",
         date:"",
         // splId:"",
-        errorMessage: null,
-        errors: false,
-      };
-      
-      componentDidMount(){ 
- 
-
-        database.ref('users/'+ auth.currentUser.uid).once('value').then(function(snapshot){
-    
-         var brand = ((snapshot.val() && snapshot.val().trademark))
-          readData(brand)
-          
-        });
         
-        const readData =  (brand) => {
-        this.setState({
-          nameBrand: brand,
-          
-        });
       };
-    }
-
-      handleChange = event => {
-        this.setState({ OfferId: event.target.value });
-      };
-
-      checkvalid = () => {
-        let valid = true;
-        if (this.state.title === "" ) {
-            valid = false;
-            this.setState({
-              errors: true,
-              errorMessage: "يرجى ادخال جميع البيانات",
-            });
-          }
-    
-          if (this.state.Descripiton === "" ) {
-            valid = false;
-            this.setState({
-              errors: true,
-              errorMessage: "يرجى ادخال جميع البيانات",
-            });
-          }
-
-          if (this.state.OfferId === "" ) {
-            valid = false;
-            this.setState({
-              errors: true,
-              errorMessage: "يرجى ادخال جميع البيانات",
-            });
-          }
-          if (this.state.date === "" ) {
-            valid = false;
-            this.setState({
-              errors: true,
-              errorMessage: "يرجى ادخال جميع البيانات",
-            });
-          }
-
-        if (valid) {
-          this.setState({
-            errors: false,
-          });
-        }
       
-      }
- 
-    
-      writeOfferSP = () => {
-       console.log("serviceProvider");
-      database
-     .ref()
-     .child("serviceProvider")
-      .child(this.brand)
-      .child("offers")
-      .child(this.state.OfferId)
-      .set({
-       Descripiton: this.state.Descripiton,
-     expDate: this.state.expDate ,
-    splId: this.state.splId,
-    title: this.state.title,
-     })
-     .then(this.props.navigation.navigate("SPhomescreen"))
-     .catch((error) => console.log(error));
-     };
       
+componentDidMount(){
+   
+  const readData =  (Descripiton,date,title) => {
+   this.setState({
+     Descripiton: Descripiton,
+     date: date,
+     title: title
+   });
+ };
+   database.ref('Offers/'+ this.state.OfferId).once('value').
+  then(function(snapshot){
+    
+    var username=  (snapshot.val() && snapshot.val().name)
+    var email =  (snapshot.val() && snapshot.val().email)
+   var title= (snapshot.val() && snapshot.val().title)
+   readData(Descripiton,date,title);
+    });
+    
+
+}
+
+
+handleUpdate= ()=>{
+    
+
+database.ref('Offers/'+this.state.OfferId).update({
+  'Description': this.state.Description,
+  'date': this.state.date,
+  'tilte': this.state.tilte,
+  
+
+}).catch(error => console.log(error)).then(console.log('successful update'))
+
+}
+
+handletitleChange = title => {
+  this.setState({ title: title  });
+};
+
+handleDescripitonChange = Descripiton => {
+  this.setState({ Descripiton: Descripiton  });
+}
+
+handleDateChange = date => {
+    this.setState({ date: date  });
+  };
+
+
+      
+
+    
+
+     
  
 render(){
     return (
@@ -114,10 +87,10 @@ render(){
             <ScrollView style={styles.scrollView}>
           <StatusBar backgroundColor='#0278ae' barStyle='light-content' />
           <TouchableOpacity>
-         <Entypo name='chevron-left' size={30} color= {colors.primaryBlue }  onPress={()=> this.props.navigation.pop()} marginTop={50} />
+         <Entypo name='chevron-left' size={30} color= {colors.primaryBlue }  onPress={()=> this.props.navigation.pop()} />
          </TouchableOpacity>
             <View style={styless.header}>
-                <Text style={styless.text_header}>اضافة عرض جديد</Text>
+                <Text style={styless.text_header}> تعديل العرض </Text>
                    {/* error message appear here */}
                 {this.state.errors && (
           <View style={styles.header}>
@@ -136,7 +109,7 @@ render(){
                     <TextInput style={styless.textInput} 
                     autoCapitalize="none" 
                     textAlign='right'
-                    onChangeText={(title) => this.setState({ title })}/>
+                    onChangeText={title => this.handletitleChange({title})}/>
                 </View>
                 
              
@@ -145,7 +118,7 @@ render(){
                 <View style={styless.action}>
                   <TextInput style={styless.textInput} 
                   autoCapitalize="none" 
-                  onChangeText={(Descripiton) => this.setState({ Descripiton })}
+                  onChangeText={Description => this.handleDescriptionChange({Description})}
                   textAlign='right'/>
                 </View>
 
@@ -155,7 +128,7 @@ render(){
                 <View style={styless.action}>
                   <TextInput style={styless.textInput} 
                   autoCapitalize="none" 
-                  onChangeText={(date) => this.setState({ date })}
+                  onChangeText={date => this.handledateChange({date})}
                   textAlign='right'/>
                 </View>
                 
@@ -163,16 +136,11 @@ render(){
                 <View>
                 {/* <ImageBackground source={require('../images/image.png')} style={{width:200,height:200,marginLeft:50}}> */}
                   <View style={styless.action}>
-                    <TextInput placeholder='ادخل الرمز' style={styles.textInput,{paddingTop:50,marginLeft:120}} autoCapitalize="none" onChange={this.handleChange} value={this.state.OfferId}/>
-                    </View>
-                    <View>
-                    
+                    <TextInput placeholder='ادخل الرمز' style={styles.textInput,{paddingTop:50,marginLeft:120}} autoCapitalize="none" onChangeText={(OfferId) => this.setState({ OfferId })}/>
                     </View>
                     <View style={styles.container} >
-                   
-                     <QRCode content={this.OfferId}/> 
+                     <QRCode content='https://reactnative.com' />  
                    </View>
-
  
                 {/* </ImageBackground> */}
                 </View>
@@ -180,15 +148,15 @@ render(){
  
                 
                 <View style={styless.buttom}>
-                    <TouchableOpacity style={styless.signIn} onPress={this.checkvalid} >
+                    <TouchableOpacity style={styless.signIn} onPress={this.handleUpdate} >
                     <LinearGradient
                         colors={['#0278ae', '#0278ae']}
                         style={styless.signIn}
                     > 
-                        <Text style={[styless.textSign, { color: '#fff' }]}> إضافة عرض </Text>
+                        <Text style={[styless.textSign, { color: '#fff' }]}> تعديل عرض </Text>
 
-                    </LinearGradient>
-                    </TouchableOpacity>
+                    </LinearGradient>  
+                    </TouchableOpacity> 
                    
                 </View>
 
