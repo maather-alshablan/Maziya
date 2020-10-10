@@ -1,22 +1,15 @@
 import React, { Component , useState } from "react";
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Dimensions, Platform, StatusBar ,Image,ImageBackground , ScrollView, Alert} from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Dimensions, Platform, StatusBar ,Image,ImageBackground , ScrollView} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { database, auth,storage } from "../config/firebase";
 import {Entypo, MaterialCommunityIcons,MaterialIcons, FontAwesome, Ionicons} from '../constants/icons'
 import colors from '../constants/colors'
 import styles from "../constants/styles";
-<<<<<<< HEAD
 import { QRCode } from 'react-native-custom-qr-codes';
 
 
 
   
-=======
-import serviceProvider from "./SPprofile";
-//import { QRCode } from 'react-native-custom-qr-codes';
-
-
->>>>>>> 17601f07c1fc87e9ecff51da1f991f98450527c8
 
  
 export default class NewOffer extends Component  {
@@ -25,9 +18,7 @@ export default class NewOffer extends Component  {
         title: "",
         Descripiton: "",
         OfferId:"",
-        expiration:"",
-        code:"",
-        serviceProvider:'',
+        date:"",
         errorMessage: null,
         errors: false,
       };
@@ -60,154 +51,108 @@ export default class NewOffer extends Component  {
             valid = false;
             this.setState({
               errors: true,
-              errorMessage: "يرجى ادخال العنوان",
+              errorMessage: "يرجى ادخال جميع البيانات",
             });
-            return;
           }
     
           if (this.state.Descripiton === "" ) {
             valid = false;
             this.setState({
               errors: true,
-              errorMessage: "يرجى ادخال الوصف",
+              errorMessage: "يرجى ادخال جميع البيانات",
             });
-            return;
           }
 
-
-
-          // if (this.state.expiration === "" ) {
-          //   valid = false;
-          //   this.setState({
-          //     errors: true,
-          //     errorMessage: "يرجى ادخال جميع البيانات",
-          //   });
-          //   return; }
-          //   if (this.state.code === "" ) {
-          //     valid = false;
-          //     this.setState({
-          //       errors: true,
-          //       errorMessage: "يرجى ادخال جميع البيانات",
-          //     });
-          //     return;
-        //  }
+          if (this.state.OfferId === "" ) {
+            valid = false;
+            this.setState({
+              errors: true,
+              errorMessage: "يرجى ادخال جميع البيانات",
+            });
+          }
+          if (this.state.date === "" ) {
+            valid = false;
+            this.setState({
+              errors: true,
+              errorMessage: "يرجى ادخال جميع البيانات",
+            });
+          }
 
         if (valid) {
           this.setState({
             errors: false,
           });
-        
-        
-        const serviceProvider=''
-            var currentUser = auth.currentUser.uid
-            var ref = database.ref().child("users/"+currentUser).once('value').then(function(snapshot) {
-              serviceProvider= (snapshot.val() && snapshot.val().serviceProvider) })
-           
-              this.setState({serviceProvider: serviceProvider})
-            
-            var OfferId =  database.ref().child("Offers").push().key
-
-            var newOffer = {
-              serviceProvider:this.state.serviceProvider,
-              descripiton: this.state.Descripiton,
-              expiration: this.state.expDate ,
-              title: this.state.title,
-              code:this.state.code
-            }
-            var updates = {};
-            updates['/Offers/' + OfferId] = newOffer;
-            updates['/serviceProvider/' + this.state.serviceProvider + '/Offers/' + OfferId] = newOffer;
-          
-             database.ref().update(updates).then(Alert.alert('successful upload')).then(this.props.navigation.pop());
-          
-        
-      }
-<<<<<<< HEAD
- 
-    
-      writeOfferSP = () => {
-       console.log("serviceProvider");
-      database
-     .ref()
-     .child("serviceProvider")
-      .child(this.brand)
-      .child("offers")
-      .child(this.state.OfferId)
-      .set({
-       Descripiton: this.state.Descripiton,
-     expDate: this.state.expDate ,
-    splId: this.state.splId,
-    title: this.state.title,
-     })
-     .then(this.props.navigation.navigate("SPhomescreen"))
-     .catch((error) => console.log(error));
-     };
-=======
-      //  checkTextInput = () => {
-      // //   //Check  TextInput
-      //   if (!handleNameChange.trim()) {
-      //     alert('Please Enter Name');
-      //     return;
-      //    }
-      // //   //Check for TextInput
-      //    if (!handleDescripitonChange.trim()) {
-      //      alert('Please Enter Email');
-      //      return;
-      //    }
-      //    if (!handleOfferIdChange.trim()) {
-      //      alert('Please Enter Email');
-      //   return;
-      //   }
-      // //   //Checked Successfully
-      // //   //Do whatever you want
-      //  writeOfferSP();
-      //  };
-
-      //firebase 
-    
-        const writeOfferSP = () => {
-  
-            const serviceProvider=''
-            var currentUser = auth.currentUser.uid
-            var ref = database.ref().child("users/"+currentUser).once('value').then(function(snapshot) {
-              serviceProvider= (snapshot.val() && snapshot.val().serviceProvider) })
-           
-              this.setState({serviceProvider: serviceProvider})
-            
-            var OfferId =  database.ref().child("Offers").push().key
-
-            var newOffer = {
-              serviceProvider:this.state.serviceProvider,
-              descripiton: this.state.Descripiton,
-              expiration: this.state.expDate ,
-              title: this.state.title,
-              code:this.state.code
-            }
-            var updates = {};
-            updates['/Offers/' + OfferId] = newOffer;
-            updates['/serviceProvider/' + this.state.serviceProvider + '/Offers/' + OfferId] = newOffer;
-          
-             database.ref().update(updates).then(Alert.alert('successful upload')).then(this.props.navigation.pop());
-          };
         }
+      
+      }
+ 
+//       const serviceProvider=''
+//       var currentUser = auth.currentUser.uid
+//       var ref = database.ref().child("users/"+currentUser).once('value').then(function(snapshot) {
+//         serviceProvider= (snapshot.val() && snapshot.val().serviceProvider) })
+     
+//         this.setState({serviceProvider: serviceProvider})
+      
+//       var OfferId =  database.ref().child("Offers").push().key
 
-        //   .ref()
-        //   .child("Offers")
-        // database
-        //   .ref()
-        //   .child("Offers")
-        //   .child(OfferId)
-        //   .set({
-        //     Descripiton: this.state.Descripiton,
-        //     expiration: this.state.expDate ,
-        //     title: this.state.title,
-        //     code:this.state.code
-        //   })
-        //   .then(this.props.navigation.navigate("SPhomescreen"))
-        //   .catch((error) => console.log(error));
+//       var newOffer = {
+//         serviceProvider:this.state.serviceProvider,
+//         descripiton: this.state.Descripiton,
+//         expiration: this.state.expDate ,
+//         title: this.state.title,
+//         code:this.state.code
+//       }
+//       var updates = {};
+//       updates['/Offers/' + OfferId] = newOffer;
+//       updates['/serviceProvider/' + this.state.serviceProvider + '/Offers/' + OfferId] = newOffer;
+    
+//        database.ref().update(updates).then(Alert.alert('successful upload')).then(this.props.navigation.pop());
+    
+  
+// }
+//       writeOfferSP = () => {
+//       console.log("serviceProvider");
+//       database
+//       .ref()
+//       .child("serviceProvider")
+//       .child(this.brand)
+//       .child("offers")
+//       .child(this.state.OfferId)
+//       .set({
+//        Descripiton: this.state.Descripiton,
+//      expDate: this.state.expDate ,
+//     splId: this.state.splId,
+//     title: this.state.title,
+//      })
+//      .then(this.props.navigation.navigate("SPhomescreen"))
+//      .catch((error) => console.log(error));
+//      };
+     
+//      const writeOfferSP = () => {
+  
+//       const serviceProvider=''
+//       var currentUser = auth.currentUser.uid
+//       var ref = database.ref().child("users/"+currentUser).once('value').then(function(snapshot) {
+//         serviceProvider= (snapshot.val() && snapshot.val().serviceProvider) })
+     
+//         this.setState({serviceProvider: serviceProvider})
       
->>>>>>> 17601f07c1fc87e9ecff51da1f991f98450527c8
-      
+//       var OfferId =  database.ref().child("Offers").push().key
+
+//       var newOffer = {
+//         serviceProvider:this.state.serviceProvider,
+//         descripiton: this.state.Descripiton,
+//         expiration: this.state.expDate ,
+//         title: this.state.title,
+//         code:this.state.code
+//       }
+//       var updates = {};
+//       updates['/Offers/' + OfferId] = newOffer;
+//       updates['/serviceProvider/' + this.state.serviceProvider + '/Offers/' + OfferId] = newOffer;
+    
+//        database.ref().update(updates).then(Alert.alert('successful upload')).then(this.props.navigation.pop());
+//     };
+//   }
  
 render(){
     return (
@@ -216,7 +161,7 @@ render(){
             <ScrollView style={styles.scrollView}>
           <StatusBar backgroundColor='#0278ae' barStyle='light-content' />
           <TouchableOpacity>
-         <Entypo name='chevron-left' size={30} color= {colors.primaryBlue }  onPress={()=> this.props.navigation.pop()} marginTop={50} />
+         <Entypo name='chevron-left' size={30} color= {colors.primaryBlue }  onPress={()=> this.props.navigation.pop()} />
          </TouchableOpacity>
             <View style={styless.header}>
                 <Text style={styless.text_header}>اضافة عرض جديد</Text>
@@ -238,7 +183,6 @@ render(){
                     <TextInput style={styless.textInput} 
                     autoCapitalize="none" 
                     textAlign='right'
-                    placeholder='مثال: خصم ١٥٪ بالمئة '
                     onChangeText={(title) => this.setState({ title })}/>
                 </View>
                 
@@ -356,7 +300,7 @@ const styless = StyleSheet.create({
         marginTop: 10,
         borderBottomWidth: 1,
         borderBottomColor: '#f2f2f2',
-        padding: 10
+        paddingBottom: 5
  
     },
     textInput: {

@@ -35,7 +35,8 @@ componentDidMount(){
      title: title
    });
  };
-   database.ref('Offers/'+ this.state.OfferId).once('value').
+ 
+  database.ref('users/'+ auth.currentUser.uid).once('value').
   then(function(snapshot){
     
     var username=  (snapshot.val() && snapshot.val().name)
