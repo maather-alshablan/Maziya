@@ -36,13 +36,16 @@ componentDidMount(){
    });
  };
  
-  database.ref('users/'+ auth.currentUser.uid).once('value').
-  then(function(snapshot){
+  database.ref('serviceProvider/'+ auth.currentUser.uid+ "/offers")
+  .once('value')
+  .then(function(snapshot){
     
-    var username=  (snapshot.val() && snapshot.val().name)
-    var email =  (snapshot.val() && snapshot.val().email)
-   var title= (snapshot.val() && snapshot.val().title)
-   readData(Descripiton,date,title);
+    console.log('snapshot', snapshot.val());
+    var Descripiton=  (snapshot.val() && snapshot.val().Descripiton)
+    var expdate =  (snapshot.val() && snapshot.val().expdate)
+    var title= (snapshot.val() && snapshot.val().title)
+
+   readData(Descripiton,expdate,title);
     });
     
 
@@ -50,29 +53,29 @@ componentDidMount(){
 
 
 handleUpdate= ()=>{
-    
+  var userId = auth.currentUser.uid;
 
-database.ref('Offers/'+this.state.OfferId).update({
-  'Description': this.state.Description,
-  'date': this.state.date,
-  'tilte': this.state.tilte,
+  database.ref('serviceprovider/'+ auth.currentUser.uid + "offers/").update({ 
+  'Descripiton': this.state.Descripiton, 
+  'expdate': this.state.expdate,
+  'title': this.state.title,
   
 
-}).catch(error => console.log(error)).then(console.log('successful update'))
+}).catch(error => alert(error)).then(Alert.alert('successful update'))
 
 }
 
-handletitleChange = title => {
-  this.setState({ title: title  });
-};
+// handletitleChange = title => {
+//   this.setState({ title: title  });
+// };
 
-handleDescripitonChange = Descripiton => {
-  this.setState({ Descripiton: Descripiton  });
-}
+// // handleDescripitonChange = Descripiton => {
+// //   this.setState({ Descripiton: Descripiton  });
+// // }
 
-handleDateChange = date => {
-    this.setState({ date: date  });
-  };
+// handleDateChange = expdate => {
+//     this.setState({ expdate: expdate  });
+//   };
 
 
       
@@ -110,7 +113,8 @@ render(){
                     <TextInput style={styless.textInput} 
                     autoCapitalize="none" 
                     textAlign='right'
-                    onChangeText={title => this.handletitleChange({title})}/>
+                    onChangeText={title =>this.setState( { title: title} ) }
+                    value={this.state.title}/>
                 </View>
                 
              
@@ -119,8 +123,9 @@ render(){
                 <View style={styless.action}>
                   <TextInput style={styless.textInput} 
                   autoCapitalize="none" 
-                  onChangeText={Description => this.handleDescriptionChange({Description})}
-                  textAlign='right'/>
+                  onChangeText={Descripiton =>this.setState( { Descripiton: Descripiton} ) }
+                  textAlign='right'
+                  value={this.state.Descripiton}/>
                 </View>
 
                 
@@ -129,7 +134,8 @@ render(){
                 <View style={styless.action}>
                   <TextInput style={styless.textInput} 
                   autoCapitalize="none" 
-                  onChangeText={date => this.handledateChange({date})}
+                  onChangeText={expdate =>this.setState( { expdate: expdate} ) }
+                  value={this.state.expdate}
                   textAlign='right'/>
                 </View>
                 
@@ -137,7 +143,13 @@ render(){
                 <View>
                 {/* <ImageBackground source={require('../images/image.png')} style={{width:200,height:200,marginLeft:50}}> */}
                   <View style={styless.action}>
-                    <TextInput placeholder='ادخل الرمز' style={styles.textInput,{paddingTop:50,marginLeft:120}} autoCapitalize="none" onChangeText={(OfferId) => this.setState({ OfferId })}/>
+                    <TextInput 
+                   placeholder='ادخل الرمز' 
+                  
+                   style={styless.TextInput,{paddingTop:50,marginLeft:120}}
+                   autoCapitalize="none" 
+                   onChangeText={OfferId =>this.setState( { OfferId: OfferId} ) }
+                   value={this.state.OfferId}/>
                     </View>
                     <View style={styles.container} >
                      <QRCode content='https://reactnative.com' />  

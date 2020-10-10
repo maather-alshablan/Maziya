@@ -18,28 +18,28 @@ export default class NewOffer extends Component  {
         title: "",
         Descripiton: "",
         OfferId:"",
-        date:"",
+        expdate:"",
         errorMessage: null,
         errors: false,
       };
       
-      componentDidMount(){ 
+    //   componentDidMount(){ 
  
 
-        database.ref('users/'+ auth.currentUser.uid).once('value').then(function(snapshot){
+    //     database.ref('users/'+ auth.currentUser.uid).once('value').then(function(snapshot){
     
-         var brand = ((snapshot.val() && snapshot.val().trademark))
-          readData(brand)
+    //      var brand = ((snapshot.val() && snapshot.val().trademark))
+    //       readData(brand)
           
-        });
+    //     });
         
-        const readData =  (brand) => {
-        this.setState({
-          nameBrand: brand,
+    //     const readData =  (brand) => {
+    //     this.setState({
+    //       nameBrand: brand,
           
-        });
-      };
-    }
+    //     });
+    //   };
+    // }
 
       handleChange = event => {
         this.setState({ OfferId: event.target.value });
@@ -70,7 +70,7 @@ export default class NewOffer extends Component  {
               errorMessage: "يرجى ادخال جميع البيانات",
             });
           }
-          if (this.state.date === "" ) {
+          if (this.state.expdate === "" ) {
             valid = false;
             this.setState({
               errors: true,
@@ -82,6 +82,7 @@ export default class NewOffer extends Component  {
           this.setState({
             errors: false,
           });
+          this.writeOfferSP();
         }
       
       }
@@ -110,23 +111,21 @@ export default class NewOffer extends Component  {
     
   
 // }
-//       writeOfferSP = () => {
-//       console.log("serviceProvider");
-//       database
-//       .ref()
-//       .child("serviceProvider")
-//       .child(this.brand)
-//       .child("offers")
-//       .child(this.state.OfferId)
-//       .set({
-//        Descripiton: this.state.Descripiton,
-//      expDate: this.state.expDate ,
-//     splId: this.state.splId,
-//     title: this.state.title,
-//      })
-//      .then(this.props.navigation.navigate("SPhomescreen"))
-//      .catch((error) => console.log(error));
-//      };
+      writeOfferSP = (resp) => { /////
+      console.log("serviceProvider");
+      database
+      .ref()
+      .child("serviceProvider")
+      .child(auth.currentUser.uid)
+      .child("offers")
+      .set({
+       Descripiton: this.state.Descripiton,
+       expdate: this.state.expdate ,
+       title: this.state.title,
+     })
+     .then(this.props.navigation.navigate("SPhomescreen"))
+     .catch((error) => console.log(error));
+     };
      
 //      const writeOfferSP = () => {
   
@@ -202,7 +201,7 @@ render(){
                 <View style={styless.action}>
                   <TextInput style={styless.textInput} 
                   autoCapitalize="none" 
-                  onChangeText={(date) => this.setState({ date })}
+                  onChangeText={(expdate) => this.setState({ expdate })}
                   textAlign='right'/>
                 </View>
                 

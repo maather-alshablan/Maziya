@@ -197,10 +197,9 @@ export default class RegistrationServiceProvider extends Component {
 
 
   handleSignUp = () => {
-   // console.log("handleSignUp", this.state);
     auth
       .createUserWithEmailAndPassword(this.state.email, this.state.password)
-      .then((resp) => this.writeUserData(resp))
+      .then((resp) => this.writeUserData())
       .catch((e) => {
         console.log("error", e);
         this.setState({
@@ -240,9 +239,10 @@ export default class RegistrationServiceProvider extends Component {
     database
       .ref()
       .child("serviceProvider")
-      .child(this.state.nameBrand)
+      .child(auth.currentUser.uid)
       .set({
         description: this.state.Description,
+        nameBrand:this.state.nameBrand , 
         category: this.state.category,
         email:this.state.email,
         phone: this.state.phoneNum,

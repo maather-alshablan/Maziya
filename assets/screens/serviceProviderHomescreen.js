@@ -24,7 +24,7 @@ state = {
       serviceProvider = data.val().serviceProvider
     })
     
-    database.ref().child("serviceProvider/"+serviceProvider+'/Offers').on('child_added', data => {
+    database.ref('serviceProvider/'+ auth.currentUser.uid).on('child_added', data => {
     this.state.offers.push({
 
       title: data.val().title,
@@ -47,16 +47,10 @@ state = {
         iconName="local-offer"
         iconType="MaterialIcons"
         iconBackgroundColor= {colors.primaryBlue}
-<<<<<<< HEAD
         bottomRightText="30"
         onPress= {() => this.props.navigation.navigate('editOffer')}/>
         )
-=======
-        bottomRightText={offer.expiration}
-        //onPress={() => {}}
-        />
-        ))
->>>>>>> 17601f07c1fc87e9ecff51da1f991f98450527c8
+        )
       }
 
     render(){
@@ -83,9 +77,10 @@ state = {
             <Text style= {styles.appButtonText} >       الرسائل    </Text>
             </TouchableOpacity>
             </View>
-            
+            <TouchableOpacity onPress= {() => this.props.navigation.navigate('editOffer')}>
             <Text style={styles.header}>عروضي </Text>
-            {this.listOffer}
+            {/* {this.listOffer} */}
+            </TouchableOpacity>
           
             
             <View style={styles.footer}>
