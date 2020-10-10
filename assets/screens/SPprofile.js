@@ -1,5 +1,5 @@
 import React , {Component , useEffect , useState   } from 'react'
-import { Text, View,  TextInput, Dimensions , StyleSheet,Image, ScrollView, TouchableOpacity, Alert} from 'react-native'
+import { Text, View,  TextInput, Dimensions  , StyleSheet,Image, ScrollView,Button, TouchableOpacity, Alert, AsyncStorage} from 'react-native'
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import {Entypo, MaterialCommunityIcons,MaterialIcons, FontAwesome, Ionicons} from '../constants/icons'
 //import {Dropdown }from 'react-native-material-dropdown';
@@ -36,6 +36,9 @@ const serviceProvider =({ navigation}) => {
   const [instagram, setInstagram] = useState('')
   const [valid, setValid]= useState(true)
   const [errorMessage,setErrorMessage]=useState(null)
+  const [ fetchingUser, setFetchingUser ] = useState(true);
+  const [textInput,setTextInput]=useState([])
+  const [inputData,setInputData]=useState([])
 
 const userId = auth.currentUser.uid;
  let userRef = database.ref('users/'+ userId);
@@ -49,27 +52,33 @@ const userId = auth.currentUser.uid;
     }  
     } 
   
-  const fetchData= () =>{
+  const fetchData=  () =>{
     setEmail(auth.currentUser.email)
           
-        const subscribe1 = userRef.on('value').then(function(snapshot) {
+        const subscribe1 = userRef.once('value').then(function(snapshot) {
         setName((snapshot.val() && snapshot.val().name) )
         setPassword((snapshot.val() && snapshot.val().password))
         //setEmail((snapshot.val() && snapshot.val().email))
         setnameBrand((snapshot.val() && snapshot.val().serviceProvider))
-          }
-        ,database.ref('serviceProvider/'+nameBrand).on('value').then(function(snapshotinner) {
+         
+        database.ref('serviceProvider/'+nameBrand).once('value').then(function(snapshotinner) {
             setDescripiton((snapshotinner.val() && snapshotinner.val().description))
             setphoneNum((snapshotinner.val() && snapshotinner.val().phone))
             setCategory((snapshotinner.val() && snapshotinner.val().category))
             setWebsite((snapshotinner.val() && snapshotinner.val().website))
             setTwitter((snapshotinner.val() && snapshotinner.val().twitter))
             setInstagram((snapshotinner.val() && snapshotinner.val().instagram))
-       }))
-       return(
-        subscribe1
-        
-      )
+       })})
+       //setFetchingUser(false)
+
+      //  try {
+      //   await AsyncStorage.setItem(
+      //     'brand' ,nameBrand
+      //   );
+      // } catch (error) {
+      //   // Error saving data
+      
+       
       }
     
   
@@ -80,26 +89,8 @@ const userId = auth.currentUser.uid;
   checkPer()
      
   fetchData();          
-      //   const subscribe1 = userRef.once('value').then(function(snapshot) {
-      //   setName((snapshot.val() && snapshot.val().name) )
-      //   setPassword((snapshot.val() && snapshot.val().password))
-      //   //setEmail((snapshot.val() && snapshot.val().email))
-      //   setnameBrand((snapshot.val() && snapshot.val().serviceProvider))
-      //     }
-      
-      //     const subscribe2 = database.ref('serviceProvider/'+nameBrand).once('value').then(function(snapshotinner) {
-      //       setDescripiton((snapshotinner.val() && snapshotinner.val().description))
-      //       setphoneNum((snapshotinner.val() && snapshotinner.val().phone))
-      //       setCategory((snapshotinner.val() && snapshotinner.val().category))
-      //       setWebsite((snapshotinner.val() && snapshotinner.val().website))
-      //       setTwitter((snapshotinner.val() && snapshotinner.val().twitter))
-      //       setInstagram((snapshotinner.val() && snapshotinner.val().instagram))
-      //  }))
-      //  return()=>{
-      //   // unmount
-      //   subscribe1
-      //   subscribe2
-      // }  
+   
+       
         },[])
 
 
@@ -169,6 +160,8 @@ const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[
     setErrorMessage("يرجى إختيار صورة")
   }
  
+  if (twitter.startsWith('@'))
+  twitter.substring(1,twitter.length-1 )
   // const twitterExp = /^@([A-Za-z0-9_]+{1,15}$)/;
   // if (!twitterExp.test(twitter) ){
   //   setValid(false);
@@ -189,6 +182,7 @@ const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[
 
 
     //Trademark 
+    
     const FirstRoute = () => (
       
       <View style={[styles.scene, { backgroundColor: 'white' }]} >
@@ -365,12 +359,59 @@ const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[
 
             </View>
       );
+
+//         //function to add TextInput dynamically
+//   const addTextInput = (index) => {
+//     let input = textInput
+//     input.push(
+//     <TextInput style={styless.TextInput}
+//       onChangeText={(text) => this.addValues(text, index)} 
+//       />);
+//     setTextInput(input );
+//   }
+
+//   //function to remove TextInput dynamically
+//   const removeTextInput = () => {
+//     let input = textInput;
+//     let inputdata = inputData;
+//     input.pop();
+//     inputdata.pop();
+//     setTextInput(input)
+//     setInputData(inputdata)
+//   }
+
+//   //function to add text from TextInputs into single array
+//   const addValues = (text, index) => {
+//     let dataArray = inputData;
+//     let checkBool = false;
+//     if (dataArray.length !== 0){
+//       dataArray.forEach(element => {
+//         if (element.index === index ){
+//           element.text = text;
+//           checkBool = true;
+//         }
+//       });
+//     }
+//     if (checkBool){
+//     setInputData(dataArray)
+//   }
+//   else {
+//     dataArray.push({'text':text,'index':index});
+//     setInputData(dataArray)
+
+//   }
+//   }
+
+//   //function to console the output
+//  const getValues = () => {
+//     console.log('Data',inputData);
+//   }
       
       const ThirdRoute = () =>{
         return (
         <View style={[styles.scene, { backgroundColor: 'white' }]} >
             <View>
-                <Image
+                 <Image
                   source={require("../images/mapsmockup.png")}
     
                     style={{
@@ -378,9 +419,44 @@ const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[
                       width: 300
 
                     }}
-                />
+                /> 
+
+                   {/* <Entypo name="location" color={colors.primaryBlue} size={40} style={styless.fieldLabels} style={{alignSelf:'center',marginTop:20}}/> 
+                     <TouchableOpacity >
+                    <View style={{alignSelf:'flex-end',margin:10 , alignItems:'flex-end',flexDirection:'row-reverse' , padding:10}}>
+                    <Entypo name="plus" size={20} color={'black'}  />
+                    <Text  style={{fontSize:20}} >إضافة فرع </Text>
+                    </View>
+                    </TouchableOpacity>
+                    <View style={styless.fields}>  
+
+                   
+                      <TextInput
+                        style={styless.TextInput}
+                        placeholder=" مثال: فرع التحلية"
+                        //onChangeText={twitter => this.setState({ twitter })}
+                        //value={this.state.twitter}
+                        autoCapitalize="none"
+                      /> 
+                       {textInput.map((value) => {
+                          return value
+                              })} 
+{/* <View>
+        <View style= {styles.row}>
+          
+        {/* <View style={{margin: 10}}>
+        <Button title='Remove' onPress={() => removeTextInput()} />
+        </View> 
+        </View>
+        {textInput.map((value) => {
+          return value
+        })}
+        <Button title='Get Values' onPress={() =>getValues()} />
+      </View>
+    */} 
+                    </View> 
                
-              </View>
+              
         </View>
         );
 

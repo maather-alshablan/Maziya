@@ -9,10 +9,6 @@ import serviceProvider from "./SPprofile";
 //import { QRCode } from 'react-native-custom-qr-codes';
 
 
- 
-
-    
-  
 
  
 export default class NewOffer extends Component  {
@@ -23,6 +19,7 @@ export default class NewOffer extends Component  {
         OfferId:"",
         expiration:"",
         code:"",
+        serviceProvider:'',
         errorMessage: null,
         errors: false,
       };
@@ -36,7 +33,7 @@ export default class NewOffer extends Component  {
             valid = false;
             this.setState({
               errors: true,
-              errorMessage: "يرجى ادخال جميع البيانات",
+              errorMessage: "يرجى ادخال العنوان",
             });
           }
     
@@ -44,7 +41,7 @@ export default class NewOffer extends Component  {
             valid = false;
             this.setState({
               errors: true,
-              errorMessage: "يرجى ادخال جميع البيانات",
+              errorMessage: "يرجى ادخال الوصف",
             });
           }
 
@@ -67,14 +64,17 @@ export default class NewOffer extends Component  {
                 errors: true,
                 errorMessage: "يرجى ادخال جميع البيانات",
               });
+              //return?
           }
 
         if (valid) {
           this.setState({
             errors: false,
           });
+          
         }
-      
+        writeOfferSP();
+        
       }
       //  checkTextInput = () => {
       // //   //Check  TextInput
@@ -93,49 +93,51 @@ export default class NewOffer extends Component  {
       //   }
       // //   //Checked Successfully
       // //   //Do whatever you want
-      //  alert('Success');
+      //  writeOfferSP();
       //  };
 
-      // firebase 
-      // writeOfferSP = () => {
-   
-
+      //firebase 
+       const writeOfferSP = () => {
+  
             const serviceProvider=''
             var currentUser = auth.currentUser.uid
             var ref = database.ref().child("users/"+currentUser).once('value').then(function(snapshot) {
               serviceProvider= (snapshot.val() && snapshot.val().serviceProvider) })
+           
+              this.setState({serviceProvider: serviceProvider})
             
-            var OfferId =  database.ref().child("offer").push().key
+            var OfferId =  database.ref().child("Offers").push().key
 
             var newOffer = {
-              serviceProvider:serviceProvider,
-              Descripiton: this.state.Descripiton,
+              serviceProvider:this.state.serviceProvider,
+              descripiton: this.state.Descripiton,
               expiration: this.state.expDate ,
               title: this.state.title,
               code:this.state.code
             }
             var updates = {};
-            updates['/offers/' + OfferId] = newOffer;
-            updates['/serviceProvider/' + serviceProvider + '/offers/' + OfferId] = newOffer;
+            updates['/Offers/' + OfferId] = newOffer;
+            updates['/serviceProvider/' + this.state.serviceProvider + '/Offers/' + OfferId] = newOffer;
           
-            return firebase.database().ref().update(updates).then(Alert.alert('successful upload'));
+             database.ref().update(updates).then(Alert.alert('successful upload')).then(this.props.navigation.pop());
+          };
+        }
 
-
-      //     .ref()
-      //     .child("Offers")
-      //   database
-      //     .ref()
-      //     .child("Offers")
-      //     .child(OfferId)
-      //     .set({
-      //       Descripiton: this.state.Descripiton,
-      //       expiration: this.state.expDate ,
-      //       title: this.state.title,
-       //      code:this.state.code
-      //     })
-      //     .then(this.props.navigation.navigate("SPhomescreen"))
-      //     .catch((error) => console.log(error));
-       };
+        //   .ref()
+        //   .child("Offers")
+        // database
+        //   .ref()
+        //   .child("Offers")
+        //   .child(OfferId)
+        //   .set({
+        //     Descripiton: this.state.Descripiton,
+        //     expiration: this.state.expDate ,
+        //     title: this.state.title,
+        //     code:this.state.code
+        //   })
+        //   .then(this.props.navigation.navigate("SPhomescreen"))
+        //   .catch((error) => console.log(error));
+      
       
  
 render(){
@@ -167,6 +169,7 @@ render(){
                     <TextInput style={styless.textInput} 
                     autoCapitalize="none" 
                     textAlign='right'
+                    placeholder='مثال: خصم ١٥٪ بالمئة '
                     onChangeText={(title) => this.setState({ title })}/>
                 </View>
                 
@@ -277,7 +280,7 @@ const styless = StyleSheet.create({
         marginTop: 10,
         borderBottomWidth: 1,
         borderBottomColor: '#f2f2f2',
-        paddingBottom: 5
+        padding: 10
  
     },
     textInput: {

@@ -1,14 +1,14 @@
 
 import React, { Component , useState } from "react";
-import { StyleSheet, Text, View, TextInput,Button, TouchableOpacity, Dimensions, Platform, StatusBar ,Image,ImageBackground , ScrollView} from 'react-native';
+import { StyleSheet, Text, View, Linking, TextInput,Button, TouchableOpacity, Dimensions, Clipboard, Platform, StatusBar ,Image,ImageBackground , ScrollView} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Modal from 'react-native-modal';
 import { database, auth,storage } from "../config/firebase";
 import {Entypo, MaterialCommunityIcons,MaterialIcons, FontAwesome, Ionicons} from '../constants/icons'
 import colors from '../constants/colors'
 import styles from "../constants/styles";
-//import { QRCode } from 'react-native-custom-qr-codes';
-
+import { QRCode } from 'react-native-custom-qr-codes';
+//import listOfferSP from '../components/ListOfferSP';
 
 
 
@@ -18,87 +18,150 @@ import styles from "../constants/styles";
 
 export default class serviceProvider extends Component{
      redeemOffer = () => {
-
+    
     }
     
     state= {
         modal:false,
+        favorite:false,
         brand:'',
         description:'',
+        email:'',
         phone:'',
         website:'',
+        code:'code123',
         twitter:'',
         instagram:'',
+        userType:'',
         //image:'',
         offers:[]
     }
 
-  
-componentDidMount(){
-    const readData= (name,description,phone,website,twitter,instagram)=>{
-        this.setState({
-            brand:name,
-            description:description,
-            phone:phone,
-            email:email,
-            website:website,
-            twitter:twitter,
-            instagram:instagram,
-            //image:image
+     fetchData= () =>{
+        
+        
+        database.ref().child('users/'+auth.currentUser.uid).once("value").then(function(snapshot) {
+                  const name= ((snapshot.val() && snapshot.val().serviceProvider))                  
+                   
+                database.ref().child('serviceProvider/'+name).once("value").then(function(snapshot) {
+                    var description=((snapshot.val() && snapshot.val().description))
+                    var email = ((snapshot.val() && snapshot.val().email))
+                   var  phone=((snapshot.val() && snapshot.val().phone))
+                   var website=((snapshot.val() && snapshot.val().website))
+                   var twitter=((snapshot.val() && snapshot.val().twitter))
+                  var  instagram=((snapshot.val() && snapshot.val().instagram))
+                  // var image=((snapshot.val() && snapshot.val().image))
+                  readData(name,email,description,phone,website,twitter,instagram);
+                
                 })
+            }
+             
+            )
+
+
+            const readData= (name,email,description,phone,website,twitter,instagram) => {
+           this.setState({
+                    brand:name,
+                    description:description,
+                    phone:phone,
+                    email: email,
+                    website:website,
+                    twitter:twitter,
+                    instagram:instagram,
+                    //image:image
+           })
+        } 
+
+        this.fetchOffers;
+          }
+
+
+    fetchOffers=()=>{
+       
+        
+        database.ref().child("serviceProvider/"+this.state.brand+'/Offers').on('child_added', data => {
+        this.state.offers.push({
+    
+          title: data.val().title,
+          description: data.val().description,
+          code: data.val().code,
+          expiration:data.val().expiration
+        });
+        });    
     }
 
-        database.ref().child('users/'+auth.currentUser.uid).on("value").then(function(snapshot) {
-          const name= ((snapshot.val() && snapshot.val().serviceProvider))
-           
-        database.ref().child('serviceProvider/'+name).on("value").then(function(snapshot) {
-            var description=((snapshot.val() && snapshot.val().description))
-            var email = ((snapshot.val() && snapshot.val().email))
-           var  phone=((snapshot.val() && snapshot.val().phone))
-           var website=((snapshot.val() && snapshot.val().website))
-           var twitter=((snapshot.val() && snapshot.val().twitter))
-          var  instagram=((snapshot.val() && snapshot.val().instagram))
-          // var image=((snapshot.val() && snapshot.val().image))
-        
-        readData(name,email,description,phone,website,twitter,instagram);
-    })
-    })         
+
+    listOffers= () => {
+
+        if( this.state.offers.length)
+        return (
+        this.state.offers.map( offer => 
+          <Card 
+        title={offer.title}
+        content={offer.description}
+        iconName="local-offer"
+        iconType="MaterialIcons"
+        iconBackgroundColor= {colors.primaryBlue}
+        bottomRightText={offer.expiration}
+        //onPress={() => {}}
+        />
+        ))
+      }
+
+UNSAFE_componentWillMount(){
+ 
+    this.fetchData();    
+
     }
-componentDidUpdate(){
-    this.componentDidMount()
-    
-}
-   
 
    
         toggleModal = () => {
         this.setState({modal: !this.state.modal});
       };
 
+       copyToClipboard = () => {
+        Clipboard.setString(this.state.code)
+      }
       
+      toggleFavorite= () => {
+        this.setState({favorite: !this.state.favorite});
+      };
+
     
      render(){
-
     return(
    
             <View style={styless.container}>
                  <ScrollView style={styles.scrollView}>
 
                     <View style={styless.header}>
+                   
+                    <TouchableOpacity style={{alignSelf:'flex-end' ,marginTop:10}}
+                    onPress={this.toggleFavorite}>
+                    <MaterialCommunityIcons 
+                    name={ this.state.favorite? "heart" : "heart-outline"}  
+                     color={colors.primaryBlue} 
+                     size={30} 
+                     />
+                    </TouchableOpacity>
                     <Text style={[styles.header]}>{this.state.brand}</Text>
                         <View >
                         <Image source={require('../images/logoDis.jpg')} style={{width:100,height:100,marginLeft:120}}/>
                         </View> 
                     </View>
-    
+                    
                     <View style={styless.footer}>
                         <Text style={styless.text_footer}>عن مزود خدمة </Text>
-                        <Text style={{alignSelf:'flex-end'}}>{this.state.description}</Text>
+
+                        <Text style={{alignSelf:'flex-end'}}>
+                            {this.state.description}
+                            
+                            </Text>
 
                         <View style={{alignSelf:'flex-end'}}>
-                        <Text style={styless.text_footer}>تواصل</Text>
+                        <Text style={styless.text_footer}>للتواصل</Text>
                         </View>
-                        <View style={{flexDirection:"column"}}>
+                        <View style={{flexDirection:"row"}}>
 
                          <TouchableOpacity>
                          <MaterialCommunityIcons
@@ -107,7 +170,8 @@ componentDidUpdate(){
                         size={30}
                         style={styles.fieldLabels}
                         accessibilityValue={this.state.email}
-                             /></TouchableOpacity>
+                        onPress={() => {Linking.openURL('mailto:'+this.state.email)}} />
+                             </TouchableOpacity>
 
                     {this.state.phone == '' ? <View></View>:
                     <TouchableOpacity>
@@ -118,19 +182,28 @@ componentDidUpdate(){
                     {this.state.website == '' ? <View></View>:
                     <TouchableOpacity>
                     <MaterialCommunityIcons name="web" color={colors.primaryBlue} size={30} style={styles.fieldLabels} 
-                    accessibilityValue={this.state.website} />
+                    accessibilityValue={this.state.website} onPress={() => {
+                        Linking.openURL('https://'+this.state.website);
+                      }}/>
                     </TouchableOpacity>}
 
                     {this.state.twitter == '' ? <View></View>:
                     <TouchableOpacity>
                     <MaterialCommunityIcons name="twitter" color={colors.primaryBlue} size={30} style={styles.fieldLabels}
-                    accessibilityValue={this.state.twitter} />
+                    accessibilityValue={this.state.twitter} 
+                    onPress={() => {
+                        Linking.openURL('https://twitter.com/'+this.state.twitter);
+                      }}
+                    
+                    />
                     </TouchableOpacity> }
 
                     {this.state.instagram == '' ? <View></View>:
                     <TouchableOpacity>
                     <MaterialCommunityIcons name="instagram" color={colors.primaryBlue} size={30} style={styles.fieldLabels} 
-                    accessibilityValue={this.state.instagram}/>
+                    onPress={() => {
+                        Linking.openURL('https://instagram.com/'+this.state.instagram);
+                      }}/>
                     </TouchableOpacity>}
                     </View>
 
@@ -143,18 +216,14 @@ componentDidUpdate(){
 
                         <Text style={styless.text_footer}>الفروع</Text>
                         <View style={styless.action}>
-                        <TextInput style={styless.textInput} 
-                        autoCapitalize="none" 
-                        textAlign='right'/>
+                        {this.listOffers}
                         </View>
 
                 
 
                         <Text style={styless.text_footer}>العروض</Text>
                         <View style={styless.action}>
-                        <TextInput style={styless.textInput} 
-                        autoCapitalize="none"
-                        textAlign='right'/>
+                        {/* {listOfferSP(this.state.brand)} */}
                         </View>
                         </View>
  
@@ -168,11 +237,23 @@ componentDidUpdate(){
                         onBackdropPress={() => this.setState({modal: false})}>
                            <View style={styless.modal}>
                           < View>
-                        <ImageBackground source={require('../images/image.png')} style={{width:200,height:200}}>    
-                    </ImageBackground>
+                          <QRCode
+          value={this.state.code}
+          size={200}
+          bgColor='black'
+          fgColor='white'/>
                     </View>
-                               <Text>Hello!</Text>
-                                 <Button title="Hide modal" onPress={this.toggleModal} />
+                                <TouchableOpacity onPress ={()=> this.copyToClipboard()}>
+                                <Text style={styles.text_footer}>انسخ الكود</Text>
+                                </TouchableOpacity>
+                            
+                                <TouchableOpacity onPress={() => {
+                       Linking.openURL('https://'+this.state.website);
+                      }}>
+                                <Text style={{color:colors.primaryBlue}}>  {this.state.brand}  انقلني لصفحة </Text>
+                                </TouchableOpacity>
+
+                                 <Button title="اغلاق" onPress={this.toggleModal} />
                                     </View>
                                </Modal>
                     </TouchableOpacity>
@@ -269,7 +350,14 @@ const styless = StyleSheet.create({
          alignItems: 'center',
         width: 330,
         //height: 100,
-         marginVertical:100
+         marginVertical:100, 
+            borderTopLeftRadius: 10,
+            borderTopRightRadius: 10,
+            borderBottomEndRadius:10,
+            borderBottomLeftRadius:10,
+            borderBottomRightRadius:10,
+            overflow: 'hidden',
+        
 
 
     }
