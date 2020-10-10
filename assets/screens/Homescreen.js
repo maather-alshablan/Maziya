@@ -5,11 +5,14 @@ import { Text,
     StyleSheet,
     ScrollView,
     TextInput } from 'react-native'
-import {firebase, auth } from '../config/firebase'
+import {firebase, auth, database } from '../config/firebase'
 import {Entypo} from '../constants/icons'
 import colors from '../constants/colors'
 import {FontAwesome} from 
 "@expo/vector-icons";
+import { Card } from "@paraboly/react-native-card";
+import serviceProvider from './SPprofile'
+
 
 // add bottom navigation 
 // drawer navigation 
@@ -56,29 +59,40 @@ const Homescreen =({ navigation}) => {
             <FontAwesome name="search" color="#fff" size={20} />
           </TouchableOpacity>
         </View>
-        <View style={styles.viewBox}></View>
-        <View style={styles.viewBox}></View>
+       <Card 
+        title={'title'}
+        content={'offer.description'}
+        iconName="local-offer"
+        iconType="MaterialIcons"
+        iconBackgroundColor= {colors.primaryBlue}
+        bottomRightText={'offer.expiration'}
+        onPress={() => {}}
+        />
       </ScrollView>
     </View>
   );
 }
-          
-            
-
-  /*          
-            <Button  type="outline" title="Log out"  color="black" border="solid" border-color="black" onPress={() => auth
-            .signOut()
-            .then(() => navigation.navigate('Login'))}
-            
-            />
-        </View>
 
 
+const serviceProviders=()=>{
+  const name=''
+  const description=''
+  database.ref().child('serviceProvider/zara').once('value', function(data){
+    name=  'zara'// data.val().s
+     description = data.val().description
     
-    );
-
-    
-};*/
+  })
+  return(
+  <Card
+  title={name}
+  content={description}
+  iconName="local-offer"
+  iconType="MaterialIcons"
+  iconBackgroundColor= {colors.primaryBlue}
+  //bottomRightText={offer.expiration}
+  //onPress={() => {}}
+  /> )
+}
 
 const styles = StyleSheet.create({
     container: {

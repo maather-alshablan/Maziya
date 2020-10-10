@@ -47,7 +47,7 @@ export default class RegistrationServiceProvider extends Component {
   }
 
   state = {
-    image: "https://imgplaceholder.com/72x80",
+    image: '',
     userName: "",
     phoneNum: "",
     email: "",
@@ -70,6 +70,7 @@ export default class RegistrationServiceProvider extends Component {
   };
   onNextFirstStep = () => {
     let valid = true;
+
     if (this.state.phoneNum.length != 10) {
       valid = false;
       this.setState({
@@ -144,6 +145,27 @@ export default class RegistrationServiceProvider extends Component {
         errors: true,
         errorMessage: "يرجى إختيار صورة"
       });
+
+
+  //  const twitterExp = /^@([A-Za-z0-9_]+{1,15}$)/;
+  // if (!twitterExp.test(this.state.twitter) ){
+
+  //   valid = false;
+  //   this.setState({
+  //     errors: true,
+  //     errorMessage: ("يرجى ادخال حساب تويتر بالشكل الصحيح")
+  //   });
+  // }
+
+  // const instagramExp = /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/;
+  // if (!instagramExp.test(this.state.instagram) ){
+  //   valid = false;
+  //   this.setState({
+  //     errors: true,
+  //     errorMessage: ("يرجى ادخال حساب الإنستغرام بالشكل الصحيح")
+  //   });
+  // }
+
     }
     if (valid) {
       this.setState({
@@ -165,23 +187,14 @@ export default class RegistrationServiceProvider extends Component {
 
   openImagePickerAsync = async () => {
     await Permissions.askAsync(Permissions.CAMERA_ROLL);
-    const { cancelled, uri } = await ImagePicker.launchImageLibraryAsync({
+    const result = await ImagePicker.launchImageLibraryAsync({
       aspect: 1,
       allowsEditing: true,
     });
-    if (!cancelled) this.setState({ image: uri });
+    if (!result.cancelled) this.setState({ image: result.uri});
   };
 
-  // handleCloseNotification = () => {
-  //   this.setState({ formValid: true });
 
-  //   if (!this.state.formValid) {
-  //     this.setState({ error: true });
-  //   } else {
-  //     this.setState({ error: false });
-  //     this.state.formValid = true;
-  //   }
-  // };
 
   handleSignUp = () => {
    // console.log("handleSignUp", this.state);
@@ -214,7 +227,8 @@ export default class RegistrationServiceProvider extends Component {
       .set({
         name: this.state.userName,
         email: this.state.email,
-        trademark: this.state.nameBrand,
+        password: this.state.password,
+        serviceProvider: this.state.nameBrand,
         accountType: "serviceProvider",
       })
       .then(this.writeServiceProvider())
@@ -228,13 +242,13 @@ export default class RegistrationServiceProvider extends Component {
       .child("serviceProvider")
       .child(this.state.nameBrand)
       .set({
-        Descripiton: this.state.Description,
+        description: this.state.Description,
         category: this.state.category,
+        email:this.state.email,
         phone: this.state.phoneNum,
         website:this.state.website,
         twitter:this.state.twitter,
         instagram:this.state.instagram,
-        //image: this.state.image,
       }).then(this.props.navigation.navigate("SPhomescreen"))
       .catch((error) => console.log(error));
   };
@@ -246,15 +260,12 @@ export default class RegistrationServiceProvider extends Component {
     };
     const imageRef = "images/"+imgName+'.png';
     const StorageRef = storage.ref().child(imageRef)
-    const task = StorageRef.put(uri,metadata).then(console.log('successfully uploaded to firebase' )).catch(console.log('failure image upload'))
-    const reference = (await task).downloadURL;
+    const task = StorageRef.put(this.state.image,metadata)
+    .then(console.log('successfully uploaded to firebase' ))
+    .catch(console.log('failure image upload'))
+    .then( this.setState({image: imageRef}))
 
-    const subscrition= database
-    .ref()
-    .child("serviceProvider")
-    .child(this.state.nameBrand)
-    .set({imageref: reference  })
-
+   
     //incase of memory leak error
     // return() =>{
     //   StorageRef();
@@ -264,11 +275,11 @@ export default class RegistrationServiceProvider extends Component {
   
 
   render() {
-    const showNotification = this.state.Valid ? false : true;
+    //const showNotification = this.state.Valid ? false : true;
     console.disableYellowBox = true;
 
 
-    console.log(this.validateEmail(this.state.email));
+   // console.log(this.validateEmail(this.state.email));
   //  console.log("state", this.state);
     return (
       <View style={styles.container}>
@@ -433,9 +444,9 @@ export default class RegistrationServiceProvider extends Component {
                     autoCapitalize="none" 
                     textAlign='right'
                     placeholder=" وصف العلامة التجارية"
-                    value={this.state.Descripiton}
-                    onChangeText={(Descripiton) =>
-                      this.setState({ Descripiton })}/>
+                    onChangeText={ Description =>this.setState({ Description })}
+                    value= {this.state.Description}/>
+
                 </View>
                 
                 
@@ -447,7 +458,7 @@ export default class RegistrationServiceProvider extends Component {
                 <MaterialCommunityIcons name="web" color={colors.primaryBlue} size={30} style={styles.fieldLabels} />
                   <TextInput
                     style={styles.TextInput}
-                    
+                  
                     placeholder=" الموقع الإلكتروني"
                     onChangeText={website => this.setState({ website })}
                     value={this.state.website}

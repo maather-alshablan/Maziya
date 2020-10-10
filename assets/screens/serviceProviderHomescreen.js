@@ -13,37 +13,50 @@ export default class serviceProviderHomescreen extends Component{
     
 state = {
   name:'',
-  //userId:auth.currentUser.uid,
-  //trademark:''
+  offers:[],
 
 }
 
-    //    userName = () => {
+  UNSAFE_componentWillMount(){
+    var userId = auth.currentUser.uid
+    var serviceProvider =""
+    database.ref("users/"+userId).once('value',function(data){
+      serviceProvider = data.val().serviceProvider
+    })
+    
+    database.ref().child("serviceProvider/"+serviceProvider+'/Offers').on('child_added', data => {
+    this.state.offers.push({
 
-      
-    //      database.ref('/users/' + this.state.userId).once('value').then(function(snapshot) {
-    //       var name = (snapshot.val() && snapshot.val().trademark)
-    //     }
-
-    //     )
-    //     this.state.trademark = name;
-    //    return (
-    //      <Text>{bra}</Text>
-
-    //    )
-    // }
+      title: data.val().title,
+      description: data.val().description,
+      code: data.val().code,
+      expiration:data.val().expiration
+    });
+    });    
+ 
+  }
         
       listOffer = () => {
+
+        if( this.state.offers.length)
         return (
+        this.state.offers.map( offer => 
           <Card 
-        title="عرضي"
-        content="تفاصيل العرض"
+        title={offer.title}
+        content={offer.description}
         iconName="local-offer"
         iconType="MaterialIcons"
         iconBackgroundColor= {colors.primaryBlue}
+<<<<<<< HEAD
         bottomRightText="30"
         onPress= {() => this.props.navigation.navigate('editOffer')}/>
         )
+=======
+        bottomRightText={offer.expiration}
+        //onPress={() => {}}
+        />
+        ))
+>>>>>>> 17601f07c1fc87e9ecff51da1f991f98450527c8
       }
 
     render(){
@@ -72,7 +85,8 @@ state = {
             </View>
             
             <Text style={styles.header}>عروضي </Text>
-            {this.listOffer()}
+            {this.listOffer}
+          
             
             <View style={styles.footer}>
             <TouchableOpacity style={styles.buttonView} onPress={() => auth

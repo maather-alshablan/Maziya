@@ -5,6 +5,7 @@ import colors from '../constants/colors'
 import {Entypo} from '../constants/icons'
 import InputField from '../components/InputField'
 import { TouchableHighlight } from 'react-native-gesture-handler'
+import resetPassword from './resetPasswordLoggedIn'
 
 export default class Profile extends Component{
  state = { 
@@ -104,8 +105,10 @@ render(){
           editable={false}
         
         />
+        <Button title='هل ترغب بتغيير كلمة المرور؟' onPress= {() => this.props.navigation.navigate('resetPassword')} color='white'/> 
+        <Button title='حفظ' onPress={this.handleUpdate} color='white'/>
+       
 
-        <Button title='update' onPress={this.handleUpdate} color='white'/>
         </View>
 
       </KeyboardAvoidingView> 

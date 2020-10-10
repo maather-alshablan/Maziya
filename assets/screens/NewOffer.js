@@ -1,15 +1,22 @@
 import React, { Component , useState } from "react";
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Dimensions, Platform, StatusBar ,Image,ImageBackground , ScrollView} from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Dimensions, Platform, StatusBar ,Image,ImageBackground , ScrollView, Alert} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { database, auth,storage } from "../config/firebase";
 import {Entypo, MaterialCommunityIcons,MaterialIcons, FontAwesome, Ionicons} from '../constants/icons'
 import colors from '../constants/colors'
 import styles from "../constants/styles";
+<<<<<<< HEAD
 import { QRCode } from 'react-native-custom-qr-codes';
 
 
 
   
+=======
+import serviceProvider from "./SPprofile";
+//import { QRCode } from 'react-native-custom-qr-codes';
+
+
+>>>>>>> 17601f07c1fc87e9ecff51da1f991f98450527c8
 
  
 export default class NewOffer extends Component  {
@@ -18,8 +25,9 @@ export default class NewOffer extends Component  {
         title: "",
         Descripiton: "",
         OfferId:"",
-        date:"",
-        // splId:"",
+        expiration:"",
+        code:"",
+        serviceProvider:'',
         errorMessage: null,
         errors: false,
       };
@@ -52,40 +60,69 @@ export default class NewOffer extends Component  {
             valid = false;
             this.setState({
               errors: true,
-              errorMessage: "يرجى ادخال جميع البيانات",
+              errorMessage: "يرجى ادخال العنوان",
             });
+            return;
           }
     
           if (this.state.Descripiton === "" ) {
             valid = false;
             this.setState({
               errors: true,
-              errorMessage: "يرجى ادخال جميع البيانات",
+              errorMessage: "يرجى ادخال الوصف",
             });
+            return;
           }
 
-          if (this.state.OfferId === "" ) {
-            valid = false;
-            this.setState({
-              errors: true,
-              errorMessage: "يرجى ادخال جميع البيانات",
-            });
-          }
-          if (this.state.date === "" ) {
-            valid = false;
-            this.setState({
-              errors: true,
-              errorMessage: "يرجى ادخال جميع البيانات",
-            });
-          }
+
+
+          // if (this.state.expiration === "" ) {
+          //   valid = false;
+          //   this.setState({
+          //     errors: true,
+          //     errorMessage: "يرجى ادخال جميع البيانات",
+          //   });
+          //   return; }
+          //   if (this.state.code === "" ) {
+          //     valid = false;
+          //     this.setState({
+          //       errors: true,
+          //       errorMessage: "يرجى ادخال جميع البيانات",
+          //     });
+          //     return;
+        //  }
 
         if (valid) {
           this.setState({
             errors: false,
           });
-        }
-      
+        
+        
+        const serviceProvider=''
+            var currentUser = auth.currentUser.uid
+            var ref = database.ref().child("users/"+currentUser).once('value').then(function(snapshot) {
+              serviceProvider= (snapshot.val() && snapshot.val().serviceProvider) })
+           
+              this.setState({serviceProvider: serviceProvider})
+            
+            var OfferId =  database.ref().child("Offers").push().key
+
+            var newOffer = {
+              serviceProvider:this.state.serviceProvider,
+              descripiton: this.state.Descripiton,
+              expiration: this.state.expDate ,
+              title: this.state.title,
+              code:this.state.code
+            }
+            var updates = {};
+            updates['/Offers/' + OfferId] = newOffer;
+            updates['/serviceProvider/' + this.state.serviceProvider + '/Offers/' + OfferId] = newOffer;
+          
+             database.ref().update(updates).then(Alert.alert('successful upload')).then(this.props.navigation.pop());
+          
+        
       }
+<<<<<<< HEAD
  
     
       writeOfferSP = () => {
@@ -105,6 +142,71 @@ export default class NewOffer extends Component  {
      .then(this.props.navigation.navigate("SPhomescreen"))
      .catch((error) => console.log(error));
      };
+=======
+      //  checkTextInput = () => {
+      // //   //Check  TextInput
+      //   if (!handleNameChange.trim()) {
+      //     alert('Please Enter Name');
+      //     return;
+      //    }
+      // //   //Check for TextInput
+      //    if (!handleDescripitonChange.trim()) {
+      //      alert('Please Enter Email');
+      //      return;
+      //    }
+      //    if (!handleOfferIdChange.trim()) {
+      //      alert('Please Enter Email');
+      //   return;
+      //   }
+      // //   //Checked Successfully
+      // //   //Do whatever you want
+      //  writeOfferSP();
+      //  };
+
+      //firebase 
+    
+        const writeOfferSP = () => {
+  
+            const serviceProvider=''
+            var currentUser = auth.currentUser.uid
+            var ref = database.ref().child("users/"+currentUser).once('value').then(function(snapshot) {
+              serviceProvider= (snapshot.val() && snapshot.val().serviceProvider) })
+           
+              this.setState({serviceProvider: serviceProvider})
+            
+            var OfferId =  database.ref().child("Offers").push().key
+
+            var newOffer = {
+              serviceProvider:this.state.serviceProvider,
+              descripiton: this.state.Descripiton,
+              expiration: this.state.expDate ,
+              title: this.state.title,
+              code:this.state.code
+            }
+            var updates = {};
+            updates['/Offers/' + OfferId] = newOffer;
+            updates['/serviceProvider/' + this.state.serviceProvider + '/Offers/' + OfferId] = newOffer;
+          
+             database.ref().update(updates).then(Alert.alert('successful upload')).then(this.props.navigation.pop());
+          };
+        }
+
+        //   .ref()
+        //   .child("Offers")
+        // database
+        //   .ref()
+        //   .child("Offers")
+        //   .child(OfferId)
+        //   .set({
+        //     Descripiton: this.state.Descripiton,
+        //     expiration: this.state.expDate ,
+        //     title: this.state.title,
+        //     code:this.state.code
+        //   })
+        //   .then(this.props.navigation.navigate("SPhomescreen"))
+        //   .catch((error) => console.log(error));
+      
+>>>>>>> 17601f07c1fc87e9ecff51da1f991f98450527c8
       
  
 render(){
@@ -136,6 +238,7 @@ render(){
                     <TextInput style={styless.textInput} 
                     autoCapitalize="none" 
                     textAlign='right'
+                    placeholder='مثال: خصم ١٥٪ بالمئة '
                     onChangeText={(title) => this.setState({ title })}/>
                 </View>
                 
@@ -253,7 +356,7 @@ const styless = StyleSheet.create({
         marginTop: 10,
         borderBottomWidth: 1,
         borderBottomColor: '#f2f2f2',
-        paddingBottom: 5
+        padding: 10
  
     },
     textInput: {
