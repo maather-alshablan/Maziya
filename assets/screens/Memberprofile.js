@@ -105,9 +105,9 @@ render(){
           editable={false}
         
         />
-
-        <Button title='update' onPress={this.handleUpdate} color='white'/>
-        <Button title='update' onPress= {() => this.props.navigation.navigate('resetPassword')} color='white'/>
+        <Button title='هل ترغب بتغيير كلمة المرور؟' onPress= {() => this.props.navigation.navigate('resetPassword')} color='white'/> 
+        <Button title='حفظ' onPress={this.handleUpdate} color='white'/>
+       
 
         </View>
 
