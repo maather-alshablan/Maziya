@@ -1,11 +1,12 @@
 import React, { Component , useState } from "react";
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Dimensions, Platform, StatusBar ,Image,ImageBackground , ScrollView} from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Dimensions, Platform, StatusBar ,Image,ImageBackground , ScrollView,Alert} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { database, auth,storage } from "../config/firebase";
 import {Entypo, MaterialCommunityIcons,MaterialIcons, FontAwesome, Ionicons} from '../constants/icons'
 import colors from '../constants/colors'
 import styles from "../constants/styles";
 import { QRCode } from 'react-native-custom-qr-codes';
+import SignInButton from "../components/SignInButton";
 
 
  
@@ -15,24 +16,35 @@ import { QRCode } from 'react-native-custom-qr-codes';
 
  
 export default class editOffer extends Component  {  
+    constructor(){
+        super();
+        this.state={
+            OfferId : this.state.OfferId2 , 
+        }
+      }
 
     state = {
         title: "",
         Descripiton: "",
         OfferId:"",
-        date:"",
-        // splId:"",
+        expdate:"",
+        OfferId2:"",
         
+        
+    
       };
-      
-      
+    
+      handleOfferIdChange = () => {
+        this.setState({ OfferId2: this.state.OfferId  });}
+    
 componentDidMount(){
    
-  const readData =  (Descripiton,date,title) => {
+  const readData =  (Descripiton,expdate,title,OfferId) => {
    this.setState({
      Descripiton: Descripiton,
-     date: date,
-     title: title
+     expdate: expdate,
+     title: title,
+     OfferId:OfferId,
    });
  };
  
@@ -44,22 +56,26 @@ componentDidMount(){
     var Descripiton=  (snapshot.val() && snapshot.val().Descripiton)
     var expdate =  (snapshot.val() && snapshot.val().expdate)
     var title= (snapshot.val() && snapshot.val().title)
-
-   readData(Descripiton,expdate,title);
+    var OfferId= (snapshot.val() && snapshot.val().OfferId)
+   readData(Descripiton,expdate,title,OfferId);
     });
     
 
 }
 
+removeOffer=() => {
+database.ref('serviceProvider/'+ auth.currentUser.uid + "/offers").remove()
+.catch(error => alert(error)).then(Alert.alert('successful delete'))
+.then(this.props.navigation.navigate("SPhomescreen"))}
 
 handleUpdate= ()=>{
-  var userId = auth.currentUser.uid;
+//   var userId = auth.currentUser.uid;
 
-  database.ref('serviceProvider/'+ auth.currentUser.uid + "offers/").update({ 
+  database.ref('serviceProvider/'+ auth.currentUser.uid + "/offers").update({ 
   'Descripiton': this.state.Descripiton, 
   'expdate': this.state.expdate,
   'title': this.state.title,
-  
+  'OfferId': this.state.OfferId,
 
 }).catch(error => alert(error)).then(Alert.alert('successful update'))
 
@@ -69,16 +85,14 @@ handleUpdate= ()=>{
 //   this.setState({ title: title  });
 // };
 
-// // handleDescripitonChange = Descripiton => {
-// //   this.setState({ Descripiton: Descripiton  });
-// // }
+
 
 // handleDateChange = expdate => {
 //     this.setState({ expdate: expdate  });
 //   };
 
 
-      
+ 
 
     
 
@@ -151,11 +165,16 @@ render(){
                    onChangeText={OfferId =>this.setState( { OfferId: OfferId} ) }
                    value={this.state.OfferId}/>
                     </View>
+                    <View style={styles.container}>
+                        <TouchableOpacity onPress={this.handleOfferIdChange}>
+                        <SignInButton text={'QR تحديث'} onPress={this.handleOfferIdChange}></SignInButton>
+                        </TouchableOpacity>
+                      </View>
                     <View style={styles.container} >
-                     <QRCode content='https://reactnative.com' />  
+                   
+                     <QRCode content={this.state.OfferId2} 
+                     logo={require('../images/logo.png')} /> 
                    </View>
- 
-                {/* </ImageBackground> */}
                 </View>
  
  
@@ -170,7 +189,16 @@ render(){
 
                     </LinearGradient>  
                     </TouchableOpacity> 
-                   
+                    <View style={styles.container} >
+                        <TouchableOpacity onPress={this.removeOffer} >
+                   <MaterialCommunityIcons
+                    name="delete"
+                    color={"red"}
+                    size={30}
+                    style={styles.fieldLabels}
+                  />
+                  </TouchableOpacity>
+                   </View>
                 </View>
 
                 {

@@ -1,24 +1,34 @@
 import React, { Component , useState } from "react";
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Dimensions, Platform, StatusBar ,Image,ImageBackground , ScrollView} from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Dimensions, Platform, StatusBar ,Image,ImageBackground , ScrollView, Alert} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { database, auth,storage } from "../config/firebase";
 import {Entypo, MaterialCommunityIcons,MaterialIcons, FontAwesome, Ionicons} from '../constants/icons'
 import colors from '../constants/colors'
 import styles from "../constants/styles";
 import { QRCode } from 'react-native-custom-qr-codes';
+import SignInButton from "../components/SignInButton";
 
 
 
-  
 
  
 export default class NewOffer extends Component  {
+
+  constructor(){
+    super();
+    this.state={
+      OfferId:"",
+        OfferId : "", 
+    }
+  }
 
     state = {
         title: "",
         Descripiton: "",
         OfferId:"",
         expdate:"",
+        OfferId:"",
+        OfferId2:"",
         errorMessage: null,
         errors: false,
       };
@@ -40,10 +50,14 @@ export default class NewOffer extends Component  {
     //     });
     //   };
     // }
+    handleOfferIdChange = () => {
+      this.setState({ OfferId2: this.state.OfferId  });
+      
+    }
 
-      handleChange = event => {
-        this.setState({ OfferId: event.target.value });
-      };
+      // handleChange = event => {
+      //   this.setState({ OfferId: OfferId2 });
+      // };
 
       checkvalid = () => {
         let valid = true;
@@ -122,9 +136,13 @@ export default class NewOffer extends Component  {
        Descripiton: this.state.Descripiton,
        expdate: this.state.expdate ,
        title: this.state.title,
-     }).then(alert('added successfully'))
+       OfferId:this.state.OfferId, 
+     })
+     .then(Alert.alert('successful add'))
      .then(this.props.navigation.pop())
      .catch((error) => console.log(error));
+    
+     
      };
      
 //      const writeOfferSP = () => {
@@ -154,6 +172,7 @@ export default class NewOffer extends Component  {
 //   }
  
 render(){
+ 
     return (
         
         <View style={styless.container}>
@@ -209,14 +228,21 @@ render(){
                 <View>
                 {/* <ImageBackground source={require('../images/image.png')} style={{width:200,height:200,marginLeft:50}}> */}
                   <View style={styless.action}>
-                    <TextInput placeholder='ادخل الرمز' style={styles.textInput,{paddingTop:50,marginLeft:120}} autoCapitalize="none" onChange={this.handleChange} value={this.state.OfferId}/>
+                    <TextInput placeholder='ادخل الرمز' style={styles.textInput,{paddingTop:50,marginLeft:132}} autoCapitalize="none" onChangeText={(OfferId) => this.setState({ OfferId })} value={this.state.OfferId}/>
                     </View>
-                    <View>
+                    {/* {this.state.OfferId} */}
                     
-                    </View>
+                      <View style={styles.container}>
+                        <TouchableOpacity onPress={this.handleOfferIdChange}>
+                        <SignInButton text={'QR تحديث'} onPress={this.handleOfferIdChange}></SignInButton>
+                        </TouchableOpacity>
+                      </View>
+                    
+                    
                     <View style={styles.container} >
                    
-                     <QRCode content={this.OfferId}/> 
+                     <QRCode content={this.state.OfferId2} 
+                     logo={require('../images/logo.png')} />
                    </View>
 
  
