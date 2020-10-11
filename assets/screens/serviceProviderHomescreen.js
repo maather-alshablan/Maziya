@@ -19,18 +19,16 @@ state = {
 
   UNSAFE_componentWillMount(){
     var userId = auth.currentUser.uid
-    var serviceProvider =""
-    database.ref("users/"+userId).once('value',function(data){
-      serviceProvider = data.val().serviceProvider
-    })
+  
     
     database.ref('serviceProvider/'+ auth.currentUser.uid).on('child_added', data => {
-    this.state.offers.push({
+    var offer = []
+      offer.push({
 
       title: data.val().title,
-      description: data.val().description,
-      code: data.val().code,
-      expiration:data.val().expiration
+      description: data.val().Descripiton,
+      //code: data.val().code,
+      expiration:data.val().expdate
     });
     
     this.setState({offers: offer})
@@ -48,11 +46,11 @@ state = {
         this.state.offers.map( offer => 
           <Card 
         title={offer.title}
-        content={offer.description}
+        content={offer.Descripiton}
         iconName="local-offer"
         iconType="MaterialIcons"
         iconBackgroundColor= {colors.primaryBlue}
-        bottomRightText="30"
+        //bottomRightText="30"
         onPress= {() => this.props.navigation.navigate('editOffer')}/>
         )
         )
@@ -84,7 +82,7 @@ state = {
             </View>
             <TouchableOpacity onPress= {() => this.props.navigation.navigate('editOffer')}>
             <Text style={styles.header}>عروضي </Text>
-            {/* {this.listOffer} */}
+             {this.listOffer()} 
             </TouchableOpacity>
           
             

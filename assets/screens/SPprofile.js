@@ -62,7 +62,7 @@ const userId = auth.currentUser.uid;
         setName((snapshot.val() && snapshot.val().name) )
         setPassword((snapshot.val() && snapshot.val().password))
          
-        database.ref('serviceProvider/'+nameBrand).once('value').then(function(snapshotinner) {
+        database.ref('serviceProvider/'+auth.currentUser.uid).once('value').then(function(snapshotinner) {
             setDescripiton((snapshotinner.val() && snapshotinner.val().description))
             setphoneNum((snapshotinner.val() && snapshotinner.val().phone))
             setCategory((snapshotinner.val() && snapshotinner.val().category))

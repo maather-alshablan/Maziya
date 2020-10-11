@@ -122,8 +122,8 @@ export default class NewOffer extends Component  {
        Descripiton: this.state.Descripiton,
        expdate: this.state.expdate ,
        title: this.state.title,
-     })
-     .then(this.props.navigation.navigate("SPhomescreen"))
+     }).then(alert('added successfully'))
+     .then(this.props.navigation.pop())
      .catch((error) => console.log(error));
      };
      
@@ -162,7 +162,7 @@ render(){
           <TouchableOpacity>
          <Entypo name='chevron-left' size={30} color= {colors.primaryBlue }  onPress={()=> this.props.navigation.pop()} />
          </TouchableOpacity>
-            <View style={styless.header}>
+            <View style={styless.header} style={{margin:0}}>
                 <Text style={styless.text_header}>اضافة عرض جديد</Text>
                    {/* error message appear here */}
                 {this.state.errors && (
