@@ -4,6 +4,7 @@ import {firebase, auth, database } from '../config/firebase'
 import colors from '../constants/colors';
 import {Entypo,MaterialIcons} from '../constants/icons'
 import NewOffer from './NewOffer'
+import editOffer from '../screens/editOffer'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 // ref: https://github.com/Paraboly/react-native-card
 import { Card } from "@paraboly/react-native-card";
@@ -23,9 +24,9 @@ state = {
       serviceProvider = data.val().serviceProvider
     })
     
-     database.ref().child("serviceProvider/"+serviceProvider).child('Offers').on('child_added',  data => {
-      var offer =[]
-    offer.push({
+    database.ref('serviceProvider/'+ auth.currentUser.uid).on('child_added', data => {
+    this.state.offers.push({
+
       title: data.val().title,
       description: data.val().description,
       code: data.val().code,
@@ -51,10 +52,10 @@ state = {
         iconName="local-offer"
         iconType="MaterialIcons"
         iconBackgroundColor= {colors.primaryBlue}
-        bottomRightText={offer.expiration}
-        //onPress={() => {}}
-        />
-        ))
+        bottomRightText="30"
+        onPress= {() => this.props.navigation.navigate('editOffer')}/>
+        )
+        )
       }
 
     render(){
@@ -81,9 +82,10 @@ state = {
             <Text style= {styles.appButtonText} >       الرسائل    </Text>
             </TouchableOpacity>
             </View>
-            
+            <TouchableOpacity onPress= {() => this.props.navigation.navigate('editOffer')}>
             <Text style={styles.header}>عروضي </Text>
-            {this.listOffer()}
+            {/* {this.listOffer} */}
+            </TouchableOpacity>
           
             
             <View style={styles.footer}>
