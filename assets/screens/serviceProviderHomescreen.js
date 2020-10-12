@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, Button, Image, Dimensions ,StyleSheet} from 'react-native'
+import { Text, View, Button, Image, Dimensions ,StyleSheet, FlatList} from 'react-native'
 import {firebase, auth, database } from '../config/firebase'
 import colors from '../constants/colors';
 import {Entypo,MaterialIcons} from '../constants/icons'
@@ -14,50 +14,85 @@ export default class serviceProviderHomescreen extends Component{
 state = {
   name:'',
   offers:[],
+  li:[{
+    key: 0,
+    title:'name',
+    description: 'age'
+  },{
+    key: 1,
+    title:'name',
+    description: 'age'
+  }]
 
 }
 
-  UNSAFE_componentWillMount(){
+componentDidMount(){
     var userId = auth.currentUser.uid
   
-    
-    database.ref('serviceProvider/'+ auth.currentUser.uid).on('child_added', data => {
-    var offer = []
+    const subscribe = database.ref('serviceProvider/'+ auth.currentUser.uid).child('offers')
+    subscribe.on('child_added', child => {
+      var offer = []
+//data.forEach((child) => {
       offer.push({
-
-      title: data.val().title,
-      description: data.val().Descripiton,
+      key: child.key,
+      title: child.val().title,
+      description: child.val().Descripiton,
       //code: data.val().code,
-      expiration:data.val().expdate
-    });
-    
+      expiration:child.val().expdate
+    })
+  
+  
     this.setState({offers: offer})
+})   
+
+  subscribe.on('child_removed', function(data){
+    handleRemoveOffer(data.key)})
+
+    const handleRemoveOffer = (key) => {
+
+      var offer = this.state.offers
+      
+      offer = offer.filter(offer=> offer.key !== key )
+      this.setState({offers:offer})
     }
-    );    
-   // return subscribe;
   }
-
- 
         
-      listOffer = () => {
+      // listOffer = () => {
 
-        if( this.state.offers.length)
+      //   if( this.state.offers.length-1)
+      //   return (
+        
+      //   this.state.offers.map( offer => 
+      //     <Card 
+      //   title={offer.title}
+      //   content={offer.Descripiton}
+      //   iconName="local-offer"
+      //   iconType="MaterialIcons"
+      //   iconBackgroundColor= {colors.primaryBlue}
+      //   //bottomRightText="30"
+      //   onPress= {() => this.props.navigation.navigate('editOffer')}/>
+      //   )
+      //   )
+      // }
+      listOffer = (title, description) => {
+
         return (
-        this.state.offers.map( offer => 
+        <TouchableOpacity>
           <Card 
-        title={offer.title}
-        content={offer.Descripiton}
+        title={title}
+        content={description}
         iconName="local-offer"
         iconType="MaterialIcons"
         iconBackgroundColor= {colors.primaryBlue}
         //bottomRightText="30"
         onPress= {() => this.props.navigation.navigate('editOffer')}/>
+        </TouchableOpacity>
         )
-        )
+        
       }
 
     render(){
-
+      
       const userId = auth.currentUser.uid;
       
      //this.state.name = this.userName()
@@ -80,10 +115,32 @@ state = {
             <Text style= {styles.appButtonText} >       الرسائل    </Text>
             </TouchableOpacity>
             </View>
-            <TouchableOpacity onPress= {() => this.props.navigation.navigate('editOffer')}>
             <Text style={styles.header}>عروضي </Text>
-             {this.listOffer()} 
-            </TouchableOpacity>
+            <View  style={{flex:1,alignSelf:'center', justifyContent:'center'}}>
+            <FlatList
+            style={{width:'100%'}}
+            data= {this.state.offers}
+            keyExtractor={(item)=>item.key}
+            renderItem={({item})=>
+             
+            {
+              
+              return(
+            <View style={{marginTop:15}}>
+            <Card 
+          title= {item.title}
+          content={item.Descripiton}
+          iconName="local-offer"
+          iconType="MaterialIcons"
+          iconBackgroundColor= {colors.primaryBlue}
+          //bottomRightText="30"
+          onPress= {() => this.props.navigation.navigate('editOffer')}/>
+      
+          </View>
+              )
+            }} />
+             </View>
+            
           
             
             <View style={styles.footer}>

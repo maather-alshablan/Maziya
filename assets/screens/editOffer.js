@@ -66,7 +66,7 @@ componentDidMount(){
 removeOffer=() => {
 database.ref('serviceProvider/'+ auth.currentUser.uid + "/offers").remove()
 .catch(error => alert(error)).then(Alert.alert('successful delete'))
-.then(this.props.navigation.navigate("SPhomescreen"))}
+.then(this.props.navigation.pop())}
 
 handleUpdate= ()=>{
 //   var userId = auth.currentUser.uid;
@@ -77,7 +77,7 @@ handleUpdate= ()=>{
   'title': this.state.title,
   'OfferId': this.state.OfferId,
 
-}).catch(error => alert(error)).then(Alert.alert('successful update'))
+}).catch(Alert.alert('error occured')).then(Alert.alert('successful update'))
 
 }
 
@@ -92,6 +92,24 @@ handleUpdate= ()=>{
 //   };
 
 
+ confirmDelete =() =>{
+Alert.alert(
+    'حذف ',
+    'هل انت متأكد من حذف العرض؟',
+    [
+      {
+        text: 'نعم',
+        onPress: () => {this.removeOffer()},
+        style: 'default'
+      },
+      {
+        text: 'لا',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel'
+      }
+    ],
+    { cancelable: false }
+  )} 
  
 
     
@@ -190,12 +208,13 @@ render(){
                     </LinearGradient>  
                     </TouchableOpacity> 
                     <View style={styles.container} >
-                        <TouchableOpacity onPress={this.removeOffer} >
+                        <TouchableOpacity  onPress={this.confirmDelete}>
                    <MaterialCommunityIcons
                     name="delete"
                     color={"red"}
                     size={30}
                     style={styles.fieldLabels}
+                   
                   />
                   </TouchableOpacity>
                    </View>

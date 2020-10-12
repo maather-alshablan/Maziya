@@ -33,7 +33,9 @@ state = {
   description:'',
   website:'',
   twitter:'',
-  instagram:''
+  instagram:'',
+  valid:true,
+  errorMessage:null
 }
 
  
@@ -70,12 +72,16 @@ handlewebsiteChange = website => {
   };
   
 
- componentDidMount(){ 
  
-  const subscribe1 =database.ref('users/'+ auth.currentUser.uid).once('value').then(function(snapshot){
+componentDidMount(){ 
+
+     this.fetchData
+}
+  fetchData=()=>{
+  const subscribe1 = database.ref('users/'+ auth.currentUser.uid).once('value').then(function(snapshot){
 
      var username=  (snapshot.val() && snapshot.val().name)
-     var email =  (snapshot.val() && snapshot.val().email)
+     //var email =  (snapshot.val() && snapshot.val().email)
      var password= (snapshot.val() && snapshot.val().password)
      var brand = ((snapshot.val() && snapshot.val().trademark))
 
@@ -88,15 +94,15 @@ handlewebsiteChange = website => {
             var twitter = ((snapshotinner.val() && snapshotinner.val().twitter))
             var instagram = ((snapshotinner.val() && snapshotinner.val().instagram))
            
-         readData(username,email, password,phone,brand,category,description,website,twitter,instagram)
+         readData(username, password,phone,brand,category,description,website,twitter,instagram)
      })
       
     });
     
-    const readData =  (username,email,password,phone,brand,category,description,website,twitter,instagram) => {
+    const readData =  (username,password,phone,brand,category,description,website,twitter,instagram) => {
     this.setState({
       userName: username,
-      email: email,
+      email: auth.currentUser.email,
       password: password,
       phoneNum:phone, 
       nameBrand: brand,
@@ -104,13 +110,18 @@ handlewebsiteChange = website => {
       description:description,
       website: website,
       twitter: twitter,
-      instagram:instagram
+      instagram:instagram,
+    
     });
-    return()=>{
-      // unmount
-      subscribe1()
-      subscribe2()}
+    
   };
+}
+
+componentWillUnmount(){
+  return()=>{
+    // unmount
+
+  }
 }
 
 
@@ -132,7 +143,7 @@ database.ref('serviceProvider/'+this.state.nameBrand).update({
     'twitter': this.state.twitter,
     'instagram': this.state.instagram
 
-}).catch(error => console.log(error)).then(console.log('successful update'))
+}).then(alert('تم حفظ التغييرات بنجاح')).then(auth.currentUser.updateEmail(email)).catch(setWrongEmailFormat)
 
 }
 
@@ -140,191 +151,295 @@ database.ref('serviceProvider/'+this.state.nameBrand).update({
 validateForm = () =>{
 
 
+  this.setState({valid:true});
 
-    handleUpdate();
+  if (this.state.phoneNum.length != 10) {
+
+    this.setState({
+    valid:false,
+    errorMessage:" يرجى التأكد من ادخال رقم التواصل يالصيغة  0XXXXXXXXX "});
+
+    return;
+}
+
+const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+  if (this.state.email === "" || !regexp.test(this.state.email)) {
+    this.setState({
+      valid:false,
+      errorMessage:" يرجى كتابة بريد الكتروني صحيح"});
+    return;
+
+   
+  }
+
+  if ( this.state.userName === ""){ 
+   
+    this.setState({
+      valid:false,
+      errorMessage:"يرجى ادخال الاسم"});
+    return;
+  }
+
+  if (this.state.Descripiton === "" ) { // provide better description
+    
+    this.setState({
+      valid:false,
+      errorMessage:"يرجى ادخال الوصف"});
+    return;
+  }
+
+  // if (image === ""  ) {
+  //   setValid(false);
+  //   setErrorMessage("يرجى إختيار صورة")
+  //   return;
+  // }
+
+  if (this.state.website ===""){
+    this.setState({
+      valid:false,
+      errorMessage:"يرجى ادخال الموقع الإلكتروني بالشكل الصحيح"});
+    return;
+  }
+
+  if(!this.state.website.endsWith('.com')){
+    this.setState({
+      valid:false,
+      errorMessage:"يرجى ادخال الموقع الإلكتروني بالشكل الصحيح"});
+    return;
+  }
+
+  var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+  '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+  '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+  '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+  '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+  '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+   
+  if (!pattern.test(this.state.website)){
+    this.setState({
+      valid:false,
+      errorMessage:"يرجى ادخال الموقع الإلكتروني بالشكل الصحيح"});
+    return;
   }
   
 
-    //Trademark 
-     FirstRoute = () => (
-       
-        <View style={[styles.scene, { backgroundColor: 'white' }]} >
-
-            <View style={{alignSelf:'flex-end',flexDirection:'row-reverse',marginTop:10,marginLeft:10}}>
-            <MaterialCommunityIcons name="tooltip-text-outline" color={colors.primaryBlue} size={30} />
-                  <Text style={[styless.fieldLabels],[{fontSize:17}]}> الوصف</Text>
-                  </View>
-              <View style={styless.fields}>
-
-                  <TextInput
-                    style={[styless.TextInput],[styles.textArea]}
-                    placeholder=" وصف العلامة التجارية"
-                    onChangeText={description => this.handleDescriptionChange({description})}
-                   value={this.state.description} 
-                    multiline={true}
-                    numberOfLines={4}
-                    textAlignVertical
-                    textAlign='right'
-                    autoCapitalize="none"
-                  />
-                </View>
-                <View style={[styless.fields]}>
-          
-                <FontAwesome name="tags" color={colors.primaryBlue} size={25}/>
-                    <Text style={[styless.fieldLabels],[{fontSize:17,marginRight:10}]}> الفئة</Text>
-                {/*<Dropdown
-                label="الفئة"
-                data={categories}
-              onChangeText={(category) => this.handleCategoryChange(category)}
-              containerStyle={{ width: 100, marginLeft: 155}}
-                value={category}
-                />*/ }
-{/* 
-<DropDownPicker
-          items={[
-        {label: 'المطاعم', value: 'المطاعم'},
-        {label: 'المستلزمات', value: 'المستلزمات'},
-        {label: 'الصحة', value: 'الصحة'},
-        {label: 'الدورات', value: 'الدورات'},
-        {label: 'التسوق', value: 'التسوق'},
-        {label: 'الخدمات', value: 'الخدمات'},
-          ]}
-          multiple={false}
-          defaultValue={''}
-          containerStyle={{height: 40}}
-          style={{backgroundColor: '#fafafa'}}
-          itemStyle={{
-              justifyContent: 'flex-start'
-          }}
-          dropDownStyle={{backgroundColor: '#fafafa'}}
-          onChangeItem={item => setCategory(item)}
-/> */}
-                   </View>
-                   <View style={styless.fields}>
-                <MaterialCommunityIcons name="web" color={colors.primaryBlue} size={30} style={styless.fieldLabels} />
-                  <TextInput
-                    style={styless.TextInput}
-                    name="websites"
-                    placeholder=" الموقع الإلكتروني"
-                    onChangeText= {(websites) => this.handlewebsiteChange(websites)}
-                    value={this.state.website}
-                    autoCapitalize="none"
-                  />
-                </View>
-
-                <View style={styless.fields}>
-                <MaterialCommunityIcons name="twitter" color={colors.primaryBlue} size={30} style={styless.fieldLabels} />
-                  <TextInput
-                    style={styless.TextInput}
-                    placeholder=" تويتر"
-                    onChangeText={(twitter) => this.handleTwitterChange(twitter)}
-                    value={ this.state.twitter}
-                    autoCapitalize="none"
-                  />
-                </View>
-                
-                <View style={styless.fields}>
-                <MaterialCommunityIcons name="instagram" color={colors.primaryBlue} size={30} style={styless.fieldLabels} />
-                  <TextInput
-                    style={styless.TextInput}
-                    placeholder=" انستغرام"
-                    onChangeText={(instagram) => this.handleInstagramChange(instagram)}
-                    value={this.state.instagram}
-                    autoCapitalize="none"
-                  />
-                </View>
-
-                <View style={styles.fields}>{/*<Upload/> */}</View>
-            </View>
-      );
-      
-      SecondRoute = () => (
-        <View style={[styles.scene, { backgroundColor: 'white' }]} >
-             
-                <View style={styless.fields}>
-                  
-                  <MaterialCommunityIcons name="account" color={colors.primaryBlue} size={30} style={styless.fieldLabels} />
-                  <TextInput
-                    style={styless.TextInput}
-                    placeholder="*الاسم"
-                    onChangeText={ username => this.handleNameChange(username)}
-                    defaultValue={this.state.userName}
-                    autoCapitalize="none"
-                  />
-                </View>
-                <View style={styless.fields}>
-                  
-                  <MaterialCommunityIcons name="email" color={colors.primaryBlue} size={30} style={styless.fieldLabels} />
-
-                  <TextInput
-                    style={styless.TextInput}
-                    placeholder="*البريد الإلكتروني"
-                    onChangeText = {email => this.handleEmailChange(email)}
-                    value={this.state.email}
-                    
-                  />
-                </View>
-                <View style={styless.fields}>
-                <FontAwesome name="phone" color={colors.primaryBlue} size={30} style={styless.fieldLabels} />
-
-                  <TextInput
-                    style={styless.TextInput}
-                    placeholder="  (*** **** *05) رقم الجوال"
-                    onChangeText= {phoneNums => this.handlePhoneChange(phoneNums)}
-                    value={this.state.phoneNum}
-                    autoCapitalize="none"
-                  />
-                </View>
-                <View style={[styless.fields]}>
-                <FontAwesome name="lock" color={colors.primaryBlue} size={30} style={styless.fieldLabels} />
-                  <TextInput
-                    style={styless.TextInput}
-                    secureTextEntry
-                    placeholder="*كلمة المرور"
-                    value={this.state.password}
-                    autoCapitalize="none"
-                    editable={false}
-                  /></View>
-                  <View style={[styless.fields]}>
-                <TouchableOpacity onPress= {() => navigation.navigate('resetPassword')}>
-                    <Text style={styles.changePassword}>
-                        هل ترغب بتغيير كلمة المرور؟
-                    </Text>
-                </TouchableOpacity>
-                </View>
-                
-                
-                    
-
-            </View>
-      );
-      
-      ThirdRoute = () =>{
-        return (
-        <View style={[styles.scene, { backgroundColor: 'white' }]} >
-           <Image
-                  source={require("../images/mapsmockup.png")}
+ 
+  if (!this.state.twitter.startsWith('@')){
+    this.setState({
+      valid:false,
+      errorMessage:"يرجى ادخال حساب تويتر بالصيغة @example"});
+    return;
     
-                    style={{
-                      height: 400,
-                      width: 300
+  }
 
-                    }}/>
-        </View>
-        );
 
-      }
+  const twitterExp =  /^(?:@)([A-Za-z0-9_]){1,15}$/
+  if (!twitterExp.test(this.state.twitter) ){
+    this.setState({
+      valid:false,
+      errorMessage:"يرجى ادخال حساب تويتر بالصيغة @example"});
+    return;
+  }
+
+  const instagramExp = new RegExp('^([A-Za-z0-9_](?:(?:[A-Za-z0-9_]|(?:\.(?!\.))){0,28}(?:[A-Za-z0-9_]))?)$')
+  if (instagram != '' && !instagramExp.test(this.state.instagram) ){
+    this.setState({
+      valid:false,
+      errorMessage:"يرجى ادخال حساب الإنستغرام بالشكل الصحيح"});
+    return;
+
+  }
+
+  if (this.state.valid) {
+    this.setState({
+      errorMessage:null});
+    this.handleUpdate();
+    }
+  }
+  
+
+    
    
       render() {
-        this.componentDidMount()
+
       const initialLayout = { width: Dimensions.get('window').width };
       
        const rout = {index: this.state.index, routes: this.state.routes}
+       //Trademark 
+        const FirstRoute = () => (
+       
+      <View style={[styles.scene, { backgroundColor: 'white' }]} >
+
+          <View style={{alignSelf:'flex-end',flexDirection:'row-reverse',marginTop:10,marginLeft:10}}>
+          <MaterialCommunityIcons name="tooltip-text-outline" color={colors.primaryBlue} size={30} />
+                <Text style={[styless.fieldLabels],[{fontSize:17}]}> الوصف</Text>
+                </View>
+            <View style={styless.fields}>
+
+                <TextInput
+                  style={[styless.TextInput],[styles.textArea]}
+                  placeholder=" وصف العلامة التجارية"
+                  onChangeText={description => this.handleDescriptionChange({description})}
+                  value={this.state.description} 
+                  multiline={true}
+                  numberOfLines={4}
+                  textAlignVertical
+                  textAlign='right'
+                  autoCapitalize="none"
+                />
+              </View>
+              <View style={[styless.fields]}>
+        
+              <FontAwesome name="tags" color={colors.primaryBlue} size={25}/>
+                  <Text style={[styless.fieldLabels],[{fontSize:17,marginRight:10}]}> الفئة</Text>
+              {/*<Dropdown
+              label="الفئة"
+              data={categories}
+            onChangeText={(category) => this.handleCategoryChange(category)}
+            containerStyle={{ width: 100, marginLeft: 155}}
+              value={category}
+              />*/ }
+{/* 
+<DropDownPicker
+        items={[
+      {label: 'المطاعم', value: 'المطاعم'},
+      {label: 'المستلزمات', value: 'المستلزمات'},
+      {label: 'الصحة', value: 'الصحة'},
+      {label: 'الدورات', value: 'الدورات'},
+      {label: 'التسوق', value: 'التسوق'},
+      {label: 'الخدمات', value: 'الخدمات'},
+        ]}
+        multiple={false}
+        defaultValue={''}
+        containerStyle={{height: 40}}
+        style={{backgroundColor: '#fafafa'}}
+        itemStyle={{
+            justifyContent: 'flex-start'
+        }}
+        dropDownStyle={{backgroundColor: '#fafafa'}}
+        onChangeItem={item => setCategory(item)}
+/> */}
+                 </View>
+                 <View style={styless.fields}>
+              <MaterialCommunityIcons name="web" color={colors.primaryBlue} size={30} style={styless.fieldLabels} />
+                <TextInput
+                  style={styless.TextInput}
+                  name="websites"
+                  placeholder=" الموقع الإلكتروني"
+                  onChangeText= {websites => this.handlewebsiteChange(websites)}
+                  value={this.state.website}
+                  autoCapitalize="none"
+                />
+              </View>
+
+              <View style={styless.fields}>
+              <MaterialCommunityIcons name="twitter" color={colors.primaryBlue} size={30} style={styless.fieldLabels} />
+                <TextInput
+                  style={styless.TextInput}
+                  placeholder=" تويتر"
+                  onChangeText={(twitter) => this.handleTwitterChange(twitter)}
+                  value={ this.state.twitter}
+                  autoCapitalize="none"
+                />
+              </View>
+              
+              <View style={styless.fields}>
+              <MaterialCommunityIcons name="instagram" color={colors.primaryBlue} size={30} style={styless.fieldLabels} />
+                <TextInput
+                  style={styless.TextInput}
+                  placeholder=" انستغرام"
+                  onChangeText={(instagram) => this.handleInstagramChange(instagram)}
+                  value={this.state.instagram}
+                  autoCapitalize="none"
+                />
+              </View>
+
+              <View style={styles.fields}>{/*<Upload/> */}</View>
+          </View>
+    );
+    
+    const SecondRoute = () => (
+      <View style={[styles.scene, { backgroundColor: 'white' }]} >
+           
+              <View style={styless.fields}>
+                
+                <MaterialCommunityIcons name="account" color={colors.primaryBlue} size={30} style={styless.fieldLabels} />
+                <TextInput
+                  style={styless.TextInput}
+                  placeholder="*الاسم"
+                  onChangeText={ username => this.handleNameChange(username)}
+                  defaultValue={this.state.userName}
+                  autoCapitalize="none"
+                />
+              </View>
+              <View style={styless.fields}>
+                
+                <MaterialCommunityIcons name="email" color={colors.primaryBlue} size={30} style={styless.fieldLabels} />
+
+                <TextInput
+                  style={styless.TextInput}
+                  placeholder="*البريد الإلكتروني"
+                  onChangeText = {email => this.handleEmailChange(email)}
+                  value={this.state.email}
+                  
+                />
+              </View>
+              <View style={styless.fields}>
+              <FontAwesome name="phone" color={colors.primaryBlue} size={30} style={styless.fieldLabels} />
+
+                <TextInput
+                  style={styless.TextInput}
+                  placeholder="  (*** **** *05) رقم الجوال"
+                  onChangeText= {phoneNums => this.handlePhoneChange(phoneNums)}
+                  value={this.state.phoneNum}
+                  autoCapitalize="none"
+                />
+              </View>
+              <View style={[styless.fields]}>
+              <FontAwesome name="lock" color={colors.primaryBlue} size={30} style={styless.fieldLabels} />
+                <TextInput
+                  style={styless.TextInput}
+                  secureTextEntry
+                  placeholder="*كلمة المرور"
+                  value={this.state.password}
+                  autoCapitalize="none"
+                  editable={false}
+                /></View>
+                <View style={[styless.fields]}>
+              <TouchableOpacity onPress= {() => navigation.navigate('resetPassword')}>
+                  <Text style={styles.changePassword}>
+                      هل ترغب بتغيير كلمة المرور؟
+                  </Text>
+              </TouchableOpacity>
+              </View>
+              
+              
+                  
+
+          </View>
+    );
+    
+    const ThirdRoute = () =>{
+      return (
+      <View style={[styles.scene, { backgroundColor: 'white' }]} >
+         <Image
+                source={require("../images/mapsmockup.png")}
+  
+                  style={{
+                    height: 400,
+                    width: 300
+
+                  }}/>
+      </View>
+      );
+
+    }
       
         const renderScene = SceneMap({
-            first: this.FirstRoute,
-            second: this.SecondRoute,
-            third: this.ThirdRoute,
+            first: FirstRoute,
+            second: SecondRoute,
+            third: ThirdRoute,
           });
         
           let categories = [{

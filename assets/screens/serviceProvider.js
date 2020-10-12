@@ -1,6 +1,6 @@
 
 import React, { Component , useState } from "react";
-import { StyleSheet, Text, View, Linking, TextInput,Button, TouchableOpacity, Dimensions, Clipboard, Platform, StatusBar ,Image,ImageBackground , ScrollView} from 'react-native';
+import { StyleSheet, Text, View, Linking, TextInput,Button,Card, FlatList, TouchableOpacity, Dimensions, Clipboard, Platform, StatusBar ,Image,ImageBackground , ScrollView} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Modal from 'react-native-modal';
 import { database, auth,storage } from "../config/firebase";
@@ -79,7 +79,7 @@ export default class serviceProvider extends Component{
     fetchOffers=()=>{
        
         
-        database.ref().child("serviceProvider/"+this.state.brand+'/Offers').on('child_added', data => {
+        database.ref().child("serviceProvider/"+auth.currentUser.uid+'/offers').on('child_added', data => {
         var list=[]
             list.push({
     
@@ -90,24 +90,63 @@ export default class serviceProvider extends Component{
         });
          this.setState({offers:list});
         });    
+
+        database.ref().child("serviceProvider/"+auth.currentUser.uid+'/offers').on('child_added', data => {
+            var list=[]
+                list.push({
+        
+              title: data.val().title,
+              description: data.val().description,
+              code: data.val().code,
+              expiration:data.val().expiration
+            });
+             this.setState({offers:list});
+            });   
+
+            database.ref().child("serviceProvider/"+auth.currentUser.uid+'/offers').on('child_removed', function(data){
+                handleRemoveOffer(data.key)})
+            
+                const handleRemoveOffer = (key) => {
+            
+                  var offer = this.state.offers
+                  
+                  offer = offer.filter(offer=> offer.key !== key )
+                  this.setState({offers:offer})
+                }
+
     }
 
 
     listOffers= () => {
 
-        if( this.state.offers.length)
-        return (
-        this.state.offers.map( offer => 
-          <Card 
-        title={offer.title}
-        content={offer.description}
-        iconName="local-offer"
-        iconType="MaterialIcons"
-        iconBackgroundColor= {colors.primaryBlue}
-        bottomRightText={offer.expiration}
-        //onPress={() => {}}
-        />
-        ))
+        // return (
+        //     <View  style={{flex:1,alignSelf:'center', justifyContent:'center'}}>
+        //     <FlatList
+        //     style={{width:'100%'}}
+        //     data= {this.state.offers}
+        //     keyExtractor={(item)=>item.key}
+        //     renderItem={({item})=>
+             
+        //     {
+              
+        //       return(
+        //     <View style={{marginTop:15}}>
+        //     <Card 
+        //   title= {item.title}
+        //   content={item.Descripiton}
+        //   iconName="local-offer"
+        //   iconType="MaterialIcons"
+        //   iconBackgroundColor= {colors.primaryBlue}
+        //   //bottomRightText="30"
+        //   onPress= {() => this.props.navigation.navigate('editOffer')}/>
+      
+        //   </View>
+        //       )
+        //     }} />
+        //      </View>
+            
+       
+        // )
       }
 
 UNSAFE_componentWillMount(){
@@ -218,14 +257,14 @@ UNSAFE_componentWillMount(){
 
                         <Text style={styless.text_footer}>الفروع</Text>
                         <View style={styless.action}>
-                        {this.listOffers()}
                         </View>
 
                 
 
                         <Text style={styless.text_footer}>العروض</Text>
                         <View style={styless.action}>
-                        {/* {listOfferSP(this.state.brand)} */}
+                        {this.listOffers()}
+
                         </View>
                         </View>
  
