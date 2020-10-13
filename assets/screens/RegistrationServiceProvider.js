@@ -139,30 +139,8 @@ export default class RegistrationServiceProvider extends Component {
         errorMessage: "يرجى ادخال جميع البيانات",
       });
     }
-    if (this.state.image === "" && this.state.image === "https://imgplaceholder.com/72x80" ) {
-      valid = false;
-      this.setState({
-        errors: true,
-        errorMessage: "يرجى إختيار صورة"
-      });
-
-    }
-    if (this.state.website ===""){
-      valid = false;
-      this.setState({
-        errors: true,
-        errorMessage: "يرجى إختيار صورة"
-      });
-    }
-
-    if (!this.state.website.endsWith('.com')){
-      valid = false;
-      this.setState({
-        errors: true,
-        errorMessage: "يرجى إختيار صورة"
-      });
-    }
-  
+ 
+    
     var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
     '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
     '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
@@ -170,36 +148,36 @@ export default class RegistrationServiceProvider extends Component {
     '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
     '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
      
-    if (!pattern.test(this.state.website)){
-      setValid(false);
-      setErrorMessage("يرجى ادخال الموقع الإلكتروني بالشكل الصحيح")
-      return; 
-    }
+  //   if (!pattern.test(this.state.website)){
+  //     setValid(false);
+  //     setErrorMessage("يرجى ادخال الموقع الإلكتروني بالشكل الصحيح")
+  //     return; 
+  //   }
     
   
    
-    if (!this.state.twitter.startsWith('@')){
-      setValid(false);
-      setErrorMessage("يرجى ادخال حساب تويتر بالصيغة @example")
-      return; 
-    }
+  //   if (!this.state.twitter.startsWith('@')){
+  //     setValid(false);
+  //     setErrorMessage("يرجى ادخال حساب تويتر بالصيغة @example")
+  //     return; 
+  //   }
   
   
-    const twitterExp =  /^(?:@)([A-Za-z0-9_]){1,15}$/
-    if (!twitterExp.test(this.state.twitter) ){
-      setValid(false);
-      setErrorMessage("يرجى ادخال حساب تويتر بالشكل الصحيح")
-      return;
-    }
-    if (valid) {
-      this.setState({
-        errors: false,
-      });
-    }
+  //   const twitterExp =  /^(?:@)([A-Za-z0-9_]){1,15}$/
+  //   if (!twitterExp.test(this.state.twitter) ){
+  //     setValid(false);
+  //     setErrorMessage("يرجى ادخال حساب تويتر بالشكل الصحيح")
+  //     return;
+  //   }
+  //   if (valid) {
+  //     this.setState({
+  //       errors: false,
+  //     });
+  //   }
   
+  // }
+
   }
-
-
   async componentDidMount() {
     const permission = await Permissions.getAsync(Permissions.CAMERA_ROLL);
     if (permission.status !== "granted") {

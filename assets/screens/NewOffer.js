@@ -126,7 +126,7 @@ export default class NewOffer extends Component  {
   
 // }
       writeOfferSP = (resp) => { /////
-      console.log("serviceProvider");
+      console.log("offers");
       database
       .ref()
       .child("serviceProvider")
@@ -182,7 +182,7 @@ render(){
          <Entypo name='chevron-left' size={30} color= {colors.primaryBlue }  onPress={()=> this.props.navigation.pop()} />
          </TouchableOpacity>
             <View style={styless.header} style={{margin:0}}>
-                <Text style={styless.text_header}>اضافة عرض جديد</Text>
+                <Text style={styless.header1}>اضافة عرض جديد</Text>
                    {/* error message appear here */}
                 {this.state.errors && (
           <View style={styles.header}>
@@ -293,6 +293,14 @@ const styless = StyleSheet.create({
         paddingHorizontal: 20,
         paddingTop:20
     },
+
+    header1:{
+      color:'#0278ae',
+      fontWeight:'bold',
+      fontSize:25,
+      marginLeft:150,
+    },
+    
     footer: {
         flex: 3,
         backgroundColor: '#fff',
