@@ -73,8 +73,6 @@ const userId = auth.currentUser.uid;
        
       }
     
-  
-  
 
 
  useEffect(() => {
@@ -115,7 +113,7 @@ database.ref('serviceProvider/'+nameBrand).update({
     'twitter': twitter,
     'instagram': instagram
 
-}).catch(setWrongEmailFormat).then(alert('تم حفظ التغييرات بنجاح')).then(auth.currentUser.updateEmail(email)).catch(setWrongEmailFormat)
+}).then(Alert.alert('تم حفظ التغييرات بنجاح')).then(auth.currentUser.updateEmail(email)).catch(setWrongEmailFormat)
 
 
 }
@@ -212,7 +210,7 @@ const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[
   }
 
   if (valid) {
-    setErrorMessage('')
+    setErrorMessage(null)
     handleUpdate();
     }
 };
@@ -571,7 +569,6 @@ const handleBranches = (location)=>{
         style={styles.tab}
         renderTabBar={renderTabBar}
         
-
       >
           
       </TabView>
