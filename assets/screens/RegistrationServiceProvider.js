@@ -132,7 +132,7 @@ export default class RegistrationServiceProvider extends Component {
         errorMessage: "يرجى ادخال جميع البيانات",
       });
     }
-    if (this.state.Descripiton === "" ) {
+    if (this.state.Description === "" ) {
       valid = false;
       this.setState({
         errors: true,
@@ -246,7 +246,7 @@ export default class RegistrationServiceProvider extends Component {
         description: this.state.Description,
         nameBrand:this.state.nameBrand , 
         category: this.state.category,
-        email:this.state.email,
+        email:auth.currentUser.email,
         phone: this.state.phoneNum,
         website:this.state.website,
         twitter:this.state.twitter,
