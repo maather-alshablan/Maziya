@@ -22,6 +22,8 @@ export default class serviceProvider extends Component{
     }
     
     state= {
+        userType:'',
+        key:null,
         modal:false,
         favorite:false,
         brand:'',
@@ -38,11 +40,22 @@ export default class serviceProvider extends Component{
     }
 
      fetchData= () =>{
-        
-        
+
         database.ref().child('users/'+auth.currentUser.uid).once("value").then(function(snapshot) {
-                  const name= ((snapshot.val() && snapshot.val().serviceProvider))                  
-                   
+             //     var type= snapshot.val().accountType;
+            // if (type == 'serviceProvider'){
+            const name= ((snapshot.val() && snapshot.val().serviceProvider))  //change name to key
+           // const ref =  database.ref().child('serviceProvider/'+auth.current.uid)
+     //     }              
+            // else {
+             //    const key = this.props.navigation.state.params.Key
+             //const ref =  database.ref().child('serviceProvider/'+key)
+
+             // var favorite = snapshot.val().favorites  < capture favorited or not 
+             // 
+            
+
+           //  }
                 database.ref().child('serviceProvider/'+name).once("value").then(function(snapshot) {
                     var description=((snapshot.val() && snapshot.val().description))
                     var email = ((snapshot.val() && snapshot.val().email))
@@ -52,7 +65,8 @@ export default class serviceProvider extends Component{
                   var  instagram=((snapshot.val() && snapshot.val().instagram))
                   // var image=((snapshot.val() && snapshot.val().image))
                   readData(name,email,description,phone,website,twitter,instagram);
-                
+            
+
                 })
             }
              
@@ -78,7 +92,9 @@ export default class serviceProvider extends Component{
 
     fetchOffers=()=>{
        
-        
+        //if userType = 'serviceProvider'
+        // ref = database.ref().child("serviceProvider/"+auth.currentUser.uid+'/offers')
+        //else  ref = database.ref().child("serviceProvider/"+key+'/offers')
         database.ref().child("serviceProvider/"+auth.currentUser.uid+'/offers').on('child_added', data => {
         var list=[]
             list.push({
@@ -155,9 +171,18 @@ UNSAFE_componentWillMount(){
 
     }
 
-   
+   //implementing favorite/ unfavorite a SP logic 
         toggleModal = () => {
         this.setState({modal: !this.state.modal});
+        if (this.state.modal){
+
+            database.ref().child('users').child(auth.currentUser.uid).child('favorites').push(
+                {
+                    SPId: this.state.key
+                }
+            )
+        
+        }
       };
 
        copyToClipboard = () => {
@@ -176,15 +201,18 @@ UNSAFE_componentWillMount(){
                  <ScrollView style={styles.scrollView}>
 
                     <View style={styless.header}>
-                   
-                    {/* <TouchableOpacity style={{alignSelf:'flex-end' ,marginTop:10}}
+                   {/* if user is KSU member then show favorite functionality else dont show  */}
+                    {  this.state.key == null ? <View></View> :<TouchableOpacity style={{alignSelf:'flex-end' ,marginTop:10}}
                     onPress={this.toggleFavorite}>
                     <MaterialCommunityIcons 
                     name={ this.state.favorite? "heart" : "heart-outline"}  
                      color={colors.primaryBlue} 
                      size={30} 
                      />
-                    </TouchableOpacity> */}
+                    </TouchableOpacity> }
+
+
+
                     <Text style={[styles.header]}>{this.state.brand}</Text>
                         <View >
                         <Image source={require('../images/logoDis.jpg')} style={{width:100,height:100,marginLeft:120}}/>

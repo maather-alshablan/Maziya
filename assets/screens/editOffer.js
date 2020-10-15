@@ -7,35 +7,35 @@ import colors from '../constants/colors'
 import styles from "../constants/styles";
 import { QRCode } from 'react-native-custom-qr-codes';
 import SignInButton from "../components/SignInButton";
+import OfferContext from '../screens/serviceProviderHomescreen'
 
+  // editOffer.contextType = OfferContext;
 
- 
-
-    
-  
-
- 
-export default class editOffer extends Component  {  
+export default class editOffer extends React.Component  {  
     constructor(){
         super();
+        // const { navigation }  = this.props;
+        // const offerKey = navigation.getParam('offerKey', null);
         this.state={
-            OfferId : this.state.OfferId2 , 
+            OfferId : this.state.code , 
+          
         }
       }
+      
 
     state = {
         title: "",
         Descripiton: "",
-        OfferId:"",
+        OfferId:'',
         expdate:"",
-        OfferId2:"",
+        code:"",
         
         
     
       };
     
       handleOfferIdChange = () => {
-        this.setState({ OfferId2: this.state.OfferId  });}
+        this.setState({ code: this.state.OfferId  });}
     
 componentDidMount(){
    
@@ -47,7 +47,10 @@ componentDidMount(){
      OfferId:OfferId,
    });
  };
- 
+
+// console.log(this.props.navigation.getParam())
+
+
   database.ref('serviceProvider/'+ auth.currentUser.uid+ "/offers")
   .once('value')
   .then(function(snapshot){
@@ -64,14 +67,15 @@ componentDidMount(){
 }
 
 removeOffer=() => {
-database.ref('serviceProvider/'+ auth.currentUser.uid + "/offers").remove()
+database.ref('serviceProvider/'+ auth.currentUser.uid + "/offers").child().remove()
 .catch(error => alert(error)).then(Alert.alert('successful delete'))
 .then(this.props.navigation.pop())}
 
 handleUpdate= ()=>{
 //   var userId = auth.currentUser.uid;
 
-  database.ref('serviceProvider/'+ auth.currentUser.uid + "/offers").update({ 
+  database.ref('serviceProvider/'+ auth.currentUser.uid + "/offers").child().
+  update({ 
   'Descripiton': this.state.Descripiton, 
   'expdate': this.state.expdate,
   'title': this.state.title,
@@ -117,16 +121,17 @@ Alert.alert(
      
  
 render(){
+ 
     return (
         
         <View style={styless.container}>
             <ScrollView style={styles.scrollView}>
           <StatusBar backgroundColor='#0278ae' barStyle='light-content' />
           <TouchableOpacity>
-         <Entypo name='chevron-left' size={30} color= {colors.primaryBlue }  onPress={()=> this.props.navigation.pop()} />
+         <Entypo name='chevron-left' size={30} color= {colors.primaryBlue } style={{marginTop:15}} onPress={()=> this.props.navigation.pop()} />
          </TouchableOpacity>
             <View style={styless.header}>
-                <Text style={styless.text_header}> تعديل العرض </Text>
+                <Text style={styless.header1 }> تعديل العرض </Text>
                    {/* error message appear here */}
                 {this.state.errors && (
           <View style={styles.header}>
@@ -190,7 +195,7 @@ render(){
                       </View>
                     <View style={styles.container} >
                    
-                     <QRCode content={this.state.OfferId2} 
+                     <QRCode content={this.state.code} 
                      logo={require('../images/logo.png')} /> 
                    </View>
                 </View>
@@ -263,6 +268,12 @@ const styless = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 25,
         marginLeft:150
+    },
+    header1:{
+      color: '#0278ae',
+      fontWeight: 'bold',
+      fontSize: 25,
+      marginLeft:150
     },
     text_footer: {
         color: '#05375a',
