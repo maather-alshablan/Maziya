@@ -109,17 +109,18 @@ export default class NewOffer extends Component  {
 
       writeOfferSP = (resp) => { /////
        // create new key to insert into table offers and use the same key to insert as a child to service provider
-        var OfferId =  database.ref().child("Offers").push().key
+      //   var OfferId =  database.ref().child("Offers").push().key
 
-      console.log("serviceProvider");
+      // console.log("serviceProvider");
       
-      var newOffer = {
-        Descripiton: this.state.Descripiton,
-        expdate: this.state.expdate ,
-        title: this.state.title,
-        code: this.state.code
-      }
+      // var newOffer = {
+      //   Descripiton: this.state.Descripiton,
+      //   expdate: this.state.expdate ,
+      //   title: this.state.title,
+      //   code: this.state.code
+      // }
 
+      console.log("offers");
       database
       .ref()
       .child("serviceProvider")
@@ -174,7 +175,7 @@ render(){
           <TouchableOpacity>
          <Entypo name='chevron-left' size={30} color= {colors.primaryBlue } style={{marginTop:15}} onPress={()=> this.props.navigation.pop()} />
          </TouchableOpacity>
-            <View  style={{}}>
+            <View style={styless.header} style={{margin:0}}>
                 <Text style={styless.header1}>اضافة عرض جديد</Text>
                    {/* error message appear here */}
                 {this.state.errors && (
@@ -289,6 +290,14 @@ const styless = StyleSheet.create({
         paddingHorizontal: 20,
         paddingTop:20
     },
+
+    header1:{
+      color:'#0278ae',
+      fontWeight:'bold',
+      fontSize:25,
+      marginLeft:150,
+    },
+    
     footer: {
         flex: 3,
         backgroundColor: '#fff',
