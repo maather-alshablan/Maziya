@@ -132,6 +132,7 @@ export default class NewOffer extends Component  {
       .child("serviceProvider")
       .child(auth.currentUser.uid)
       .child("offers")
+      .child(this.state.OfferId)
       .set({
        Descripiton: this.state.Descripiton,
        expdate: this.state.expdate ,
@@ -232,19 +233,20 @@ render(){
                     </View>
                     {/* {this.state.OfferId} */}
                     
-                      <View style={styles.container}>
+                      {/* <View style={styles.container}>
                         <TouchableOpacity onPress={this.handleOfferIdChange}>
                         <SignInButton text={'QR تحديث'} onPress={this.handleOfferIdChange}></SignInButton>
                         </TouchableOpacity>
-                      </View>
+                      </View> */}
                     
                     
                     <View style={styles.container} >
                    
-                     <QRCode content={this.state.OfferId2} 
+                    {this.state.OfferId ? <QRCode content={this.state.OfferId} 
                      logo={require('../images/logo.png')} />
-                   </View>
+                   : null } 
 
+                         </View>
  
                 {/* </ImageBackground> */}
                 </View>
