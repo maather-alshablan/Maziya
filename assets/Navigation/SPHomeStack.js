@@ -18,7 +18,7 @@ screenOptions={{ headerShown: false }}
 option={{
 headerTransparent: true}} unmountOnBlur={true}/>
 <HomeStack.Screen name= 'addOffer' component={addOffer}/>
-<HomeStack.Screen name= 'editOffer' component={editOffer}/>
+<HomeStack.Screen name= 'editOffer' component={editOffer} initialParams/>
 <HomeStack.Screen name='logout' component={login} unmountOnBlur={true}/>
     </HomeStack.Navigator>
     )

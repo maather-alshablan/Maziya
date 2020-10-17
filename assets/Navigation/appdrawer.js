@@ -82,11 +82,7 @@ function CustomDrawerContent(props) { // fix navigation issue: error > navigatio
                 color:'white',
     
               }}/>
-            <Drawer.Screen name= 'courses' component={Courses} options={{
-                title: 'الدورات المسجلة',
-                color:'white',
-    
-              }}/>
+            
             <Drawer.Screen name= 'usedOffers' component={usedOffers} options={{
                 title: 'العروض المستخدمة',
                 color:'white',

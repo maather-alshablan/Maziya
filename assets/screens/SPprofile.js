@@ -160,13 +160,13 @@ const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[
     return;
   }
 
-  if (website ===""){
-    setValid(false);
-    setErrorMessage("يرجى ادخال الموقع الإلكتروني بالشكل الصحيح")
-    return;
-  }
+  // if (website ===""){
+  //   setValid(false);
+  //   setErrorMessage("يرجى ادخال الموقع الإلكتروني بالشكل الصحيح")
+  //   return;
+  // }
 
-  if(!website.endsWith('.com')){
+  if(website!= '' && !website.endsWith('.com')){
     setValid(false);
     setErrorMessage("يرجى ادخال الموقع الإلكتروني بالشكل الصحيح")
     return;

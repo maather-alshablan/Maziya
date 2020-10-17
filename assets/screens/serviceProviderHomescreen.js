@@ -9,21 +9,13 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 // ref: https://github.com/Paraboly/react-native-card
 import { Card } from "@paraboly/react-native-card";
 
-export default class serviceProviderHomescreen extends Component{
+
+const OfferContext = React.createContext();
+export default class serviceProviderHomescreen extends React.Component{
     
 state = {
   name:'',
   offers:[],
-  li:[{
-    key: 0,
-    title:'name',
-    description: 'age'
-  },{
-    key: 1,
-    title:'name',
-    description: 'age'
-  }]
-
 }
 
 componentDidMount(){
@@ -78,6 +70,7 @@ componentDidMount(){
 
         return (
         <TouchableOpacity>
+          
           <Card 
         title={title}
         content={description}
@@ -122,11 +115,12 @@ componentDidMount(){
             data= {this.state.offers}
             keyExtractor={(item)=>item.key}
             renderItem={({item})=>
-             
+            
             {
               
               return(
             <View style={{marginTop:15}}>
+              {/* <OfferContext.Provider value={item.key}> */}
             <Card 
           title= {item.title}
           content={item.Descripiton}
@@ -134,9 +128,11 @@ componentDidMount(){
           iconType="MaterialIcons"
           iconBackgroundColor= {colors.primaryBlue}
           //bottomRightText="30"
-          onPress= {() => this.props.navigation.navigate('editOffer')}/>
-      
+          onPress= {() => this.props.navigation.navigate('editOffer', {offerKey: 'hi'})}/>
+          {/* , {offerKey: item.key} */}
+           {/* </OfferContext.Provider> */}
           </View>
+       
               )
             }} />
              </View>
@@ -171,7 +167,7 @@ const styles = StyleSheet.create({
     }, 
     appButtonContainer: {
         elevation: 8,
-        backgroundColor: "#009688",
+        backgroundColor: colors.primaryBlue,
         borderRadius: 25,
         paddingVertical: 25,
         paddingHorizontal: 25,

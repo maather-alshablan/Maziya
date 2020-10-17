@@ -74,7 +74,6 @@ export default class resetPassword extends Component  {
   
 render() {
   const showNotification = this.state.formValid ? false : true;
-
   return (
     <KeyboardAvoidingView style={[ pg.wrapper]}
       behavior="padding"

@@ -17,8 +17,7 @@ export default class NewOffer extends Component  {
   constructor(){
     super();
     this.state={
-      OfferId:"",
-        OfferId : "", 
+      OfferId:""
     }
   }
 
@@ -28,7 +27,7 @@ export default class NewOffer extends Component  {
         OfferId:"",
         expdate:"",
         OfferId:"",
-        OfferId2:"",
+        code:"",
         errorMessage: null,
         errors: false,
       };
@@ -51,13 +50,20 @@ export default class NewOffer extends Component  {
     //   };
     // }
     handleOfferIdChange = () => {
-      this.setState({ OfferId2: this.state.OfferId  });
+      this.setState({ code: this.state.OfferId  });
       
     }
 
-      // handleChange = event => {
-      //   this.setState({ OfferId: OfferId2 });
-      // };
+    generateQR =() =>{
+      
+
+      return(
+        <View style={styles.container}>
+        <QRCode content={this.state.code} 
+        logo={require('../images/logo.png')} /> 
+       </View>
+      )
+    }
 
       checkvalid = () => {
         let valid = true;
@@ -100,37 +106,26 @@ export default class NewOffer extends Component  {
         }
       
       }
- 
-//       const serviceProvider=''
-//       var currentUser = auth.currentUser.uid
-//       var ref = database.ref().child("users/"+currentUser).once('value').then(function(snapshot) {
-//         serviceProvider= (snapshot.val() && snapshot.val().serviceProvider) })
-     
-//         this.setState({serviceProvider: serviceProvider})
-      
-//       var OfferId =  database.ref().child("Offers").push().key
 
-//       var newOffer = {
-//         serviceProvider:this.state.serviceProvider,
-//         descripiton: this.state.Descripiton,
-//         expiration: this.state.expDate ,
-//         title: this.state.title,
-//         code:this.state.code
-//       }
-//       var updates = {};
-//       updates['/Offers/' + OfferId] = newOffer;
-//       updates['/serviceProvider/' + this.state.serviceProvider + '/Offers/' + OfferId] = newOffer;
-    
-//        database.ref().update(updates).then(Alert.alert('successful upload')).then(this.props.navigation.pop());
-    
-  
-// }
       writeOfferSP = (resp) => { /////
+       // create new key to insert into table offers and use the same key to insert as a child to service provider
+      //   var OfferId =  database.ref().child("Offers").push().key
+
+      // console.log("serviceProvider");
+      
+      // var newOffer = {
+      //   Descripiton: this.state.Descripiton,
+      //   expdate: this.state.expdate ,
+      //   title: this.state.title,
+      //   code: this.state.code
+      // }
+
       console.log("offers");
       database
       .ref()
       .child("serviceProvider")
       .child(auth.currentUser.uid)
+<<<<<<< HEAD
       .child("offers")
       .child(this.state.OfferId)
       .set({
@@ -141,8 +136,18 @@ export default class NewOffer extends Component  {
      })
      .then(Alert.alert('successful add'))
      .then(this.props.navigation.pop())
+=======
+      .child("offers").child(OfferId)
+      .set(newOffer)
+    //  .then(Alert.alert('successful add'))
+    //  .then(this.props.navigation.pop())
+>>>>>>> 511668bc1a4ef808de2fc41da33ecc9d0992274e
      .catch((error) => console.log(error));
+     var updates = {};
+      updates['/Offers/' + OfferId] = newOffer;
+      updates['/serviceProvider/' + auth.currentUser.uid + '/offers' + OfferId] = newOffer;
     
+      database.ref().update(updates).then(Alert.alert('successful upload')).then(this.props.navigation.pop());
      
      };
      
@@ -177,10 +182,11 @@ render(){
     return (
         
         <View style={styless.container}>
-            <ScrollView style={styles.scrollView}>
+           
           <StatusBar backgroundColor='#0278ae' barStyle='light-content' />
+          <ScrollView style={styles.scrollView}>
           <TouchableOpacity>
-         <Entypo name='chevron-left' size={30} color= {colors.primaryBlue }  onPress={()=> this.props.navigation.pop()} />
+         <Entypo name='chevron-left' size={30} color= {colors.primaryBlue } style={{marginTop:15}} onPress={()=> this.props.navigation.pop()} />
          </TouchableOpacity>
             <View style={styless.header} style={{margin:0}}>
                 <Text style={styless.header1}>اضافة عرض جديد</Text>
@@ -227,19 +233,30 @@ render(){
                 
  
                 <View>
+                <Text style={{color: '#05375a',fontSize: 18,marginTop: 20 , alignSelf:'flex-end'}}>رمز العرض الترويجي</Text>
+
                 {/* <ImageBackground source={require('../images/image.png')} style={{width:200,height:200,marginLeft:50}}> */}
                   <View style={styless.action}>
-                    <TextInput placeholder='ادخل الرمز' style={styles.textInput,{paddingTop:50,marginLeft:132}} autoCapitalize="none" onChangeText={(OfferId) => this.setState({ OfferId })} value={this.state.OfferId}/>
+
+                    <TextInput placeholder='ادخل الرمز' style={styles.textInput,{paddingTop:20,marginLeft:132}} autoCapitalize="none" onChangeText={(OfferId) => this.setState({ OfferId })} value={this.state.OfferId}/>
                     </View>
                     {/* {this.state.OfferId} */}
                     
                       {/* <View style={styles.container}>
                         <TouchableOpacity onPress={this.handleOfferIdChange}>
-                        <SignInButton text={'QR تحديث'} onPress={this.handleOfferIdChange}></SignInButton>
+                        <SignInButton 
+                        text={'QR تحديث'} 
+                        onPress={this.handleOfferIdChange}></SignInButton>
                         </TouchableOpacity>
                       </View> */}
                     
+                    {this.state.code == '' ? <View></View>:  
+                    <View style={styles.container}>
+        <QRCode content={this.state.code} 
+        logo={require('../images/logo.png')} /> 
+       </View>}
                     
+<<<<<<< HEAD
                     <View style={styles.container} >
                    
                     {this.state.OfferId ? <QRCode content={this.state.OfferId} 
@@ -249,6 +266,9 @@ render(){
                          </View>
  
                 {/* </ImageBackground> */}
+=======
+                  
+>>>>>>> 511668bc1a4ef808de2fc41da33ecc9d0992274e
                 </View>
  
  
@@ -317,6 +337,13 @@ const styless = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 25,
         marginLeft:150
+    },
+    header1:{
+      color: '#0278ae',
+      fontWeight: 'bold',
+      fontSize: 25,
+      marginLeft:150
+  
     },
     text_footer: {
         color: '#05375a',
