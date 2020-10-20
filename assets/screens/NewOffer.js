@@ -10,7 +10,6 @@ import SignInButton from "../components/SignInButton";
 
 
 
-
  
 export default class NewOffer extends Component  {
 
@@ -125,7 +124,6 @@ export default class NewOffer extends Component  {
       .ref()
       .child("serviceProvider")
       .child(auth.currentUser.uid)
-<<<<<<< HEAD
       .child("offers")
       .child(this.state.OfferId)
       .set({
@@ -136,12 +134,6 @@ export default class NewOffer extends Component  {
      })
      .then(Alert.alert('successful add'))
      .then(this.props.navigation.pop())
-=======
-      .child("offers").child(OfferId)
-      .set(newOffer)
-    //  .then(Alert.alert('successful add'))
-    //  .then(this.props.navigation.pop())
->>>>>>> 511668bc1a4ef808de2fc41da33ecc9d0992274e
      .catch((error) => console.log(error));
      var updates = {};
       updates['/Offers/' + OfferId] = newOffer;
@@ -256,7 +248,6 @@ render(){
         logo={require('../images/logo.png')} /> 
        </View>}
                     
-<<<<<<< HEAD
                     <View style={styles.container} >
                    
                     {this.state.OfferId ? <QRCode content={this.state.OfferId} 
@@ -266,9 +257,6 @@ render(){
                          </View>
  
                 {/* </ImageBackground> */}
-=======
-                  
->>>>>>> 511668bc1a4ef808de2fc41da33ecc9d0992274e
                 </View>
  
  
@@ -388,3 +376,4 @@ const styless = StyleSheet.create({
  
  
 });
+
