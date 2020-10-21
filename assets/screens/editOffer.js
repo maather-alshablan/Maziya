@@ -7,9 +7,8 @@ import colors from '../constants/colors'
 import styles from "../constants/styles";
 import { QRCode } from 'react-native-custom-qr-codes';
 import SignInButton from "../components/SignInButton";
-import OfferContext from '../screens/serviceProviderHomescreen'
 
-  // editOffer.contextType = OfferContext;
+
 
 export default class editOffer extends React.Component  {  
     constructor(props){

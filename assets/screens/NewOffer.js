@@ -10,7 +10,6 @@ import SignInButton from "../components/SignInButton";
 
 
 
-
  
 export default class NewOffer extends Component  {
 
@@ -125,10 +124,16 @@ export default class NewOffer extends Component  {
       .ref()
       .child("serviceProvider")
       .child(auth.currentUser.uid)
-      .child("offers").child(OfferId)
-      .set(newOffer)
-    //  .then(Alert.alert('successful add'))
-    //  .then(this.props.navigation.pop())
+      .child("offers")
+      .child(this.state.OfferId)
+      .set({
+       Descripiton: this.state.Descripiton,
+       expdate: this.state.expdate ,
+       title: this.state.title,
+       OfferId:this.state.OfferId, 
+     })
+     .then(Alert.alert('successful add'))
+     .then(this.props.navigation.pop())
      .catch((error) => console.log(error));
      var updates = {};
       updates['/Offers/' + OfferId] = newOffer;
@@ -229,13 +234,13 @@ render(){
                     </View>
                     {/* {this.state.OfferId} */}
                     
-                      <View style={styles.container}>
+                      {/* <View style={styles.container}>
                         <TouchableOpacity onPress={this.handleOfferIdChange}>
                         <SignInButton 
                         text={'QR تحديث'} 
                         onPress={this.handleOfferIdChange}></SignInButton>
                         </TouchableOpacity>
-                      </View>
+                      </View> */}
                     
                     {this.state.code == '' ? <View></View>:  
                     <View style={styles.container}>
@@ -243,7 +248,15 @@ render(){
         logo={require('../images/logo.png')} /> 
        </View>}
                     
-                  
+                    <View style={styles.container} >
+                   
+                    {this.state.OfferId ? <QRCode content={this.state.OfferId} 
+                     logo={require('../images/logo.png')} />
+                   : null } 
+
+                         </View>
+ 
+                {/* </ImageBackground> */}
                 </View>
  
  
@@ -363,3 +376,4 @@ const styless = StyleSheet.create({
  
  
 });
+
