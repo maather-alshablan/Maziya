@@ -1,35 +1,37 @@
-import React,{ useState, useEffect } from 'react'
-import { Text, View, Button, Image, Dimensions ,StyleSheet,TouchableOpacity,Linking } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { Component } from "react";
+import { Text, View, Button, Image, Dimensions, StyleSheet, TouchableOpacity, Linking } from 'react-native'
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import * as Permissions from 'expo-permissions';
 
 // add bottom navigation 
 // drawer navigation 
 
-  export default class scanQR extends Component  {  
+export default class scanQR extends Component {
 
-    onSuccess = e => {
-        Linking.openURL(e.data).catch(err =>
-          console.error('An error occured', err)
-        );
-      }; 
-    
-      state = {
-        hasCameraPermission: null,
-        scanned: false,
-      };
-    
-      async componentDidMount() {
-        this.getPermissionsAsync();
-      }; 
-    
-      getPermissionsAsync = async () => {
-        const { status } = await Permissions.askAsync(Permissions.CAMERA);
-        this.setState({ hasCameraPermission: status === 'granted' });
-      };
-    
-     
-   render() { 
+  onSuccess = e => {
+    Linking.openURL(e.data).catch(err =>
+      console.error('An error occured', err)
+    );
+  }
+
+
+  state = {
+    hasCameraPermission: null,
+    scanned: false,
+  };
+
+  async componentDidMount() {
+    this.getPermissionsAsync();
+  };
+
+  getPermissionsAsync = async () => {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA);
+    this.setState({ hasCameraPermission: status === 'granted' });
+  };
+
+
+  render() {
     const { hasCameraPermission, scanned } = this.state;
 
     if (hasCameraPermission === null) {
@@ -38,8 +40,8 @@ import * as Permissions from 'expo-permissions';
     if (hasCameraPermission === false) {
       return <Text>No access to camera</Text>;
     }
-          return (
-            <View
+    return (
+      <View
         style={{
           flex: 1,
           flexDirection: 'column',
