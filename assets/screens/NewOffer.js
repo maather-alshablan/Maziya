@@ -109,16 +109,16 @@ export default class NewOffer extends Component  {
 
       writeOfferSP = (resp) => { /////
        // create new key to insert into table offers and use the same key to insert as a child to service provider
-      //   var OfferId =  database.ref().child("Offers").push().key
+        var OfferId =  database.ref().child("Offers").push().key
 
-      // console.log("serviceProvider");
-      
-      // var newOffer = {
-      //   Descripiton: this.state.Descripiton,
-      //   expdate: this.state.expdate ,
-      //   title: this.state.title,
-      //   code: this.state.code
-      // }
+       console.log("serviceProvider");
+       console.warn(this.state.code);
+      var newOffer = {
+        Descripiton: this.state.Descripiton,
+        expdate: this.state.expdate ,
+         title: this.state.title,
+        code: this.state.code
+       }
 
       console.log("offers");
       database

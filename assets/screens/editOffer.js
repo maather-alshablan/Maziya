@@ -12,12 +12,12 @@ import OfferContext from '../screens/serviceProviderHomescreen'
   // editOffer.contextType = OfferContext;
 
 export default class editOffer extends React.Component  {  
-    constructor(){
-        super();
-        // const { navigation }  = this.props;
-        // const offerKey = navigation.getParam('offerKey', null);
+    constructor(props){
+        super(props);
+        console.warn(props);
+        const offerKey = props?.route?.params?.offerKey;
         this.state={
-            OfferId : this.state.code , 
+          OfferId : offerKey , 
           
         }
       }
@@ -39,37 +39,46 @@ export default class editOffer extends React.Component  {
     
 componentDidMount(){
    
-  const readData =  (Descripiton,expdate,title,OfferId) => {
+  const readData =  (Descripiton,expdate,title,code) => {
    this.setState({
      Descripiton: Descripiton,
      expdate: expdate,
      title: title,
-     OfferId:OfferId,
+    code : code
    });
  };
 
 // console.log(this.props.navigation.getParam())
 
-
+  var self = this;
   database.ref('serviceProvider/'+ auth.currentUser.uid+ "/offers")
   .once('value')
   .then(function(snapshot){
-    
-    console.log('snapshot', snapshot.val());
-    var Descripiton=  (snapshot.val() && snapshot.val().Descripiton)
-    var expdate =  (snapshot.val() && snapshot.val().expdate)
-    var title= (snapshot.val() && snapshot.val().title)
-    var OfferId= (snapshot.val() && snapshot.val().OfferId)
-   readData(Descripiton,expdate,title,OfferId);
+    const offers = snapshot.val();
+    const offersDetails = offers[self.state.OfferId];
+    console.warn('snapshot', snapshot.val());
+    var Descripiton=  (offersDetails.Descripiton)
+    var expdate =  (offersDetails.expdate)
+    var title= (offersDetails.title)
+    var code = offersDetails.code
+   readData(Descripiton,expdate,title,code);
     });
     
 
 }
 
 removeOffer=() => {
-database.ref('serviceProvider/'+ auth.currentUser.uid + "/offers").child().remove()
+  console.warn(this.state.OfferId);
+  database
+      .ref()
+      .child("serviceProvider")
+      .child(auth.currentUser.uid)
+      .child("offers").child(this.state.OfferId)
+      .remove()
+
 .catch(error => alert(error)).then(Alert.alert('successful delete'))
-.then(this.props.navigation.pop())}
+.then(this.props.navigation.pop())
+}
 
 handleUpdate= ()=>{
 //   var userId = auth.currentUser.uid;
@@ -185,8 +194,8 @@ render(){
                   
                    style={styless.TextInput,{paddingTop:50,marginLeft:120}}
                    autoCapitalize="none" 
-                   onChangeText={OfferId =>this.setState( { OfferId: OfferId} ) }
-                   value={this.state.OfferId}/>
+                   onChangeText={code =>this.setState( { code: code} ) }
+                   value={this.state.code}/>
                     </View>
                     <View style={styles.container}>
                         <TouchableOpacity onPress={this.handleOfferIdChange}>

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import Homescreen from '../screens/Homescreen'
-import ServiceProvider from '../screens/serviceProvidersKSU'
+import serviceProvider from '../screens/serviceProvider'
 
 function HomeStack(){
     const HomeStack = createStackNavigator()
@@ -14,7 +14,7 @@ screenOptions={{ headerShown: false }}
 <HomeStack.Screen name = 'Home' component= {Homescreen}
 option={{
 headerTransparent: true}} unmountOnBlur={true}/>
-<HomeStack.Screen name= 'serviceProvider' component={ServiceProvider}/>
+<HomeStack.Screen name= 'serviceProvider' component={serviceProvider}/>
     </HomeStack.Navigator>
     )
 }

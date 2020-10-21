@@ -1,70 +1,128 @@
 import React, { Component } from 'react'
-import { Text, View, TouchableOpacity, StyleSheet,
-  ScrollView, } from 'react-native'
+import {
+  Text, View, TouchableOpacity, StyleSheet,
+  ScrollView,
+} from 'react-native'
 import colors from '../constants/colors'
-import {Entypo} from '../constants/icons'
+import { Entypo } from '../constants/icons'
 import { Card } from "@paraboly/react-native-card";
 import serviceProvider from './SPprofile'
-import {firebase, auth } from '../config/firebase'
+import { firebase, auth, database } from '../config/firebase'
 
-export default class Favorite extends Component{
+export default class Favorite extends Component {
 
-  Cards=()=>{
+  constructor() {
+    super()
+    this.state = {
+      offers: []
+    }
+  }
+  componentDidMount() {
+
+    var self = this;
+    const subscribe = database.ref('favorites/' + auth.currentUser.uid)
+      .on('value', function (snapshot) {
+        const favorites = snapshot.val();
+        console.warn(favorites)
+        const favoritesArray = []
+        Object.keys(favorites).map(key => {
+          console.warn(favorites, self.state.offerDetails)
+          favoritesArray.push(favorites[key])
+        })
+        self.setState({
+          offers: favoritesArray
+        })
+      })
+
+
+    // subscribe.on('child_removed', function (data) {
+    //   handleRemoveOffer(data.key)
+    // })
+
+    // const handleRemoveOffer = (key) => {
+
+    //   var offer = this.state.offers
+
+    //   offer = offer.filter(offer => offer.key !== key)
+    //   this.setState({ offers: offer })
+    // }
+
+    // subscribe.on('child_added', function (data) {
+    //   handleAddOffer(data)
+    // })
+
+    // const handleAddOffer = (data) => {
+
+    //   var offer = this.state.offers
+
+    //   this.setState({ offers: [...offer, data] })
+    // }
+  }
+
+  Cards = () => {
     // const name='zara'
-    
+
     // database.ref().child('serviceProviders/zara').once('value', function(data){
     //  setData(data.val().description)
-      
+
     // })
 
     // const setData = (data)=>{
     // this.setState( {description: data })}
-    return(
-      
-    <Card
-    title={this.props.brand}
-    content={'Service Provider description'}
-    iconName="local-offer"
-    iconType="MaterialIcons"
-    iconBackgroundColor= {colors.primaryBlue}
-    style={{marginTop:5}}
-    //bottomRightText={offer.expiration}
-    onPress={() => navigation.navigate(serviceProvider)}
-    /> )
+    return (
+
+      <Card
+        title={this.props.brand}
+        content={'Service Provider description'}
+        iconName="local-offer"
+        iconType="MaterialIcons"
+        iconBackgroundColor={colors.primaryBlue}
+        style={{ marginTop: 5 }}
+        //bottomRightText={offer.expiration}
+        onPress={() => navigation.navigate(serviceProvider)}
+      />)
   }
 
-render(){
-    return(
+  render() {
+    console.warn(this.state.offers)
+    return (
       <View style={styles.container}>
         <ScrollView showsVerticalScrollIndicator={false}>
-            <TouchableOpacity
-                style={{ alignSelf: "flex-end" }}
-                onPress={() => {
-                    this.props.navigation.toggleDrawer();
-                }}
-                >
-                <Entypo name="menu" size={30} style={{marginTop:30}} />
-            </TouchableOpacity>
-            <Text style={{ marginBottom:10 ,fontSize: 22, color: colors.primaryBlue, alignItems: "center", textAlign:"center" }}>
+          <TouchableOpacity
+            style={{ alignSelf: "flex-end" }}
+            onPress={() => {
+              this.props.navigation.toggleDrawer();
+            }}
+          >
+            <Entypo name="menu" size={30} style={{ marginTop: 30 }} />
+          </TouchableOpacity>
+          <Text style={{ marginBottom: 10, fontSize: 22, color: colors.primaryBlue, alignItems: "center", textAlign: "center" }}>
             العروض المفضلة
             </Text>
+          {this.state.offers.map(offer => {
+            return (
+              <View style={{ margin: 15 }}>
+                <Card
+                  title={offer.title}
+                  //content={'offer.description'}
+                  iconName="local-offer"
+                  iconType="MaterialIcons"
+                  iconBackgroundColor={colors.primaryBlue}
+                  //bottomRightText={'offer.expiration'}
+                  //onPress= {() => this.props.navigation.navigate('editOffer', {offerKey: item.key })}/>
 
-            <Card 
-              
-              title={'Zara'}
-              //content={'offer.description'}
-              iconName="local-offer"
-              iconType="MaterialIcons"
-              iconBackgroundColor= {colors.primaryBlue}
-              //bottomRightText={'offer.expiration'}
-              onPress={() => {this.props.navigation.navigate(serviceProvider)}}
-            />
+                  onPress={() => { this.props.navigation.navigate('serviceProvider', { offer: offer }) }}
+                />
+              </View>
+            )
+          })}
+
 
         </ScrollView>
       </View>
 
     );
-}
+  }
 
 }
 
@@ -72,7 +130,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 20,
-    backgroundColor:'white',
+    backgroundColor: 'white',
   },
   viewBox: {
     width: "80%",
@@ -100,6 +158,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
     paddingHorizontal: 15,
-    textAlign:"right"
+    textAlign: "right"
   },
 });
