@@ -7,7 +7,7 @@ import styles from '../constants/styles';
 // add bottom navigation 
 // drawer navigation 
 
-  export default class scanQR extends Component  {  
+export default class scanQR extends Component {
 
    
       state = {
@@ -35,8 +35,8 @@ import styles from '../constants/styles';
     if (hasCameraPermission === false) {
       return <Text>No access to camera</Text>;
     }
-          return (
-            <View
+    return (
+      <View
         style={{
           flex: 1,
           flexDirection: 'column',
