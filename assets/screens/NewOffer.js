@@ -122,6 +122,7 @@ export default class NewOffer extends Component {
       code: this.state.OfferId
     }
     console.log("offers");
+
     database
       .ref()
       .child("serviceProvider")
@@ -129,16 +130,54 @@ export default class NewOffer extends Component {
       .child("offers")
       .child(OfferId)
       .set(newOffer)
-      .then(Alert.alert('successful add'))
-      .then(this.props.navigation.pop())
-      .catch((error) => console.log(error));
+      .then(() => {
+        Alert.alert('Offer Created')
+        this.sendNotification(newOffer);
+      })
+      .then(() => {
+        this.props.navigation.pop();
+      })
+      .catch((error) => console.warn(error));
+
+
     var updates = {};
     updates['/Offers/' + OfferId] = newOffer;
     updates['/serviceProvider/' + auth.currentUser.uid + '/offers' + OfferId] = newOffer;
 
-    database.ref().update(updates).then().catch()
+    database.ref().update(updates).then(() => null).catch(e => console.warn(e))
+
 
   };
+
+  sendNotification = async (newOffer) => {
+    console.warn({ newOffer })
+    const subscribe = database.ref('users')
+    subscribe.on('value', snapshot => {
+      const users = snapshot.val();
+      Object.keys(users).map(key => {
+        if (users[key] && users[key].push_token) {
+          let response = fetch('https://exp.host/--/api/v2/push/send', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              to: users[key].push_token,
+              sound: 'default',
+              title: newOffer.title,
+              body: newOffer.Descripiton
+            })
+          })
+        }
+      })
+      // console.warn(snapshot.val(), "data")
+    })
+
+
+    // console.warn({ response })
+    // this.props.navigation.pop()
+  }
 
   //      const writeOfferSP = () => {
 

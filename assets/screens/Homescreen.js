@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
-  TextInput
+  TextInput, Platform
 } from 'react-native'
 import { firebase, auth, database } from '../config/firebase'
 import { Entypo } from '../constants/icons'
@@ -15,6 +15,18 @@ import { FontAwesome } from
 import { Card } from "@paraboly/react-native-card";
 import serviceProvider from './SPprofile'
 
+import * as Notifications from 'expo-notifications';
+import * as Permissions from 'expo-permissions';
+import Constants from 'expo-constants';
+
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
 
 // add bottom navigation 
 // drawer navigation 
@@ -28,7 +40,8 @@ export default class Homescreen extends React.Component {
   componentDidMount() {
 
     const subscribe = database.ref('Offers')
-    subscribe.on('value', snapshot => {
+    subscribe.on('value', async snapshot => {
+      await this.cancelAllScheduledNotificationsAsync();
       const offers = snapshot.val();
       const offersArray = [];
       Object.keys(offers).map(key => {
@@ -37,7 +50,12 @@ export default class Homescreen extends React.Component {
           key: key,
           ...offers[key]
         });
-
+        const endDate = new Date(offers[key].expdate);
+        const nowDate = new Date();
+        // console.warn((endDate / 1000 - nowDate / 1000), offers[key], nowDate);
+        if ((endDate / 1000 - nowDate / 1000) > (24 * 60 * 60)) { // offer has more than one day 
+          this.scheduleNotification(offers[key], ((endDate / 1000 - nowDate / 1000) - (24 * 60 * 60)));
+        }
       });
       this.setState({
         offers: offersArray
@@ -45,21 +63,77 @@ export default class Homescreen extends React.Component {
 
       })
     })
-
-
+    this.generateToken();
+    this.getAllScheduledNotificationsAsync()
+    // this.scheduleNotification();
   }
 
+  generateToken = async () => {
+    const token = await this.registerForPushNotificationsAsync();
+    database
+      .ref()
+      .child("users")
+      .child(auth.currentUser.uid)
+      .child("push_token")
+      .set(token)
+  }
+
+  registerForPushNotificationsAsync = async () => {
+    let token;
+    if (Constants.isDevice) {
+      const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+      let finalStatus = existingStatus;
+      if (existingStatus !== 'granted') {
+        const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+        finalStatus = status;
+      }
+      if (finalStatus !== 'granted') {
+        alert('Failed to get push token for push notification!');
+        return;
+      }
+      token = (await Notifications.getExpoPushTokenAsync()).data;
+      console.log(token);
+    } else {
+      alert('Must use physical device for Push Notifications');
+    }
+
+    if (Platform.OS === 'android') {
+      Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      });
+    }
+
+    return token;
+  }
+  scheduleNotification = (offer, seconds) => {
+
+    Notifications.scheduleNotificationAsync({
+      content: {
+        sound: 'default',
+        title: "هذا العرض سوف ينتهي بعد يوم" + offer.title,
+        body: offer.Descripiton
+      },
+      trigger: {
+        seconds: seconds,
+        repeats: false
+      },
+    });
+  }
+
+  getAllScheduledNotificationsAsync = async () => {
+    console.warn('ffff')
+    console.warn(await Notifications.getAllScheduledNotificationsAsync())
+  }
+
+  cancelAllScheduledNotificationsAsync = async () => {
+    return await Notifications.cancelAllScheduledNotificationsAsync()
+  }
 
   Cards = () => {
-    // const name='zara'
 
-    // database.ref().child('serviceProviders/zara').once('value', function(data){
-    //  setData(data.val().description)
-
-    // })
-
-    // const setData = (data)=>{
-    // this.setState( {description: data })}
     return (
 
       <Card
@@ -78,6 +152,7 @@ export default class Homescreen extends React.Component {
 
     return (
       <View style={styles.container}>
+
         <ScrollView showsVerticalScrollIndicator={false}>
           <TouchableOpacity
             style={{ alignSelf: "flex-end" }}
@@ -112,6 +187,8 @@ export default class Homescreen extends React.Component {
             </TouchableOpacity>
 
           </View>
+          {/**for test */}
+
           <View style={styles.viewSearch}>
             <TextInput style={styles.inputSearch} />
             <TouchableOpacity>

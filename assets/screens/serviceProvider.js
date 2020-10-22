@@ -37,17 +37,29 @@ export default class serviceProvider extends Component {
             offers: [],
             offerDetails: props?.route?.params?.offer,
             favoriteId: '',
+            used: false,
         }
     }
 
     componentDidMount() {
         this.fetchData()
-        const readData = (favId) => {
-            console.warn(favId, "favId")
-            this.setState({
-                favoriteId: favId,
-                favorite: true
-            })
+        const readData = (favId, used = false) => {
+            if (used) {
+                this.setState({
+                    used: true,
+                })
+
+            } else {
+                console.warn(favId, "favId")
+                this.setState({
+                    favoriteId: favId,
+                    favorite: true,
+
+                })
+            }
+
+
+
         }
         var self = this;
         database.ref('favorites/' + auth.currentUser.uid)
@@ -61,6 +73,22 @@ export default class serviceProvider extends Component {
                     if (favorites[key].key == self.state.offerDetails?.key) {
                         console.warn('added')
                         readData(key);
+
+                    }
+                })
+            })
+
+        database.ref('usedOffers/' + auth.currentUser.uid)
+            .once('value')
+            .then(function (snapshot) {
+                const usedOffers = snapshot.val();
+                console.warn(usedOffers)
+                var usedDetails = {}
+                Object.keys(usedOffers).map(key => {
+                    console.warn(usedOffers, self.state.offerDetails)
+                    if (usedOffers[key].key == self.state.offerDetails?.key) {
+                        console.warn('added')
+                        readData(key, true);
 
                     }
                 })
@@ -199,7 +227,17 @@ export default class serviceProvider extends Component {
     };
 
     copyToClipboard = () => {
-        Clipboard.setString(this.state.code)
+
+        if (!this.state.used) {
+            Clipboard.setString(this.state.offerDetails?.code)
+            this.setState({ used: true });
+            database
+                .ref()
+                .child("usedOffers")
+                .child(auth.currentUser.uid)
+                .push()
+                .set({ ...this.state.offerDetails, uid: auth.currentUser.uid })
+        }
     }
 
     toggleFavorite = () => {
@@ -353,14 +391,21 @@ export default class serviceProvider extends Component {
                             <View style={styless.modal}>
                                 < View>
                                     <QRCode
-                                        value={this.state.code}
+                                        value={this.state.offerDetails?.code}
                                         size={200}
                                         bgColor='black'
                                         fgColor='white' />
                                 </View>
-                                <TouchableOpacity onPress={() => this.copyToClipboard()}>
-                                    <Text style={styles.text_footer}>انسخ الكود</Text>
-                                </TouchableOpacity>
+                                {false ? <View></View> : <TouchableOpacity style={{
+                                    marginTop: 10
+                                }}
+                                    onPress={() => this.copyToClipboard()}>
+                                    <Text
+                                        name={this.state.offerId}
+                                        style={styles.text_footer}
+                                    >انسخ الكود</Text>
+                                </TouchableOpacity>}
+
 
                                 <TouchableOpacity onPress={() => {
                                     Linking.openURL('https://' + this.state.website);
