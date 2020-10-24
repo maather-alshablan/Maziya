@@ -36,10 +36,12 @@ export default class serviceProvider extends Component {
             copied:false,
             offerDetails: props?.route?.params?.offer,
             favoriteId: '',
+            used: false,
         }
     }
 
     componentDidMount() {
+<<<<<<< HEAD
        this.fetchData();
         const readData = (favId) => {
             console.log(favId, "favId")
@@ -47,6 +49,26 @@ export default class serviceProvider extends Component {
                 favoriteId: favId,
                 favorite: true
             })
+=======
+        this.fetchData()
+        const readData = (favId, used = false) => {
+            if (used) {
+                this.setState({
+                    used: true,
+                })
+
+            } else {
+                console.warn(favId, "favId")
+                this.setState({
+                    favoriteId: favId,
+                    favorite: true,
+
+                })
+            }
+
+
+
+>>>>>>> 5686c893fc052e585b553231140d884f18c62002
         }
         var self = this;
         database.ref('favorites/' + auth.currentUser.uid)
@@ -64,7 +86,41 @@ export default class serviceProvider extends Component {
                     }
                 })
             })
+<<<<<<< HEAD
         }
+=======
+
+        database.ref('usedOffers/' + auth.currentUser.uid)
+            .once('value')
+            .then(function (snapshot) {
+                const usedOffers = snapshot.val();
+                console.warn(usedOffers)
+                var usedDetails = {}
+                Object.keys(usedOffers).map(key => {
+                    console.warn(usedOffers, self.state.offerDetails)
+                    if (usedOffers[key].key == self.state.offerDetails?.key) {
+                        console.warn('added')
+                        readData(key, true);
+
+                    }
+                })
+            })
+    }
+    fetchData = () => {
+
+        database.ref().child('users/' + auth.currentUser.uid).once("value").then(function (snapshot) {
+            //     var type= snapshot.val().accountType;
+            // if (type == 'serviceProvider'){
+            const name = ((snapshot.val() && snapshot.val().serviceProvider))  //change name to key
+            // const ref =  database.ref().child('serviceProvider/'+auth.current.uid)
+            //     }              
+            // else {
+            //    const key = this.props.navigation.state.params.Key
+            //const ref =  database.ref().child('serviceProvider/'+key)
+
+            // var favorite = snapshot.val().favorites  < capture favorited or not 
+            // 
+>>>>>>> 5686c893fc052e585b553231140d884f18c62002
 
   
     
@@ -198,10 +254,24 @@ export default class serviceProvider extends Component {
     };
 
     copyToClipboard = () => {
+<<<<<<< HEAD
         Clipboard.setString(this.state.offerDetails.code)
         this.setState({copied:true})
         database.ref().child('usedOffers').child(auth.currentUser.uid).child(this.state.offerDetails?.key)
         .set({ ...this.state.offerDetails});
+=======
+
+        if (!this.state.used) {
+            Clipboard.setString(this.state.offerDetails?.code)
+            this.setState({ used: true });
+            database
+                .ref()
+                .child("usedOffers")
+                .child(auth.currentUser.uid)
+                .push()
+                .set({ ...this.state.offerDetails, uid: auth.currentUser.uid })
+        }
+>>>>>>> 5686c893fc052e585b553231140d884f18c62002
     }
 
     toggleFavorite = () => {
@@ -360,6 +430,7 @@ export default class serviceProvider extends Component {
                             onBackdropPress={() => this.setState({ modal: false })}>
                                 
                             <View style={styless.modal}>
+<<<<<<< HEAD
                                 <FontAwesome 
                                 name={'close'}
                                 color={colors.primaryGrey}
@@ -393,6 +464,25 @@ export default class serviceProvider extends Component {
                                     color= {this.state.copied ?  colors.primaryBlue : colors.primaryGrey} />
                                 </TouchableOpacity>
                                 </View> 
+=======
+                                < View>
+                                    <QRCode
+                                        value={this.state.offerDetails?.code}
+                                        size={200}
+                                        bgColor='black'
+                                        fgColor='white' />
+                                </View>
+                                {false ? <View></View> : <TouchableOpacity style={{
+                                    marginTop: 10
+                                }}
+                                    onPress={() => this.copyToClipboard()}>
+                                    <Text
+                                        name={this.state.offerId}
+                                        style={styles.text_footer}
+                                    >انسخ الكود</Text>
+                                </TouchableOpacity>}
+
+>>>>>>> 5686c893fc052e585b553231140d884f18c62002
 
                                 <TouchableOpacity style={{flexDirection:'row-reverse',alignSelf:'center',margin:10}}  onPress={() => {
                                     Linking.openURL('https://' + this.state.website);

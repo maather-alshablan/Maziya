@@ -104,6 +104,7 @@ export default class NewOffer extends Component {
       serviceProvider: auth.currentUser.uid
     }
     console.log("offers");
+
     database
       .ref()
       .child("serviceProvider")
@@ -111,17 +112,89 @@ export default class NewOffer extends Component {
       .child("offers")
       .child(OfferId)
       .set(newOffer)
+<<<<<<< HEAD
       .then(Alert.alert('تم إضافة العرض بنجاح'))
       .then(this.props.navigation.pop())
       .catch((error) => console.log(error));
+=======
+      .then(() => {
+        Alert.alert('Offer Created')
+        this.sendNotification(newOffer);
+      })
+      .then(() => {
+        this.props.navigation.pop();
+      })
+      .catch((error) => console.warn(error));
+
+
+>>>>>>> 5686c893fc052e585b553231140d884f18c62002
     var updates = {};
     updates['/Offers/' + OfferId] = newOffer;
     updates['/serviceProvider/' + auth.currentUser.uid + '/offers' + OfferId] = newOffer;
 
-    database.ref().update(updates).then().catch()
+    database.ref().update(updates).then(() => null).catch(e => console.warn(e))
+
 
   };
 
+<<<<<<< HEAD
+=======
+  sendNotification = async (newOffer) => {
+    console.warn({ newOffer })
+    const subscribe = database.ref('users')
+    subscribe.on('value', snapshot => {
+      const users = snapshot.val();
+      Object.keys(users).map(key => {
+        if (users[key] && users[key].push_token) {
+          let response = fetch('https://exp.host/--/api/v2/push/send', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              to: users[key].push_token,
+              sound: 'default',
+              title: newOffer.title,
+              body: newOffer.Descripiton
+            })
+          })
+        }
+      })
+      // console.warn(snapshot.val(), "data")
+    })
+
+
+    // console.warn({ response })
+    // this.props.navigation.pop()
+  }
+
+  //      const writeOfferSP = () => {
+
+  //       const serviceProvider=''
+  //       var currentUser = auth.currentUser.uid
+  //       var ref = database.ref().child("users/"+currentUser).once('value').then(function(snapshot) {
+  //         serviceProvider= (snapshot.val() && snapshot.val().serviceProvider) })
+
+  //         this.setState({serviceProvider: serviceProvider})
+
+  //       var OfferId =  database.ref().child("Offers").push().key
+
+  //       var newOffer = {
+  //         serviceProvider:this.state.serviceProvider,
+  //         descripiton: this.state.Descripiton,
+  //         expiration: this.state.expDate ,
+  //         title: this.state.title,
+  //         code:this.state.code
+  //       }
+  //       var updates = {};
+  //       updates['/Offers/' + OfferId] = newOffer;
+  //       updates['/serviceProvider/' + this.state.serviceProvider + '/Offers/' + OfferId] = newOffer;
+
+  //        database.ref().update(updates).then(Alert.alert('successful upload')).then(this.props.navigation.pop());
+  //     };
+  //   }
+>>>>>>> 5686c893fc052e585b553231140d884f18c62002
 
   render() {
 

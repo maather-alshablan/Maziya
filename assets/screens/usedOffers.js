@@ -1,7 +1,9 @@
-import React ,{ Component } from 'react'
-import { Text, View,TouchableOpacity, StyleSheet,
-    ScrollView, Button, Image, Dimensions } from 'react-native'
-import {Entypo} from '../constants/icons'
+import React, { Component } from 'react'
+import {
+  Text, View, TouchableOpacity, StyleSheet,
+  ScrollView, Button, Image, Dimensions
+} from 'react-native'
+import { Entypo } from '../constants/icons'
 import colors from '../constants/colors'
 import { Card } from "@paraboly/react-native-card";
 import serviceProvider from './SPprofile'
@@ -91,47 +93,48 @@ export default class usedOffers  extends Component{
     
 
 
-    
-        );
-    }
-    
+
+
+    );
+  }
+
 }
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      paddingHorizontal: 20,
-      backgroundColor:'white',
-    },
-    viewBox: {
-      width: "80%",
-      height: 230,
-      borderWidth: 2,
-      borderColor: "#bbb",
-      borderRadius: 20,
-      alignSelf: "center",
-      marginTop: 20,
-    },
-    inputSearch: {
-      flex: 1,
-      paddingHorizontal: 10,
-      paddingVertical: 0,
-      color: 'black',
-    },
-    viewSearch: {
-      backgroundColor: colors.primaryGrey,
-      width: 200,
-      borderRadius: 30,
-      height: 50,
-      marginTop: 20,
-      alignSelf: "center",
-      justifyContent: "center",
-      alignItems: "center",
-      flexDirection: "row",
-      paddingHorizontal: 15,
-      textAlign:"right"
-    },
-  });
+  container: {
+    flex: 1,
+    paddingHorizontal: 20,
+    backgroundColor: 'white',
+  },
+  viewBox: {
+    width: "80%",
+    height: 230,
+    borderWidth: 2,
+    borderColor: "#bbb",
+    borderRadius: 20,
+    alignSelf: "center",
+    marginTop: 20,
+  },
+  inputSearch: {
+    flex: 1,
+    paddingHorizontal: 10,
+    paddingVertical: 0,
+    color: 'black',
+  },
+  viewSearch: {
+    backgroundColor: colors.primaryGrey,
+    width: 200,
+    borderRadius: 30,
+    height: 50,
+    marginTop: 20,
+    alignSelf: "center",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    paddingHorizontal: 15,
+    textAlign: "right"
+  },
+});
 
 
 

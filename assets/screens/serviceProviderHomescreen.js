@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Text, View, Button, Image, Dimensions, StyleSheet, FlatList, SnapshotViewIOSBase } from 'react-native'
-import { firebase, auth, database } from '../config/firebase'
+import { auth, database, firebase } from '../config/firebase'
 import colors from '../constants/colors';
 import { Entypo, MaterialIcons } from '../constants/icons'
 import NewOffer from './NewOffer'
@@ -75,6 +75,7 @@ export default class serviceProviderHomescreen extends React.Component {
     }
   }
 
+
   // listOffer = () => {
 
   //   if( this.state.offers.length-1)
@@ -124,12 +125,12 @@ export default class serviceProviderHomescreen extends React.Component {
         <View style={{ flexDirection: "row", justifyContent: 'space-between', marginTop: 15 }}>
           <TouchableOpacity style={styles.appButtonContainer}
             onPress={() => this.props.navigation.navigate('addOffer')} >
-            <Entypo name="plus" size={40} color='white' />
+            <Entypo name="plus" size={35} color='white' />
 
             <Text style={styles.appButtonText} > إضافة عرض </Text>
           </TouchableOpacity>
           <TouchableOpacity style={[styles.appButtonContainer]} >
-            <Entypo name="chat" size={40} color='white' />
+            <Entypo name="chat" size={35} color='white' />
 
             <Text style={styles.appButtonText} >       الرسائل    </Text>
           </TouchableOpacity>
@@ -196,8 +197,8 @@ const styles = StyleSheet.create({
     elevation: 8,
     backgroundColor: colors.primaryBlue,
     borderRadius: 25,
-    paddingVertical: 25,
-    paddingHorizontal: 25,
+    paddingVertical: 15,
+    paddingHorizontal: 15,
     alignItems: 'center',
     margin: 20
   },
