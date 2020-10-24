@@ -16,6 +16,7 @@ export default class serviceProviderHomescreen extends React.Component {
   state = {
     name: '',
     offers: [],
+    existOffers:null,
   }
 
   componentDidMount() {
@@ -25,6 +26,7 @@ export default class serviceProviderHomescreen extends React.Component {
     subscribe.on('value', snapshot => {
       const { offers } = snapshot.val();
       const offersArray = [];
+      if(offers != null){
       Object.keys(offers).map(key => {
         // console.warn(offers[key]);
         offersArray.push({
@@ -34,12 +36,15 @@ export default class serviceProviderHomescreen extends React.Component {
 
       });
       this.setState({
-        offers: offersArray
-
-
-      })
-      console.warn(offers);
-      console.warn(offersArray);
+        offers: offersArray,
+        existOffers: true
+      }) }
+      else{
+        this.setState({
+          existOffers: false
+        })}
+      console.log(offers);
+      console.log(offersArray);
       /*console.warn(child);
       var offer = []
       offer.forEach((child) => {
@@ -131,6 +136,7 @@ export default class serviceProviderHomescreen extends React.Component {
         </View>
         <Text style={styles.header}>عروضي </Text>
         <View style={{ flex: 1, alignSelf: 'center', justifyContent: 'center' }}>
+        {this.state.existOffers ? 
           <FlatList
             style={{ width: '100%' }}
             data={this.state.offers}
@@ -148,12 +154,13 @@ export default class serviceProviderHomescreen extends React.Component {
                     iconBackgroundColor={colors.primaryBlue}
                     //bottomRightText="30"
                     onPress={() => this.props.navigation.navigate('editOffer', { offerKey: item.key })} />
+
                   {/* , {offerKey: item.key} */}
                   {/* </OfferContext.Provider> */}
                 </View>
 
-              )
-            }} />
+              ) 
+            }} /> : <Text style={{alignSelf:'center', fontSize:20,color:colors.primaryGrey,marginBottom:150}}>لا يوجد لديك عروض </Text>}
         </View>
 
 
@@ -179,10 +186,11 @@ export default class serviceProviderHomescreen extends React.Component {
 const styles = StyleSheet.create({
   header: {
     color: colors.primaryBlue,
-    fontSize: 25,
+    fontSize: 30,
     alignItems: 'flex-start',
     textAlign: 'right',
-    margin: 20
+    margin: 20,
+    textDecorationStyle:'double'
   },
   appButtonContainer: {
     elevation: 8,

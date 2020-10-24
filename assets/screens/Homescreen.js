@@ -50,29 +50,6 @@ export default class Homescreen extends React.Component {
   }
 
 
-  Cards = () => {
-    // const name='zara'
-
-    // database.ref().child('serviceProviders/zara').once('value', function(data){
-    //  setData(data.val().description)
-
-    // })
-
-    // const setData = (data)=>{
-    // this.setState( {description: data })}
-    return (
-
-      <Card
-        title={this.props.brand}
-        content={'Service Provider description'}
-        iconName="local-offer"
-        iconType="MaterialIcons"
-        iconBackgroundColor={colors.primaryBlue}
-        style={{ marginTop: 5 }}
-        //bottomRightText={offer.expiration}
-        onPress={() => navigation.navigate(serviceProvider)}
-      />)
-  }
   render() {
 
 
@@ -80,7 +57,7 @@ export default class Homescreen extends React.Component {
       <View style={styles.container}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <TouchableOpacity
-            style={{ alignSelf: "flex-end" }}
+            style={{ alignSelf: "flex-end" , marginTop:15}}
             onPress={() => {
               this.props.navigation.toggleDrawer();
             }}
@@ -126,7 +103,7 @@ export default class Homescreen extends React.Component {
                 <View style={{ marginTop: 15 }}>
                   <Card
                     title={offer.title}
-                    //content={'offer.description'}
+                    content={offer.description}
                     iconName="local-offer"
                     iconType="MaterialIcons"
                     iconBackgroundColor={colors.primaryBlue}

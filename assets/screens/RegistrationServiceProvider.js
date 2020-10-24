@@ -1,4 +1,5 @@
 import React, { Component, useState } from "react";
+import Map from '../screens/map'
 import {
   ImageEditor,
   Image,
@@ -501,24 +502,12 @@ export default class RegistrationServiceProvider extends Component {
               nextBtnTextStyle={{ color: "white", fontSize: 20 }}
               nextBtnStyle={styles.nextButton}
             >
-
               <View>
-                <Image
-                  source={require("../images/mapsmockup.png")}
-    
-                    style={{
-                      height: 400,
-                      width: 300
-
-                    }}
-                />
-                {/* <TouchableOpacity onPress={this.handleSignUp}>
-                  <SignUpButton
-                    text={"إنشاء حساب"}
-                    onPress={this.handleSignUp}
-                  ></SignUpButton>
-                </TouchableOpacity> */}
+              <Text style={{color:colors.primaryBlue, alignSelf:'flex-end', fontSize:20}}>
+                 تحديد موقع الفرع
+              </Text>
               </View>
+            <Map/>
             </ProgressStep>
           </ProgressSteps>
         </View>

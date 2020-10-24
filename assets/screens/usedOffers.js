@@ -5,10 +5,48 @@ import {Entypo} from '../constants/icons'
 import colors from '../constants/colors'
 import { Card } from "@paraboly/react-native-card";
 import serviceProvider from './SPprofile'
+import { database, auth, storage } from "../config/firebase";
+
 
 // add bottom navigation 
 // drawer navigation 
 export default class usedOffers  extends Component{
+  constructor() {
+    super()
+    this.state = {
+      existOffers:null,
+      offers: []
+    }
+  }
+  componentDidMount() {
+
+    var self = this;
+    const subscribe = database.ref('usedOffers/' + auth.currentUser.uid)
+      .on('value', function (snapshot) {
+        const offers = snapshot.val();
+       console.log(offers)
+        const usedArray = []
+      
+        if (offers != null){
+        Object.keys(offers).map(key => {
+         console.log(offers, self.state.offerDetails)
+         usedArray.push(offers[key])
+        })
+        self.setState({
+          offers: usedArray,
+          existOffers: true
+
+        })
+      }
+      else{
+        self.setState({
+          existOffers: false
+        })
+        
+      }}
+      )}
+
+
     render(){
         return(
             <View style={styles.container}>
@@ -19,23 +57,35 @@ export default class usedOffers  extends Component{
                         this.props.navigation.toggleDrawer();
                     }}
                     >
+
                     <Entypo name="menu" size={30} style={{marginTop:30}} />
+
+
                 </TouchableOpacity>
                 <Text style={{ marginBottom:10 ,fontSize: 22, color: colors.primaryBlue, alignItems: "center", textAlign:"center" }}>
                 العروض المستخدمة
                 </Text>
     
-                <Card 
-                  
-                  title={'Zara'}
+          {this.state.existOffers ? 
+          this.state.offers.map(offer => {
+            return (
+              <View style={{ margin: 15 }}>
+                <Card
+                  title={offer.title}
                   //content={'offer.description'}
                   iconName="local-offer"
                   iconType="MaterialIcons"
-                  iconBackgroundColor= {colors.primaryBlue}
+                  iconBackgroundColor={colors.primaryBlue}
                   //bottomRightText={'offer.expiration'}
-                  onPress={() => {this.props.navigation.navigate(serviceProvider)}}
+                  //onPress= {() => this.props.navigation.navigate('editOffer', {offerKey: item.key })}/>
+
+                  onPress={() => { this.props.navigation.navigate('serviceProvider', { offer: offer }) }}
                 />
-    
+                  </View>
+            )
+          } 
+          ): <Text style={{alignSelf:'center', fontSize:20,color:colors.primaryGrey, marginTop:250}}>لا يوجد عروض مستخدمة</Text>}
+
             </ScrollView>
           </View>
     

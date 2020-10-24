@@ -7,13 +7,15 @@ import colors from '../constants/colors'
 import styles from "../constants/styles";
 import { QRCode } from 'react-native-custom-qr-codes';
 import SignInButton from "../components/SignInButton";
+import { DatePicker } from 'native-base'
+
 
 
 
 export default class editOffer extends React.Component  {  
     constructor(props){
         super(props);
-        console.warn(props);
+        console.log(props);
         const offerKey = props?.route?.params?.offerKey;
         this.state={
           OfferId : offerKey , 
@@ -55,7 +57,7 @@ componentDidMount(){
   .then(function(snapshot){
     const offers = snapshot.val();
     const offersDetails = offers[self.state.OfferId];
-    console.warn('snapshot', snapshot.val());
+    console.log('snapshot', snapshot.val());
     var Descripiton=  (offersDetails.Descripiton)
     var expdate =  (offersDetails.expdate)
     var title= (offersDetails.title)
@@ -67,7 +69,7 @@ componentDidMount(){
 }
 
 removeOffer=() => {
-  console.warn(this.state.OfferId);
+  console.log(this.state.OfferId);
   database
       .ref()
       .child("serviceProvider")
@@ -75,19 +77,19 @@ removeOffer=() => {
       .child("offers").child(this.state.OfferId)
       .remove()
 
-.catch(error => alert(error)).then(Alert.alert('successful delete'))
+.catch(error => alert(error)).then(Alert.alert('تم حذف العرض بنجاح'))
 .then(this.props.navigation.pop())
 }
 
 handleUpdate= ()=>{
 //   var userId = auth.currentUser.uid;
 
-  database.ref('serviceProvider/'+ auth.currentUser.uid + "/offers").child().
+  database.ref('serviceProvider/'+ auth.currentUser.uid + "/offers").child(this.state.OfferId).
   update({ 
   'Descripiton': this.state.Descripiton, 
   'expdate': this.state.expdate,
   'title': this.state.title,
-  'OfferId': this.state.OfferId,
+  'code': this.state.code,
 
 }).catch(Alert.alert('error occured')).then(Alert.alert('successful update'))
 
@@ -99,9 +101,9 @@ handleUpdate= ()=>{
 
 
 
-// handleDateChange = expdate => {
-//     this.setState({ expdate: expdate  });
-//   };
+ handleDateChange = expdate => {
+     this.setState({ expdate: expdate  });
+  };
 
 
  confirmDelete =() =>{
@@ -136,7 +138,7 @@ render(){
             <ScrollView style={styles.scrollView}>
           <StatusBar backgroundColor='#0278ae' barStyle='light-content' />
           <TouchableOpacity>
-         <Entypo name='chevron-left' size={30} color= {colors.primaryBlue } style={{marginTop:15}} onPress={()=> this.props.navigation.pop()} />
+         <Entypo name='chevron-left' size={35} color= {colors.primaryBlue } style={{marginTop:30, marginLeft:20 }} onPress={()=> this.props.navigation.pop()} />
          </TouchableOpacity>
             <View style={styless.header}>
                 <Text style={styless.header1}> تعديل العرض </Text>
@@ -175,14 +177,35 @@ render(){
 
                 
 
-                <Text style={styless.text_footer}>التاريخ</Text>
+                {/* <Text style={styless.text_footer}>التاريخ</Text>
                 <View style={styless.action}>
                   <TextInput style={styless.textInput} 
                   autoCapitalize="none" 
                   onChangeText={expdate =>this.setState( { expdate: expdate} ) }
                   value={this.state.expdate}
                   textAlign='right'/>
-                </View>
+                  
+                </View> */}
+                 <Text style={styless.text_footer}>تاريخ إنتهاء العرض</Text>
+            <View style={styless.action}>
+              <DatePicker
+                defaultDate={new Date()}
+                minimumDate={new Date()}
+                value={this.state.expdate}
+                locale={"en"}
+                timeZoneOffsetInMinutes={undefined}
+                modalTransparent={false}
+                animationType={"fade"}
+                mode={'date'}
+                placeHolderText="التاريخ"
+                textStyle={{ color: "green" }}
+                placeHolderTextStyle={{ color: "#d3d3d3" }}
+                textAlign={'right'}
+                onDateChange={date => this.handleDateChange(date)}
+                disabled={false}
+              />
+            </View>
+
                 
  
                 <View>
@@ -275,6 +298,7 @@ const styless = StyleSheet.create({
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
         paddingVertical: 20,
+
         paddingHorizontal: 30
     },
     text_header: {
@@ -288,13 +312,15 @@ const styless = StyleSheet.create({
       color: '#0278ae',
       fontWeight: 'bold',
       fontSize: 25,
-      marginLeft:150
+      alignSelf:'center'
     },
     text_footer: {
         color: '#05375a',
         fontSize: 18,
-        marginLeft:260,
-        marginTop:10
+        //marginLeft:200,
+        alignSelf:'flex-end',
+        marginTop:15
+
         
     },
     buttom:{
@@ -312,9 +338,9 @@ const styless = StyleSheet.create({
     },
     textInput: {
         flex: 1,
-        marginTop:  -12,
+        marginTop:  12,
         paddingLeft: 10,
-        color: '#05375a'
+        color: 'black'
     },
     
     signIn: {

@@ -58,8 +58,8 @@ const styles = {
     alignItems: "flex-start",
   },
   header: {
-    fontFamily: "Bradley Hand",
-    fontWeight: "bold",
+    fontFamily: "Arial",
+    fontWeight: "Normal",
     fontSize: 35,
     alignSelf: "center",
     color: colors.primaryBlue,

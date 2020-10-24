@@ -30,25 +30,6 @@ export default class NewOffer extends Component {
     }
   }
 
-
-
-  //   componentDidMount(){ 
-
-
-  //     database.ref('users/'+ auth.currentUser.uid).once('value').then(function(snapshot){
-
-  //      var brand = ((snapshot.val() && snapshot.val().trademark))
-  //       readData(brand)
-
-  //     });
-
-  //     const readData =  (brand) => {
-  //     this.setState({
-  //       nameBrand: brand,
-
-  //     });
-  //   };
-  // }
   handleOfferIdChange = () => {
     this.setState({ code: this.state.OfferId });
 
@@ -114,12 +95,13 @@ export default class NewOffer extends Component {
     var OfferId = database.ref().child("Offers").push().key
 
     console.log("serviceProvider");
-    console.warn(this.state.OfferId, "Code");
+    console.log(this.state.OfferId, "Code");
     var newOffer = {
       Descripiton: this.state.Descripiton,
-      expdate: this.state.chosenDate,
+      expdate: this.state.chosenDate.toDateString(),
       title: this.state.title,
-      code: this.state.OfferId
+      code: this.state.OfferId,
+      serviceProvider: auth.currentUser.uid
     }
     console.log("offers");
     database
@@ -129,7 +111,7 @@ export default class NewOffer extends Component {
       .child("offers")
       .child(OfferId)
       .set(newOffer)
-      .then(Alert.alert('successful add'))
+      .then(Alert.alert('تم إضافة العرض بنجاح'))
       .then(this.props.navigation.pop())
       .catch((error) => console.log(error));
     var updates = {};
@@ -140,31 +122,6 @@ export default class NewOffer extends Component {
 
   };
 
-  //      const writeOfferSP = () => {
-
-  //       const serviceProvider=''
-  //       var currentUser = auth.currentUser.uid
-  //       var ref = database.ref().child("users/"+currentUser).once('value').then(function(snapshot) {
-  //         serviceProvider= (snapshot.val() && snapshot.val().serviceProvider) })
-
-  //         this.setState({serviceProvider: serviceProvider})
-
-  //       var OfferId =  database.ref().child("Offers").push().key
-
-  //       var newOffer = {
-  //         serviceProvider:this.state.serviceProvider,
-  //         descripiton: this.state.Descripiton,
-  //         expiration: this.state.expDate ,
-  //         title: this.state.title,
-  //         code:this.state.code
-  //       }
-  //       var updates = {};
-  //       updates['/Offers/' + OfferId] = newOffer;
-  //       updates['/serviceProvider/' + this.state.serviceProvider + '/Offers/' + OfferId] = newOffer;
-
-  //        database.ref().update(updates).then(Alert.alert('successful upload')).then(this.props.navigation.pop());
-  //     };
-  //   }
 
   render() {
 
@@ -175,7 +132,7 @@ export default class NewOffer extends Component {
         <StatusBar backgroundColor='#0278ae' barStyle='light-content' />
         <ScrollView style={styles.scrollView}>
           <TouchableOpacity>
-            <Entypo name='chevron-left' size={30} color={colors.primaryBlue} style={{ marginTop: 15 }} onPress={() => this.props.navigation.pop()} />
+            <Entypo name='chevron-left' size={30} color={colors.primaryBlue} style={{ marginTop: 30 }} onPress={() => this.props.navigation.pop()} />
           </TouchableOpacity>
           <View style={styless.header} style={{ margin: 0 }}>
             <Text style={styless.header1}>اضافة عرض جديد</Text>
@@ -212,18 +169,19 @@ export default class NewOffer extends Component {
 
 
 
-            <Text style={styless.text_footer}>التاريخ</Text>
+            <Text style={styless.text_footer}>تاريخ إنتهاء العرض</Text>
             <View style={styless.action}>
               <DatePicker
                 defaultDate={new Date()}
                 minimumDate={new Date()}
+                value={this.state.expdate}
                 locale={"en"}
                 timeZoneOffsetInMinutes={undefined}
                 modalTransparent={false}
                 animationType={"fade"}
-                androidMode={"default"}
-                placeHolderText="Select date"
+                placeHolderText="التاريخ"
                 textStyle={{ color: "green" }}
+                textAlign='right'
                 placeHolderTextStyle={{ color: "#d3d3d3" }}
                 onDateChange={this.setDate}
                 disabled={false}
@@ -343,7 +301,7 @@ const styless = StyleSheet.create({
   text_footer: {
     color: '#05375a',
     fontSize: 18,
-    marginLeft: 260,
+    alignSelf:'flex-end',
     marginTop: 10
 
   },

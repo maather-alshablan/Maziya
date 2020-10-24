@@ -1,19 +1,18 @@
 
 import React, { Component, useState } from "react";
-import { StyleSheet, Text, View, Linking, TextInput, Button, Card, FlatList, TouchableOpacity, Dimensions, Clipboard, Platform, StatusBar, Image, ImageBackground, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Linking, TextInput, 
+    Button, Card, FlatList, TouchableOpacity, Dimensions, Clipboard, LogBox, StatusBar, Image, ImageBackground, ScrollView, TabBarIOS } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Modal from 'react-native-modal';
 import { database, auth, storage } from "../config/firebase";
-import { Entypo, MaterialCommunityIcons, MaterialIcons, FontAwesome, Ionicons } from '../constants/icons'
+import { Entypo, MaterialCommunityIcons, MaterialIcons, FontAwesome, Ionicons, Feather } from '../constants/icons'
 import colors from '../constants/colors'
 import styles from "../constants/styles";
 import { QRCode } from 'react-native-custom-qr-codes';
+import { Colors } from "react-native/Libraries/NewAppScreen";
+import Map from '../screens/map'
+import SignInButton from "../components/SignInButton";
 //import listOfferSP from '../components/ListOfferSP';
-
-
-
-
-
 
 
 export default class serviceProvider extends Component {
@@ -29,21 +28,21 @@ export default class serviceProvider extends Component {
             email: '',
             phone: '',
             website: '',
-            code: 'code123',
+            code: '',
             twitter: '',
             instagram: '',
-            userType: '',
             //image:'',
             offers: [],
+            copied:false,
             offerDetails: props?.route?.params?.offer,
             favoriteId: '',
         }
     }
 
     componentDidMount() {
-        this.fetchData()
+       this.fetchData();
         const readData = (favId) => {
-            console.warn(favId, "favId")
+            console.log(favId, "favId")
             this.setState({
                 favoriteId: favId,
                 favorite: true
@@ -54,36 +53,36 @@ export default class serviceProvider extends Component {
             .once('value')
             .then(function (snapshot) {
                 const favorites = snapshot.val();
-                console.warn(favorites)
+                console.log(favorites)
                 var favoriteDetails = {}
                 Object.keys(favorites).map(key => {
-                    console.warn(favorites, self.state.offerDetails)
+                    console.log(favorites, self.state.offerDetails)
                     if (favorites[key].key == self.state.offerDetails?.key) {
-                        console.warn('added')
+                        console.log('added')
                         readData(key);
 
                     }
                 })
             })
-    }
-    fetchData = () => {
+        }
+
+  
+    
+     fetchData = () => {
+      
 
         database.ref().child('users/' + auth.currentUser.uid).once("value").then(function (snapshot) {
-            //     var type= snapshot.val().accountType;
-            // if (type == 'serviceProvider'){
-            const name = ((snapshot.val() && snapshot.val().serviceProvider))  //change name to key
-            // const ref =  database.ref().child('serviceProvider/'+auth.current.uid)
-            //     }              
-            // else {
-            //    const key = this.props.navigation.state.params.Key
-            //const ref =  database.ref().child('serviceProvider/'+key)
+            if (snapshot.val().accountType == 'serviceProvider') 
+                var sp =     auth.currentUser.uid
+            
+            else if (this.state.offerDetails){
+                var sp = this.state.offerDetails.serviceProvider}
+                
+                console.log('hi')
 
-            // var favorite = snapshot.val().favorites  < capture favorited or not 
-            // 
-
-
-            //  }
-            database.ref().child('serviceProvider/' + name).once("value").then(function (snapshot) {
+                console.log(sp)
+            database.ref().child('serviceProvider/' + sp).once("value").then(function (snapshot) {
+                var name = ((snapshot.val() && snapshot.val().nameBrand)) 
                 var description = ((snapshot.val() && snapshot.val().description))
                 var email = ((snapshot.val() && snapshot.val().email))
                 var phone = ((snapshot.val() && snapshot.val().phone))
@@ -91,16 +90,17 @@ export default class serviceProvider extends Component {
                 var twitter = ((snapshot.val() && snapshot.val().twitter))
                 var instagram = ((snapshot.val() && snapshot.val().instagram))
                 // var image=((snapshot.val() && snapshot.val().image))
-                readData(name, email, description, phone, website, twitter, instagram);
-
-
+                readData_(name, email, description, phone, website, twitter, instagram);
+            
             })
         }
+       
+    
 
         )
 
 
-        const readData = (name, email, description, phone, website, twitter, instagram) => {
+        const readData_ = (name, email, description, phone, website, twitter, instagram) => {
             this.setState({
                 brand: name,
                 description: description,
@@ -114,7 +114,6 @@ export default class serviceProvider extends Component {
         }
 
     }
-
 
     fetchOffers = () => {
 
@@ -199,7 +198,10 @@ export default class serviceProvider extends Component {
     };
 
     copyToClipboard = () => {
-        Clipboard.setString(this.state.code)
+        Clipboard.setString(this.state.offerDetails.code)
+        this.setState({copied:true})
+        database.ref().child('usedOffers').child(auth.currentUser.uid).child(this.state.offerDetails?.key)
+        .set({ ...this.state.offerDetails});
     }
 
     toggleFavorite = () => {
@@ -226,37 +228,55 @@ export default class serviceProvider extends Component {
 
 
     render() {
+        //console.log(this.state.brand)
+        console.log(this.state.offerDetails)
+       // console.log(this.state.offerDetails.serviceProvider)
 
+        //LogBox.ignoreAllLogs()
+        this.fetchData()
         return (
 
             <View style={styless.container}>
                 <ScrollView style={styles.scrollView}>
 
                     <View style={styless.header}>
-                        {/* if user is KSU member then show favorite functionality else dont show  */}
+                        {/* if page is accessed through offer View then show heart and and back page else offer is accessed through service provider thus don't show  */}
+                        {this.state.offerDetails ?  
+                        <View>
+                        <Entypo name='chevron-left' size={30} color={colors.primaryBlue}  style={{marginTop:40}} onPress={()=> this.props.navigation.pop()} />
 
-
-
+                       
+                        <TouchableOpacity 
+                        onPress={this.toggleFavorite}>
+                        <MaterialCommunityIcons
+                            name={this.state.favorite ? "heart" : "heart-outline"}
+                            color={colors.primaryBlue}
+                            size={40}
+                            style={{alignSelf:'flex-end'}}
+                        />
+                    </TouchableOpacity>
+                    </View> : <View></View> }
                         <Text style={[styles.header]}>{this.state.brand}</Text>
                         <View >
                             <Image source={require('../images/logoDis.jpg')} style={{ width: 100, height: 100, marginLeft: 120 }} />
                         </View>
                     </View>
 
-                    {false ? <View></View> : <TouchableOpacity style={{
+                    {/* {false ? <View></View> : <TouchableOpacity style={{
                         marginTop: 10
                     }}
                         onPress={this.toggleFavorite}>
                         <MaterialCommunityIcons
                             name={this.state.favorite ? "heart" : "heart-outline"}
                             color={colors.primaryBlue}
-                            size={30}
+                            size={40}
+                            style={{alignSelf:'flex-end'}}
                         />
-                    </TouchableOpacity>}
+                    </TouchableOpacity>} */}
 
 
                     <View style={styless.footer}>
-                        <Text style={styless.text_footer}>عن مزود خدمة {this.state.offerDetails.name}</Text>
+                        <Text style={styless.text_footer}>عن  {this.state.brand}</Text>
 
                         <Text style={{ alignSelf: 'flex-end' }}>
                             {this.state.description}
@@ -266,7 +286,7 @@ export default class serviceProvider extends Component {
                         <View style={{ alignSelf: 'flex-end' }}>
                             <Text style={styless.text_footer}>للتواصل</Text>
                         </View>
-                        <View style={{ flexDirection: "row" }}>
+                        <View style={{ flexDirection: "row"  , alignItems:"center"}}>
 
                             <TouchableOpacity>
                                 <MaterialCommunityIcons
@@ -312,66 +332,100 @@ export default class serviceProvider extends Component {
                                 </TouchableOpacity>}
                         </View>
 
-                        <View style={styless.action}>
-                            <Text>
-
-                            </Text>
-                        </View>
+                     
+                        {this.state.offerDetails ? 
+                      <View>
                         <Text style={styless.text_footer}>العنوان</Text>
-                        <Text style={styless.text_footer}>{this.state.offerDetails.title}</Text>
+                        <Text style={styless.subtext_footer}>{this.state.offerDetails.title}</Text>
                         <View style={styless.action}>
                         </View>
 
                         <Text style={styless.text_footer}>الوصف</Text>
-                        <Text style={styless.text_footer}>{this.state.offerDetails.Descripiton}</Text>
+                        <Text style={styless.subtext_footer}>{this.state.offerDetails.Descripiton}</Text>
                         <View style={styless.action}>
-
 
                         </View>
 
-                        <Text style={styless.text_footer}>التاريخ</Text>
-                        <Text style={styless.text_footer}>{this.state.offerDetails.expdate}</Text>
-                        <View style={styless.action}>
-
-
+                        <Text style={styless.text_footer}>تاريخ إنتهاء العرض</Text>
+                        <Text style={styless.subtext_footer}>{this.state.offerDetails.expdate}</Text>
+                        <View style={styless.action}> 
                         </View>
-
-
-                    </View>
-
-
-
-
-
-
-
-                    <TouchableOpacity style={styles.ButtonContainer} onPress={this.toggleModal}  >
+                        </View> : <View></View> } 
+                        {this.state.offerDetails ?
+                        <View>
+                        <TouchableOpacity style={styles.ButtonContainer} onPress={this.toggleModal}  >
                         <Text style={styles.appButtonText} >استخدم العرض</Text>
                         <Modal
                             isVisible={this.state.modal}
                             onBackdropPress={() => this.setState({ modal: false })}>
+                                
                             <View style={styless.modal}>
-                                < View>
-                                    <QRCode
-                                        value={this.state.code}
-                                        size={200}
-                                        bgColor='black'
-                                        fgColor='white' />
-                                </View>
-                                <TouchableOpacity onPress={() => this.copyToClipboard()}>
-                                    <Text style={styles.text_footer}>انسخ الكود</Text>
-                                </TouchableOpacity>
+                                <FontAwesome 
+                                name={'close'}
+                                color={colors.primaryGrey}
+                                size={30}
+                                style={{alignSelf:"flex-start",justifyContent:'center'}}
+                                onPress={this.toggleModal} />
+                                {/* <Text style={{ fontFamily: "Arial",fontWeight: "Normal",fontSize: 35,alignSelf: "center",color: colors.primaryBlue}}>استخدم العرض</Text> */}
+                                <Text style={[styless.subtext_footer],
+                                    [{alignSelf:'flex-end',color:colors.primaryBlue, fontSize:30, margin:10,textDecorationLine:'underline'}]}> الطريقة الأولى</Text>
+                             <View>
+                               <TouchableOpacity 
+                            //    onPress={this.props.navigation.navigate('ScanQR')} 
+                               >
+                                <Text style={
+                                    [{alignSelf:'flex-end',color: '#05375a', fontSize:20, margin:10}]}>امسح العرض</Text>
+                                 </TouchableOpacity>
+                                 </View>
+                                  < View>
+                                  <QRCode content={this.state.offerDetails.code}
+                                  logo={require('../images/logo.png')} />
 
-                                <TouchableOpacity onPress={() => {
+                                    
+
+                                   <Text style={[styless.subtext_footer],
+                                    [{alignSelf:'flex-end',color:colors.primaryBlue, fontSize:30, margin:7,textDecorationLine:'underline'}]}> الطريقة الثانية</Text>
+                                <TouchableOpacity style={{flexDirection:'row-reverse',alignSelf:'center'}} onPress={() => this.copyToClipboard()}>
+                                
+                                    <Text style={{fontSize: 20,alignSelf:"center", margin:20,color: '#05375a'}} > 1 - انسخ الكود </Text>
+                                    <Feather name={'copy'} 
+                                    size={30} 
+                                    color= {this.state.copied ?  colors.primaryBlue : colors.primaryGrey} />
+                                </TouchableOpacity>
+                                </View> 
+
+                                <TouchableOpacity style={{flexDirection:'row-reverse',alignSelf:'center',margin:10}}  onPress={() => {
                                     Linking.openURL('https://' + this.state.website);
                                 }}>
-                                    <Text style={{ color: colors.primaryBlue }}>  {this.state.brand}  انقلني لصفحة </Text>
-                                </TouchableOpacity>
-
-                                <Button title="اغلاق" onPress={this.toggleModal} />
+                                    <Text style={{ alignSelf:"center", margin:10, color: '#05375a', fontSize:20}}> 2 - {this.state.brand}  انقلني لصفحة  </Text>
+                                
+                                <Feather name={'external-link'} 
+                                    size={30} 
+                                    color= {  colors.primaryGrey }/>
+                              </TouchableOpacity>
                             </View>
                         </Modal>
+
+
+
+
                     </TouchableOpacity>
+                    </View> : <View></View>}
+                        <View style={{ alignSelf: 'flex-end' }}>
+                            <Text style={styless.text_footer}>الفروع</Text>
+                        </View>
+                    
+                    </View>
+                    <View style={{height:50, width:50}}>
+                       <Map/>
+                       </View>
+
+
+
+
+
+
+                  
                 </ScrollView>
 
 
@@ -421,11 +475,16 @@ const styless = StyleSheet.create({
     },
     text_footer: {
         color: '#05375a',
-        fontSize: 18,
+        fontSize: 20,
         marginLeft: 200,
         marginTop: 10,
-        alignSelf: 'flex-end'
-
+        alignSelf: 'flex-end',
+    },subtext_footer: {
+        color: 'black',
+        fontSize: 15,
+        marginLeft: 200,
+        marginTop: 10,
+        alignSelf: 'flex-end',
     },
     buttom: {
         alignItems: 'flex-end',
@@ -466,13 +525,16 @@ const styless = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         width: 330,
-        //height: 100,
-        marginVertical: 100,
+        alignSelf:"center",
+        marginVertical: 115,
+        marginHorizontal:50,
         borderTopLeftRadius: 10,
         borderTopRightRadius: 10,
         borderBottomEndRadius: 10,
         borderBottomLeftRadius: 10,
         borderBottomRightRadius: 10,
+        borderColor:colors.primaryGrey,
+        borderWidth:4,
         overflow: 'hidden',
 
 

@@ -14,6 +14,7 @@ export default class Favorite extends Component {
   constructor() {
     super()
     this.state = {
+      existOffers:null,
       offers: []
     }
   }
@@ -23,16 +24,27 @@ export default class Favorite extends Component {
     const subscribe = database.ref('favorites/' + auth.currentUser.uid)
       .on('value', function (snapshot) {
         const favorites = snapshot.val();
-        console.warn(favorites)
+       console.log(favorites)
         const favoritesArray = []
+      
+        if (favorites != null){
         Object.keys(favorites).map(key => {
-          console.warn(favorites, self.state.offerDetails)
+         console.log(favorites, self.state.offerDetails)
           favoritesArray.push(favorites[key])
         })
         self.setState({
-          offers: favoritesArray
+          offers: favoritesArray,
+          existOffers: true
+
         })
-      })
+      }
+      else{
+        self.setState({
+          existOffers: false
+        })
+        
+      }} 
+      )
 
 
     // subscribe.on('child_removed', function (data) {
@@ -60,15 +72,7 @@ export default class Favorite extends Component {
   }
 
   Cards = () => {
-    // const name='zara'
 
-    // database.ref().child('serviceProviders/zara').once('value', function(data){
-    //  setData(data.val().description)
-
-    // })
-
-    // const setData = (data)=>{
-    // this.setState( {description: data })}
     return (
 
       <Card
@@ -84,7 +88,7 @@ export default class Favorite extends Component {
   }
 
   render() {
-    console.warn(this.state.offers)
+    console.log(this.state.offers)
     return (
       <View style={styles.container}>
         <ScrollView showsVerticalScrollIndicator={false}>
@@ -99,7 +103,8 @@ export default class Favorite extends Component {
           <Text style={{ marginBottom: 10, fontSize: 22, color: colors.primaryBlue, alignItems: "center", textAlign: "center" }}>
             العروض المفضلة
             </Text>
-          {this.state.offers.map(offer => {
+          {this.state.existOffers ? 
+          this.state.offers.map(offer => {
             return (
               <View style={{ margin: 15 }}>
                 <Card
@@ -115,7 +120,8 @@ export default class Favorite extends Component {
                 />
               </View>
             )
-          })}
+          } 
+          ): <Text style={{alignSelf:'center', fontSize:20,color:colors.primaryGrey, marginTop:250}}> لا يوجد عروض في المفضلة</Text>}
 
 
         </ScrollView>

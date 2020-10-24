@@ -1,12 +1,13 @@
 import * as React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createStackNavigator } from '@react-navigation/stack'
-import {Entypo, Feather , MaterialCommunityIcons, MaterialIcons, FontAwesome5} from '../constants/icons'
+import {Entypo, Feather , MaterialCommunityIcons, MaterialIcons, Ionicons, FontAwesome5, SimpleLineIcons, Fontisto} from '../constants/icons'
 import colors from '../constants/colors'
 
 import HomescreenServiceProvider from '../screens/serviceProviderHomescreen'
 import ServiceProviderPage from '../screens/serviceProvider'
 import ProfileServiceProvider from '../screens/SPprofile'
+import usedBy from '../screens/usedBy' 
 //import ProfileServiceProvider from '../screens/spprofile2'
 
 import addOffer from '../screens/NewOffer'
@@ -63,6 +64,17 @@ const Tab = createBottomTabNavigator()
           tabBarIcon: ({ tintColor, focused }) => (
             <MaterialCommunityIcons 
             name={focused ? "store" : "store"} 
+            color={colors.primaryBlue} 
+            size={30} />
+          )
+
+        }} />
+         <Tab.Screen name='usedBy' component={usedBy}
+         options={{
+          
+          tabBarIcon: ({ tintColor, focused }) => (
+            <Fontisto 
+            name={"bar-chart"} 
             color={colors.primaryBlue} 
             size={30} />
           )
