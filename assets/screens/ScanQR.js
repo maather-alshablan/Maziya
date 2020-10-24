@@ -57,12 +57,10 @@ export default class scanQR extends Component {
           </Text> */}
         </BarCodeScanner>
 
-        {scanned && (
-        <Button title={'go to website'}
-        onPress={this.onSuccess}
+        <Button title={'go to app reader '}
+         onPress={() => Linking.openURL('https://apps.apple.com/sa/app/qr-code-pro/id1490112564')}
         />
-        )}
-
+        
         {scanned && (
           <Button
             title={'Tap to Scan Again'}
