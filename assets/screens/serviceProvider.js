@@ -257,11 +257,10 @@ export default class serviceProvider extends Component {
 
     render() {
         //console.log(this.state.brand)
-        console.log(this.state.offerDetails)
+      //  console.log(this.state.offerDetails)
        // console.log(this.state.offerDetails.serviceProvider)
 
         //LogBox.ignoreAllLogs()
-        this.fetchData()
         return (
 
             <View style={styless.container}>

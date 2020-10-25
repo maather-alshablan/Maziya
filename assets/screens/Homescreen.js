@@ -44,6 +44,7 @@ export default class Homescreen extends React.Component {
       await this.cancelAllScheduledNotificationsAsync();
       const offers = snapshot.val();
       const offersArray = [];
+      if (offers!= null)
       Object.keys(offers).map(key => {
         // console.warn(offers[key]);
         offersArray.push({

@@ -45,7 +45,7 @@ export default class scanQR extends Component {
         <BarCodeScanner
           onBarCodeScanned={scanned ? undefined : this.handleBarCodeScanned}
           style={[StyleSheet.absoluteFill, styless.container]}>
-          <Text style={styless.description}>Scan your QR code</Text>
+          <Text style={styless.description}>قم بمسح العرض</Text>
           <Image
             style={styless.qr}
             source={require('../images/qr.png')}
@@ -57,13 +57,13 @@ export default class scanQR extends Component {
           </Text> */}
         </BarCodeScanner>
 
-        <Button title={'go to app reader '}
+        <Button title={'قم بالمسح '}
          onPress={() => Linking.openURL('https://apps.apple.com/sa/app/qr-code-pro/id1490112564')}
         />
         
         {scanned && (
           <Button
-            title={'Tap to Scan Again'}
+            title={'يرجى إعادة المسح'}
             onPress={() => this.setState({ scanned: false })}
           />
         )}
@@ -74,7 +74,7 @@ export default class scanQR extends Component {
 
   handleBarCodeScanned = ({ type, data }) => { 
     this.setState({ scanned: true });
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`)
+    alert(`تم المسح بنجاح`)
   
   };
 

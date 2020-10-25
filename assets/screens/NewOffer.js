@@ -112,22 +112,9 @@ export default class NewOffer extends Component {
       .child("offers")
       .child(OfferId)
       .set(newOffer)
-<<<<<<< HEAD
       .then(Alert.alert('تم إضافة العرض بنجاح'))
       .then(this.props.navigation.pop())
       .catch((error) => console.log(error));
-=======
-      .then(() => {
-        Alert.alert('Offer Created')
-        this.sendNotification(newOffer);
-      })
-      .then(() => {
-        this.props.navigation.pop();
-      })
-      .catch((error) => console.warn(error));
-
-
->>>>>>> 5686c893fc052e585b553231140d884f18c62002
     var updates = {};
     updates['/Offers/' + OfferId] = newOffer;
     updates['/serviceProvider/' + auth.currentUser.uid + '/offers' + OfferId] = newOffer;
@@ -137,8 +124,6 @@ export default class NewOffer extends Component {
 
   };
 
-<<<<<<< HEAD
-=======
   sendNotification = async (newOffer) => {
     console.warn({ newOffer })
     const subscribe = database.ref('users')
@@ -194,7 +179,6 @@ export default class NewOffer extends Component {
   //        database.ref().update(updates).then(Alert.alert('successful upload')).then(this.props.navigation.pop());
   //     };
   //   }
->>>>>>> 5686c893fc052e585b553231140d884f18c62002
 
   render() {
 

@@ -12,7 +12,6 @@ import { DatePicker } from 'native-base'
 
 
 
-<<<<<<< HEAD
 export default class editOffer extends React.Component  {  
     constructor(props){
         super(props);
@@ -37,7 +36,8 @@ export default class editOffer extends React.Component  {
       };
     
       handleOfferIdChange = () => {
-        this.setState({ code: this.state.OfferId  });}
+        this.setState({ code: this.state.OfferId  });
+      }
     
 componentDidMount(){
    
@@ -66,108 +66,33 @@ componentDidMount(){
    readData(Descripiton,expdate,title,code);
     });
     
-=======
-export default class editOffer extends React.Component {
-  constructor(props) {
-    super(props);
-    console.warn(props);
-    const offerKey = props?.route?.params?.offerKey;
-    this.state = {
-      OfferId: offerKey,
->>>>>>> 5686c893fc052e585b553231140d884f18c62002
-
     }
-  }
+  
 
 
-  state = {
-    title: "",
-    Descripiton: "",
-    OfferId: '',
-    expdate: "",
-    code: "",
-
-
-
-  };
-
-  handleOfferIdChange = () => {
-    this.setState({ code: this.state.OfferId });
-  }
-
-  componentDidMount() {
-
-<<<<<<< HEAD
+ 
 removeOffer=() => {
   console.log(this.state.OfferId);
   database
-=======
-    const readData = (Descripiton, expdate, title, code) => {
-      this.setState({
-        Descripiton: Descripiton,
-        expdate: expdate,
-        title: title,
-        code: code
-      });
-    };
-
-    // console.log(this.props.navigation.getParam())
-
-    var self = this;
-    database.ref('serviceProvider/' + auth.currentUser.uid + "/offers")
-      .once('value')
-      .then(function (snapshot) {
-        const offers = snapshot.val();
-        const offersDetails = offers[self.state.OfferId];
-        console.warn('snapshot', snapshot.val());
-        var Descripiton = (offersDetails.Descripiton)
-        var expdate = (offersDetails.expdate)
-        var title = (offersDetails.title)
-        var code = offersDetails.code
-        readData(Descripiton, expdate, title, code);
-      });
-
-
-  }
-
-  removeOffer = () => {
-    console.warn(this.state.OfferId);
-    database
->>>>>>> 5686c893fc052e585b553231140d884f18c62002
       .ref()
       .child("serviceProvider")
       .child(auth.currentUser.uid)
       .child("offers").child(this.state.OfferId)
       .remove()
 
-<<<<<<< HEAD
 .catch(error => alert(error)).then(Alert.alert('تم حذف العرض بنجاح'))
 .then(this.props.navigation.pop())
 }
-=======
-      .catch(error => alert(error)).then(Alert.alert('successful delete'))
-      .then(this.props.navigation.pop())
-  }
->>>>>>> 5686c893fc052e585b553231140d884f18c62002
 
   handleUpdate = () => {
     //   var userId = auth.currentUser.uid;
 
-<<<<<<< HEAD
   database.ref('serviceProvider/'+ auth.currentUser.uid + "/offers").child(this.state.OfferId).
   update({ 
   'Descripiton': this.state.Descripiton, 
   'expdate': this.state.expdate,
   'title': this.state.title,
   'code': this.state.code,
-=======
-    database.ref('serviceProvider/' + auth.currentUser.uid + "/offers").child().
-      update({
-        'Descripiton': this.state.Descripiton,
-        'expdate': this.state.expdate,
-        'title': this.state.title,
-        'OfferId': this.state.OfferId,
->>>>>>> 5686c893fc052e585b553231140d884f18c62002
 
       }).catch(Alert.alert('error occured')).then(Alert.alert('successful update'))
 
@@ -178,7 +103,6 @@ removeOffer=() => {
   // };
 
 
-<<<<<<< HEAD
 // handletitleChange = title => {
 //   this.setState({ title: title  });
 // };
@@ -207,66 +131,18 @@ Alert.alert(
       }
     ],
     { cancelable: false }
-  )} 
+  )};
  
 
-    
-
-     
- 
+  
 render(){
  
-=======
-
-  // handleDateChange = expdate => {
-  //     this.setState({ expdate: expdate  });
-  //   };
-
-
-  confirmDelete = () => {
-    Alert.alert(
-      'حذف ',
-      'هل انت متأكد من حذف العرض؟',
-      [
-        {
-          text: 'نعم',
-          onPress: () => { this.removeOffer() },
-          style: 'default'
-        },
-        {
-          text: 'لا',
-          onPress: () => console.log('Cancel Pressed'),
-          style: 'cancel'
-        }
-      ],
-      { cancelable: false }
-    )
-  }
-
-
-
-
-
-
-  render() {
-
->>>>>>> 5686c893fc052e585b553231140d884f18c62002
     return (
 
       <View style={styless.container}>
         <ScrollView style={styles.scrollView}>
           <StatusBar backgroundColor='#0278ae' barStyle='light-content' />
           <TouchableOpacity>
-<<<<<<< HEAD
-         <Entypo name='chevron-left' size={35} color= {colors.primaryBlue } style={{marginTop:30, marginLeft:20 }} onPress={()=> this.props.navigation.pop()} />
-         </TouchableOpacity>
-            <View style={styless.header}>
-                <Text style={styless.header1}> تعديل العرض </Text>
-                   {/* error message appear here */}
-                {this.state.errors && (
-          <View style={styles.header}>
-            <Text style={styles.errors}>{this.state.errorMessage}</Text>
-=======
             <Entypo name='chevron-left' size={30} color={colors.primaryBlue} style={{ marginTop: 15 }} onPress={() => this.props.navigation.pop()} />
           </TouchableOpacity>
           <View style={styless.header}>
@@ -280,7 +156,6 @@ render(){
             <View >
               <Image source={require('../images/logoDis.jpg')} style={{ width: 100, height: 100, marginLeft: 120 }} />
             </View>
->>>>>>> 5686c893fc052e585b553231140d884f18c62002
           </View>
 
           <View style={styles.container} >
@@ -315,7 +190,6 @@ render(){
                 textAlign='right'
                 value={this.state.Descripiton} />
             </View>
-<<<<<<< HEAD
  
             
                 <View style={styless.footer}>
@@ -423,64 +297,8 @@ render(){
                 {
                     /* https://www.npmjs.com/package/react-native-qrcode-generator */
                 }
-=======
-
-
-
-            <Text style={styless.text_footer}>التاريخ</Text>
-            <View style={styless.action}>
-              <TextInput style={styless.textInput}
-                autoCapitalize="none"
-                onChangeText={expdate => this.setState({ expdate: expdate })}
-                value={this.state.expdate}
-                textAlign='right' />
->>>>>>> 5686c893fc052e585b553231140d884f18c62002
             </View>
-
-
-            <View>
-              {/* <ImageBackground source={require('../images/image.png')} style={{width:200,height:200,marginLeft:50}}> */}
-              <View style={styless.action}>
-                <TextInput
-                  placeholder='ادخل الرمز'
-
-                  style={styless.TextInput, { paddingTop: 50, marginLeft: 120 }}
-                  autoCapitalize="none"
-                  onChangeText={code => this.setState({ code: code })}
-                  value={this.state.code} />
-              </View>
-              <View style={styles.container}>
-                <TouchableOpacity onPress={this.handleOfferIdChange}>
-                  <SignInButton text={'QR تحديث'} onPress={this.handleOfferIdChange}></SignInButton>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.container} >
-
-                <QRCode content={this.state.code}
-                  logo={require('../images/logo.png')} />
-              </View>
-            </View>
-
-
-
-            <View style={styless.buttom}>
-
-              <TouchableOpacity style={styless.signIn} onPress={this.handleUpdate} >
-                <LinearGradient
-                  colors={['#0278ae', '#0278ae']}
-                  style={styless.signIn}
-                >
-                  <Text style={[styless.textSign, { color: '#fff' }]}> تعديل عرض </Text>
-
-                </LinearGradient>
-              </TouchableOpacity>
-
-            </View>
-
-            {
-              /* https://www.npmjs.com/package/react-native-qrcode-generator */
-            }
-          </View>
+</View>
 
 
         </ScrollView>
@@ -495,7 +313,6 @@ const { height } = Dimensions.get('screen');
 const height_logo = height * 0.28;
 
 const styless = StyleSheet.create({
-<<<<<<< HEAD
     container: {
         flex: 1,
         backgroundColor : 'white'
@@ -580,88 +397,4 @@ const styless = StyleSheet.create({
     
  
  
-=======
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-    alignItems: 'center'
-
-  },
-  header: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    paddingHorizontal: 20,
-    paddingTop: 20
-  },
-  header1: {
-    color: '#0278ae',
-    fontWeight: 'bold',
-    fontSize: 25,
-    marginLeft: 150,
-  },
-
-  footer: {
-    flex: 3,
-    backgroundColor: '#fff',
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    paddingVertical: 20,
-    paddingHorizontal: 30
-  },
-  text_header: {
-    paddingTop: 100,
-    color: '#0278ae',
-    fontWeight: 'bold',
-    fontSize: 25,
-    marginLeft: 150
-  },
-  header1: {
-    color: '#0278ae',
-    fontWeight: 'bold',
-    fontSize: 25,
-    marginLeft: 150
-  },
-  text_footer: {
-    color: '#05375a',
-    fontSize: 18,
-    marginLeft: 260,
-    marginTop: 10
-
-  },
-  buttom: {
-    alignItems: 'flex-end',
-    marginTop: 30
-  },
-
-  action: {
-    flexDirection: 'row',
-    marginTop: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f2f2f2',
-    paddingBottom: 5
-
-  },
-  textInput: {
-    flex: 1,
-    marginTop: -12,
-    paddingLeft: 10,
-    color: '#05375a'
-  },
-
-  signIn: {
-    width: '100%',
-    height: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 10,
-  },
-
-  textSign: {
-    fontSize: 18,
-    fontWeight: 'bold'
-  }
-
-
-
->>>>>>> 5686c893fc052e585b553231140d884f18c62002
 });
