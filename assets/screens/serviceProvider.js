@@ -41,7 +41,7 @@ export default class serviceProvider extends Component {
     }
 
     componentDidMount() {
-        this.fetchData()
+     
         const readData = (favId, used = false) => {
             if (used) {
                 this.setState({
@@ -57,20 +57,43 @@ export default class serviceProvider extends Component {
                 })
             } }
 
+            
+            var self = this;
+        database.ref('users/'+auth.currentUser.uid).once('value').then(function(snapshot){
+       
+            const user = snapshot.val().accountType
+            console.log("this")
+            
 
-        var self = this;
+        if (user == 'serviceProvider') 
+        var sp =     auth.currentUser.uid
+    
+        else if (self.state.offerDetails != null ){
+        var sp = self.state.offerDetails.serviceProvider}
+        
+        console.log(sp)
+        fetchData(sp);
+        
+        } )
+
+ 
+
+        console.log('hi1')
+
         database.ref('favorites/' + auth.currentUser.uid)
             .once('value')
             .then(function (snapshot) {
                 const favorites = snapshot.val();
-                console.log(favorites)
+                //console.log(favorites)
                 var favoriteDetails = {}
+                if (favorites != null)
                 Object.keys(favorites).map(key => {
-                    console.log(favorites, self.state.offerDetails)
+                    //console.log(favorites, self.state.offerDetails)
                     if (favorites[key].key == self.state.offerDetails?.key) {
-                        console.log('added')
+                        console.log('added');
+                        console.log('hi');
                         readData(key);
-
+                        fetchData(self.state.offerDetails.serviceProvider);
                     }
                 })
             })
@@ -90,25 +113,10 @@ export default class serviceProvider extends Component {
         //             }
         //         })
         //     })
-    }
-
-    
-
-  
-    
-     fetchData = () => {
+     const fetchData = (sp) => {
       
+        console.log('hi')
 
-        database.ref().child('users/' + auth.currentUser.uid).once("value").then(function (snapshot) {
-            if (snapshot.val().accountType == 'serviceProvider') 
-                var sp =     auth.currentUser.uid
-            
-            else if (this.state.offerDetails){
-                var sp = this.state.offerDetails.serviceProvider}
-                
-                console.log('hi')
-
-                console.log(sp)
             database.ref().child('serviceProvider/' + sp).once("value").then(function (snapshot) {
                 var name = ((snapshot.val() && snapshot.val().nameBrand)) 
                 var description = ((snapshot.val() && snapshot.val().description))
@@ -121,11 +129,6 @@ export default class serviceProvider extends Component {
                 readData_(name, email, description, phone, website, twitter, instagram);
             
             })
-        }
-       
-    
-
-        )
 
 
         const readData_ = (name, email, description, phone, website, twitter, instagram) => {
@@ -141,7 +144,7 @@ export default class serviceProvider extends Component {
             })
         }
 
-    }
+    }}
 
     fetchOffers = () => {
 
@@ -256,9 +259,8 @@ export default class serviceProvider extends Component {
         
 
     render() {
-        //console.log(this.state.brand)
-      //  console.log(this.state.offerDetails)
-       // console.log(this.state.offerDetails.serviceProvider)
+      //  console.log('hi')
+       
 
         //LogBox.ignoreAllLogs()
         return (

@@ -18,6 +18,8 @@ export default class Map extends Component{
 
 
       _getLocationAsync = async () => {
+        // the following line causes error
+        
         let { status } = await Permissions.askAsync(Permissions.LOCATION);
         if (status !== 'granted') {
         this.setState({

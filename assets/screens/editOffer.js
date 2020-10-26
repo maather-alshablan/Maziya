@@ -80,6 +80,8 @@ removeOffer=() => {
       .child("offers").child(this.state.OfferId)
       .remove()
 
+    //also removed from used and favorited offers 
+
 .catch(error => alert(error)).then(Alert.alert('تم حذف العرض بنجاح'))
 .then(this.props.navigation.pop())
 }
@@ -193,28 +195,7 @@ render(){
  
             
                 <View style={styless.footer}>
-                <Text style={styless.text_footer}>العنوان</Text>
-                <View style={styless.action}>
-                    <TextInput style={styless.textInput} 
-                    autoCapitalize="none" 
-                    textAlign='right'
-                    onChangeText={title =>this.setState( { title: title} ) }
-                    value={this.state.title}/>
-                </View>
-                
-             
-
-                <Text style={styless.text_footer}>الوصف</Text>
-                <View style={styless.action}>
-                  <TextInput style={styless.textInput} 
-                  autoCapitalize="none" 
-                  onChangeText={Descripiton =>this.setState( { Descripiton: Descripiton} ) }
-                  textAlign='right'
-                  value={this.state.Descripiton}/>
-                </View>
-
-                
-
+          
                 {/* <Text style={styless.text_footer}>التاريخ</Text>
                 <View style={styless.action}>
                   <TextInput style={styless.textInput} 

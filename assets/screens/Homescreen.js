@@ -133,21 +133,18 @@ export default class Homescreen extends React.Component {
     return await Notifications.cancelAllScheduledNotificationsAsync()
   }
 
-  Cards = () => {
 
-    return (
+retrieveServiceProviderName = (sp) =>{
 
-      <Card
-        title={this.props.brand}
-        content={'Service Provider description'}
-        iconName="local-offer"
-        iconType="MaterialIcons"
-        iconBackgroundColor={colors.primaryBlue}
-        style={{ marginTop: 5 }}
-        //bottomRightText={offer.expiration}
-        onPress={() => navigation.navigate(serviceProvider)}
-      />)
-  }
+  database.ref('serviceProvider/'+sp).once('value', function(snapshot){
+    var name = snapshot.val().nameBrand;
+    readName(name)
+  })
+  const readName = (name)=>{
+  this.setState(
+   { brand:name}
+  )} 
+}
   render() {
 
 
@@ -199,16 +196,19 @@ export default class Homescreen extends React.Component {
           {/* {this.Cards()} */}
           {
             this.state.offers.map(offer => {
-
+                console.log(offer)
+                
+             this.retrieveServiceProviderName(offer.serviceProvider)
+              var name = this.state.brand.toString()
               return (
                 <View style={{ marginTop: 15 }}>
                   <Card
                     title={offer.title}
-                    content={offer.description}
+                    content={offer.Descripiton}
                     iconName="local-offer"
                     iconType="MaterialIcons"
                     iconBackgroundColor={colors.primaryBlue}
-                    //bottomRightText={'offer.expiration'}
+                    bottomRightText={name+''}
                     //onPress= {() => this.props.navigation.navigate('editOffer', {offerKey: item.key })}/>
 
                     onPress={() => { this.props.navigation.navigate('serviceProvider', { offer: offer }) }}

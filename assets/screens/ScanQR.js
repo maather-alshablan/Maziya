@@ -74,7 +74,7 @@ export default class scanQR extends Component {
 
   handleBarCodeScanned = ({ type, data }) => { 
     this.setState({ scanned: true });
-    alert(`تم المسح بنجاح`)
+   // alert(`تم المسح بنجاح`)
   
   };
 
