@@ -107,6 +107,7 @@ export default class NewOffer extends Component {
       title: this.state.title,
       code: this.state.OfferId,
      // name: this.state.name,
+     usedCount:0,
       serviceProvider: auth.currentUser.uid
     }
     console.log("offers");

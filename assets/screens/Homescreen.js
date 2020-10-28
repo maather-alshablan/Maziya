@@ -198,8 +198,8 @@ retrieveServiceProviderName = (sp) =>{
             this.state.offers.map(offer => {
                 console.log(offer)
                 
-             this.retrieveServiceProviderName(offer.serviceProvider)
-              var name = this.state.brand.toString()
+           //  this.retrieveServiceProviderName(offer.serviceProvider)
+             // var name = this.state.brand.toString()
               return (
                 <View style={{ marginTop: 15 }}>
                   <Card
@@ -208,7 +208,7 @@ retrieveServiceProviderName = (sp) =>{
                     iconName="local-offer"
                     iconType="MaterialIcons"
                     iconBackgroundColor={colors.primaryBlue}
-                    bottomRightText={name+''}
+                    bottomRightText={offer.expdate}
                     //onPress= {() => this.props.navigation.navigate('editOffer', {offerKey: item.key })}/>
 
                     onPress={() => { this.props.navigation.navigate('serviceProvider', { offer: offer }) }}

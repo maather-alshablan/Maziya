@@ -233,6 +233,9 @@ export default class serviceProvider extends Component {
         this.setState({copied:true})
         database.ref().child('usedOffers').child(auth.currentUser.uid).child(this.state.offerDetails?.key)
         .set({ ...this.state.offerDetails});
+        
+        this.updateUsedCount();
+
     }
 
     toggleFavorite = () => {
@@ -257,6 +260,11 @@ export default class serviceProvider extends Component {
 
     }
         
+    updateUsedCount = () =>{
+        database.ref('Offers/'+this.state.offerDetails?.key).transaction(function(data){
+            data.usedCount++;
+        })
+    }
 
     render() {
       //  console.log('hi')
