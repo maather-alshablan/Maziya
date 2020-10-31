@@ -37,6 +37,7 @@ export default class serviceProvider extends Component {
             offerDetails: props?.route?.params?.offer,
             favoriteId: '',
             used: false,
+            usedOffer:false
         }
     }
 
@@ -246,7 +247,7 @@ export default class serviceProvider extends Component {
                 .child("favorites")
                 .child(auth.currentUser.uid)
                 .child(this.state.favoriteId)
-                .remove()
+                .remove().then(this.updateFavoriteCount('decrement'))
 
         } else {
             this.setState({ favorite: true });
@@ -255,17 +256,31 @@ export default class serviceProvider extends Component {
                 .child("favorites")
                 .child(auth.currentUser.uid)
                 .push()
-                .set({ ...this.state.offerDetails, uid: auth.currentUser.uid })
+                .set({ ...this.state.offerDetails, uid: auth.currentUser.uid }).then(this.updateFavoriteCount('increment'))
         }
 
     }
         
     updateUsedCount = () =>{
         database.ref('Offers/'+this.state.offerDetails?.key).transaction(function(data){
-            data.usedCount++;
+            console.log(data.usedCount)
+           return data.usedCount++;
+           // console.log(data.usedCount)
+
         })
     }
+    updateFavoriteCount = (type) =>{
 
+        database.ref('Offers/'+this.state.offerDetails?.key).transaction(function(data){
+            console.log(data.favoriteCount)
+            if(type =='increment')
+           return data.favoriteCount++;
+           if(type =='decrement')
+           return data.favoriteCount++;
+           // console.log(data.usedCount)
+
+        })
+    }
     render() {
       //  console.log('hi')
        

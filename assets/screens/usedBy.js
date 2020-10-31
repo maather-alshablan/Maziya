@@ -5,48 +5,44 @@ import {
 } from 'react-native'
 import {BarChart} from "react-native-chart-kit";
 import colors from '../constants/colors'
+import { database, auth } from '../config/firebase';
 
 export default class chart extends Component {
+state = {
+  offers:[],
+  labels:[],
+  data:[]
+
+}
 
 
-  usedChart = () => { 
+  componentDidMount(){
+    console.log('hi');
 
-    const chartConfig = {
-      backgroundGradientFrom: "#1E2923",
-      backgroundGradientFromOpacity: 0,
-      backgroundGradientTo: "#08130D",
-      backgroundGradientToOpacity: 0.5,
-      color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
-      strokeWidth: 2, // optional, default 3
-      barPercentage: 0.5,
-      useShadowColorFromDataset: false // optional
-    };
+    var self = this;
+    database.ref('Offers').on('value',function(snapshot){
+      const offers= snapshot.val()
+      const list =[]
+      const labels=[]
+      const data = []
 
+      if (offers != null){
+       Object.keys(offers).map(key => {
+        
+        if(offers[key].serviceProvider == auth.currentUser.uid){
+          console.log(offers[key].code)
+         list.push(offers[key])
+         labels.push(offers[key].title)
+         data.push(offers[key].usedCount)
 
-
-   const screenWidth  = Dimensions.get("window").width;
-    const data = {
-      labels: ["January", "February", "March", "April", "May", "June"],
-      datasets: [
-        {
-          data: [20, 45, 28, 80, 99, 43]
         }
-      ]
-    };
-
-    return(
-<BarChart
- 
-  data={data}
-  width={screenWidth}
-  height={220}
-  yAxisLabel="$"
-  chartConfig={chartConfig}
-  verticalLabelRotation={30}
-/> ) 
-
+       })
+      self.setState(
+        {offers: list,
+        labels:labels,
+        data:data}) }
+    })
   }
-
 
 
   render() {
@@ -67,10 +63,10 @@ export default class chart extends Component {
 
    const screenWidth  = Dimensions.get("window").width;
     const data = {
-      labels: ["January", "February", "March", "April", "May", "June"],
+      labels: this.state.labels,
       datasets: [
         {
-          data: [20, 45, 28, 80, 99, 43]
+          data: this.state.data
         }
       ]
     };
@@ -84,18 +80,24 @@ export default class chart extends Component {
             الإحصائيات          
  </Text>
  <View style={{alignSelf:'center',justifyContent:'center',marginTop:150}}> 
+{/* check if there exists data  */}
+  
+ <View>
  <Text style={{ alignSelf:'flex-end' ,fontSize: 22, color: colors.primaryGrey, marginBottom:20 }}>أكثر العروض استخداماً</Text>
 
  <BarChart
 
  data={data}
  width={screenWidth}
- height={220}
- yAxisLabel="$"
+ height={400}
  chartConfig={chartConfig}
  verticalLabelRotation={30}
  backgroundColor="transparent"
-/>
+/> 
+ </View>
+{/*: <View>
+<Text style={{ alignSelf:'center' ,fontSize: 22, color: colors.primaryGrey, marginBottom:20 }}>لا توجد لديك عروض</Text>
+</View>}  */}
 </View> 
            
         </ScrollView>
