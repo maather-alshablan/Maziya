@@ -23,7 +23,7 @@ export default class NewOffer extends Component {
       OfferId: "",
       expdate: "",
       OfferId: "",
-      name:'',
+      name: '',
       code: "",
       errorMessage: null,
       errors: false,
@@ -91,10 +91,10 @@ export default class NewOffer extends Component {
 
   }
 
-  writeOfferSP = (resp) => { 
+  writeOfferSP = (resp) => {
 
 
-    
+
     /////
     // create new key to insert into table offers and use the same key to insert as a child to service provider
     var OfferId = database.ref().child("Offers").push().key
@@ -133,7 +133,7 @@ export default class NewOffer extends Component {
   };
 
   sendNotification = async (newOffer) => {
-    console.warn({ newOffer })
+    //console.warn({ newOffer })
     const subscribe = database.ref('users')
     subscribe.on('value', snapshot => {
       const users = snapshot.val();
@@ -366,7 +366,7 @@ const styless = StyleSheet.create({
   text_footer: {
     color: '#05375a',
     fontSize: 18,
-    alignSelf:'flex-end',
+    alignSelf: 'flex-end',
     marginTop: 10
 
   },
