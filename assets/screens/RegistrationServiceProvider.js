@@ -1,5 +1,5 @@
 import React, { Component, useState } from "react";
-import Map from '../screens/map'
+import Map ,{ Marker }from '../screens/map'
 import {
   ImageEditor,
   Image,
@@ -34,10 +34,12 @@ import { database, auth, storage } from "../config/firebase";
 import Notification from "../components/Notification";
 import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 // import ModalDropdown from 'react-native-modal-dropdown';
 
 // import DropDownPicker from 'react-native-dropdown-picker';
 
+const GOOGLE_PLACES_API_KEY = ''; 
 
 export default class RegistrationServiceProvider extends Component {
   constructor(props) {
@@ -49,13 +51,13 @@ export default class RegistrationServiceProvider extends Component {
 
   state = {
     image: '',
-    userName: "",
-    phoneNum: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    nameBrand: "",
-    Description: "",
+    userName: "reem",
+    phoneNum: "0553524206",
+    email: "re@re.com",
+    password: "12345678",
+    confirmPassword: "12345678",
+    nameBrand: "d",
+    Description: "d",
     category:"",
     imageref:'',
     website:"",
@@ -489,7 +491,9 @@ export default class RegistrationServiceProvider extends Component {
                     value={this.state.instagram}
                     autoCapitalize="none"
                   />
+                  
                 </View>
+                
               </View>
             </ProgressStep>
 
@@ -507,7 +511,27 @@ export default class RegistrationServiceProvider extends Component {
                  تحديد موقع الفرع
               </Text>
               </View>
-            <Map/>
+              <View style={styles.mapSize}>
+      <GooglePlacesAutocomplete
+        placeholder="Search"
+        query={{
+          key: GOOGLE_PLACES_API_KEY,
+          language: 'en', // language of the results
+        }}
+        onPress={(data, details = null) => console.log(data)}
+        onFail={(error) => console.error(error)}
+        requestUrl={{
+          url:
+            'https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api',
+          useOnPlatform: 'web',
+        }} // this in only required for use on the web. See https://git.io/JflFv more for details.
+      />
+    </View>
+              <View >
+              <Map style = {style.mapSize}>
+      
+              </Map>
+              </View>
             </ProgressStep>
           </ProgressSteps>
         </View>
@@ -521,5 +545,16 @@ const style = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.primaryBlue,
     padding: 20,
-    margin: 10,}
+    margin: 10,},
+
+    mapSize :{ 
+      flex: 1,
+      padding: 10,
+      paddingTop: Constants.statusBarHeight + 10,
+      backgroundColor: '#ecf0f1',
+    
+
+    }
+
+    
   }) 
