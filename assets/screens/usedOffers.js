@@ -61,9 +61,13 @@ export default class usedOffers  extends Component{
                     >
 
                     <Entypo name="menu" size={30} style={{marginTop:30}} />
-
-
                 </TouchableOpacity>
+
+                <TouchableOpacity>                
+                  <Entypo name='chevron-left' size={30} color={colors.primaryBlue}  style={{alignSelf:'flex-start'}} onPress={()=> this.props.navigation.goBack()} />
+                  </TouchableOpacity>
+
+
                 <Text style={{ marginBottom:10 ,fontSize: 22, color: colors.primaryBlue, alignItems: "center", textAlign:"center" }}>
                 العروض المستخدمة
                 </Text>

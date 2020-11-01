@@ -36,8 +36,7 @@ export default class serviceProvider extends Component {
             copied:false,
             offerDetails: props?.route?.params?.offer,
             favoriteId: '',
-            used: false,
-            usedOffer:false
+            used: false
         }
     }
 
@@ -57,6 +56,13 @@ export default class serviceProvider extends Component {
 
                 })
             } }
+
+        const setUsed = ()=>{
+            
+                this.setState({
+                    used: true,
+                })
+        }
 
             
             var self = this;
@@ -93,27 +99,30 @@ export default class serviceProvider extends Component {
                     if (favorites[key].key == self.state.offerDetails?.key) {
                         console.log('added');
                         console.log('hi');
+                        
                         readData(key);
-                        fetchData(self.state.offerDetails.serviceProvider);
+                        fetchData(self.state.offerDetails.serviceProvider)
                     }
                 })
             })
 
-        // database.ref('usedOffers/' + auth.currentUser.uid)
-        //     .once('value')
-        //     .then(function (snapshot) {
-        //         const usedOffers = snapshot.val();
-        //         console.warn(usedOffers)
-        //         var usedDetails = {}
-        //         Object.keys(usedOffers).map(key => {
-        //             console.warn(usedOffers, self.state.offerDetails)
-        //             if (usedOffers[key].key == self.state.offerDetails?.key) {
-        //                 console.warn('added')
-        //                 readData(key, true);
+        database.ref('usedOffers/' + auth.currentUser.uid)
+            .once('value')
+            .then(function (snapshot) {
+                const usedOffers = snapshot.val();
+                console.warn(usedOffers)
+                var usedDetails = {}
+                if (usedOffers != null)
+                Object.keys(usedOffers).map(key => {
+                    console.warn(usedOffers, self.state.offerDetails)
+                    if (usedOffers[key].key == self.state.offerDetails?.key) {
+                        //console.warn('added')
+                        setUsed();
 
-        //             }
-        //         })
-        //     })
+                    }
+                })
+            })
+
      const fetchData = (sp) => {
       
         console.log('hi')
@@ -232,8 +241,9 @@ export default class serviceProvider extends Component {
     copyToClipboard = () => {
         Clipboard.setString(this.state.offerDetails.code)
         this.setState({copied:true})
+        this.setState({used:true})
         database.ref().child('usedOffers').child(auth.currentUser.uid).child(this.state.offerDetails?.key)
-        .set({ ...this.state.offerDetails});
+        .set({ ...this.state.offerDetails, used:true});
         
         this.updateUsedCount();
 
@@ -258,29 +268,27 @@ export default class serviceProvider extends Component {
                 .push()
                 .set({ ...this.state.offerDetails, uid: auth.currentUser.uid }).then(this.updateFavoriteCount('increment'))
         }
-
     }
         
     updateUsedCount = () =>{
-        database.ref('Offers/'+this.state.offerDetails?.key).transaction(function(data){
-            console.log(data.usedCount)
-           return data.usedCount++;
-           // console.log(data.usedCount)
+      
+         database.ref('Offers/'+this.state.offerDetails?.key+'/usedCount').transaction(function(data){
 
-        })
+            return ++data;
+         })
     }
+
     updateFavoriteCount = (type) =>{
 
-        database.ref('Offers/'+this.state.offerDetails?.key).transaction(function(data){
-            console.log(data.favoriteCount)
+        database.ref('Offers/'+this.state.offerDetails?.key+'/favoriteCount').transaction(function(data){
             if(type =='increment')
-           return data.favoriteCount++;
+           return ++data;
            if(type =='decrement')
-           return data.favoriteCount++;
-           // console.log(data.usedCount)
+           return ++data;
 
         })
     }
+
     render() {
       //  console.log('hi')
        
@@ -403,7 +411,8 @@ export default class serviceProvider extends Component {
                         <View style={styless.action}> 
                         </View>
                         </View> : <View></View> } 
-                        {this.state.offerDetails ?
+
+                        {this.state.used == false && this.state.offerDetails ?
                         <View>
                         <TouchableOpacity style={styles.ButtonContainer} onPress={this.toggleModal}  >
                         <Text style={styles.appButtonText} >استخدم العرض</Text>
@@ -468,14 +477,9 @@ export default class serviceProvider extends Component {
                         </View>
                     
                     </View>
-                    <View style={{height:50, width:50}}>
+                    <View style={{height:50, width:250}}>
                        <Map/>
                        </View>
-
-
-
-
-
 
                   
                 </ScrollView>

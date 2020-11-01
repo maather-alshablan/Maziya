@@ -47,6 +47,7 @@ export default class Homescreen extends React.Component {
       if (offers!= null)
       Object.keys(offers).map(key => {
         // console.warn(offers[key]);
+        if (key)
         offersArray.push({
           key: key,
           ...offers[key]
