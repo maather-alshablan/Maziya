@@ -1,73 +1,146 @@
 import React, { Component } from 'react'
 import {
-  Text, View, TouchableOpacity, StyleSheet,
+  Text, View, TouchableOpacity, StyleSheet, Dimensions,
   ScrollView,
 } from 'react-native'
+import {BarChart} from "react-native-chart-kit";
 import colors from '../constants/colors'
+import { database, auth } from '../config/firebase';
 
-export default class Favorite extends Component {
+export default class chart extends Component {
+state = {
+  offers:[],
+  labels:[],
+  data:[],
+  dataFav: []
 
-  constructor() {
-    super()
-    this.state = {
-      existOffers:null,
-      offers: []
-    }
+}
+
+
+  componentDidMount(){
+    console.log('hi');
+
+    var self = this;
+    database.ref('Offers').on('value',function(snapshot){
+      const offers= snapshot.val()
+      const list =[]
+      const labels=[]
+      const data = []
+      const dataFav =[]
+
+      if (offers != null){
+       Object.keys(offers).map(key => {
+        
+        if(offers[key].serviceProvider == auth.currentUser.uid){
+          console.log(offers[key].code)
+         list.push(offers[key])
+         labels.push(offers[key].title)
+         data.push(offers[key].usedCount)
+         dataFav.push(offers[key].favoriteCount)
+
+        }
+       })
+      self.setState(
+        {offers: list,
+        labels:labels,
+        data:data,
+        dataFav:dataFav}) }
+    })
   }
-  
 
-
-    // subscribe.on('child_removed', function (data) {
-    //   handleRemoveOffer(data.key)
-    // })
-
-    // const handleRemoveOffer = (key) => {
-
-    //   var offer = this.state.offers
-
-    //   offer = offer.filter(offer => offer.key !== key)
-    //   this.setState({ offers: offer })
-    // }
-
-    // subscribe.on('child_added', function (data) {
-    //   handleAddOffer(data)
-    // })
-
-    // const handleAddOffer = (data) => {
-
-    //   var offer = this.state.offers
-
-    //   this.setState({ offers: [...offer, data] })
-    // }
-  
-
-//   Cards = () => {
-
-//     return (
-
-//       <Card
-//         title={this.props.brand}
-//         content={'Service Provider description'}
-//         iconName="local-offer"
-//         iconType="MaterialIcons"
-//         iconBackgroundColor={colors.primaryBlue}
-//         style={{ marginTop: 5 }}
-//         //bottomRightText={offer.expiration}
-//         onPress={() => navigation.navigate(serviceProvider)}
-//       />)
-//   }
 
   render() {
+
+    const chartConfig = {
+      backgroundGradientFrom: 'white',
+      backgroundGradientFromOpacity: 0,
+      backgroundGradientTo: 'white',
+      backgroundGradientToOpacity: 0.5,
+      //rgba(1, 132, 189, 255)
+      color: (opacity = 1) => `rgba(1, 132, 189, ${opacity})`,
+      strokeWidth: 2, // optional, default 3
+      barPercentage: 0.5,
+      useShadowColorFromDataset: false // optional
+    };
+
+
+
+   const screenWidth  = Dimensions.get("window").width;
+    const data = {
+      labels: this.state.labels,
+      datasets: [
+        {
+          data: this.state.data
+        }
+      ]
+    };
+   
+    const dataFavorite = {
+      labels: this.state.labels,
+      datasets: [
+        {
+          data: this.state.dataFav
+        }
+      ]
+    };
+
+    
+    
+
+
+
+
     return (
       <View style={styles.container}>
         <ScrollView showsVerticalScrollIndicator={false}>
          
          
-          <Text style={{ marginBottom: 10, fontSize: 22, color: colors.primaryBlue, alignItems: "center", textAlign: "center" }}>
-            مستخدمي العروض           
+          <Text style={{ marginTop:60, fontSize: 35, color: colors.primaryBlue,  textAlign: "center" }}>
+            الإحصائيات          
  </Text>
-         
-              
+ <View style={{alignSelf:'center',justifyContent:'center',marginTop:150}}> 
+{ this.state.data ?  
+ <View>
+ <Text style={{ alignSelf:'center' ,fontSize: 22, color: colors.primaryGrey, marginBottom:20 }}>أكثر العروض استخداماً</Text>
+
+ <BarChart
+
+ data={data}
+ width={screenWidth}
+ height={400}
+ chartConfig={chartConfig}
+ verticalLabelRotation={30}
+ backgroundColor="transparent"
+/> 
+ </View> 
+: <View>
+<Text style={{ alignSelf:'center' ,fontSize: 22, color: colors.primaryGrey, marginBottom:20 }}>لا توجد لديك عروض</Text>
+</View>} 
+</View>
+
+
+
+
+
+ <View style={{alignSelf:'center',justifyContent:'center',marginTop:150}}> 
+{ this.state.dataFav ?  
+ <View>
+ <Text style={{ alignSelf:'center' ,fontSize: 22, color: colors.primaryGrey, marginBottom:20 }}>أكثر العروض المفضلة</Text>
+
+ <BarChart
+
+ data={dataFavorite}
+ width={screenWidth}
+ height={400}
+ chartConfig={chartConfig}
+ verticalLabelRotation={30}
+ backgroundColor="transparent"
+/> 
+ </View> 
+: <View>
+<Text style={{ alignSelf:'center' ,fontSize: 22, color: colors.primaryGrey, marginBottom:20 }}>  لا توجد عروض مفضلة</Text>
+</View>} 
+</View>
            
         </ScrollView>
       </View>
@@ -80,35 +153,8 @@ export default class Favorite extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 20,
+    
     backgroundColor: 'white',
   },
-  viewBox: {
-    width: "80%",
-    height: 230,
-    borderWidth: 2,
-    borderColor: "#bbb",
-    borderRadius: 20,
-    alignSelf: "center",
-    marginTop: 20,
-  },
-  inputSearch: {
-    flex: 1,
-    paddingHorizontal: 10,
-    paddingVertical: 0,
-    color: 'black',
-  },
-  viewSearch: {
-    backgroundColor: colors.primaryGrey,
-    width: 200,
-    borderRadius: 30,
-    height: 50,
-    marginTop: 20,
-    alignSelf: "center",
-    justifyContent: "center",
-    alignItems: "center",
-    flexDirection: "row",
-    paddingHorizontal: 15,
-    textAlign: "right"
-  },
+
 });

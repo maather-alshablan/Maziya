@@ -94,8 +94,7 @@ import { Entypo } from '../constants/icons'
          onChangeText={password => this.setState({ password })}
          value={this.state.password}
          autoCapitalize="none"
-         />
-         </View>
+         /></View>
          {this.state.errorMessage &&
           <Text style={{ color: 'red' }}>
             {this.state.errorMessage}

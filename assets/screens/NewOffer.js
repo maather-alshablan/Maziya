@@ -106,7 +106,8 @@ export default class NewOffer extends Component {
       expdate: this.state.chosenDate.toDateString(),
       title: this.state.title,
       code: this.state.OfferId,
-      // name: this.state.name,
+      usedCount:0,
+      favoriteCount:0,
       serviceProvider: auth.currentUser.uid
     }
     console.log("offers");

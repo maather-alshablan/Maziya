@@ -53,6 +53,7 @@ render(){
         style={styles.map}
         region={this.state.locationResult}
         showsUserLocation={true}
+        zoom={30}
       >
       </MapView>
       
