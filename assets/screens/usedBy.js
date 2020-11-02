@@ -11,7 +11,8 @@ export default class chart extends Component {
 state = {
   offers:[],
   labels:[],
-  data:[]
+  data:[],
+  dataFav: []
 
 }
 
@@ -25,6 +26,7 @@ state = {
       const list =[]
       const labels=[]
       const data = []
+      const dataFav =[]
 
       if (offers != null){
        Object.keys(offers).map(key => {
@@ -34,13 +36,15 @@ state = {
          list.push(offers[key])
          labels.push(offers[key].title)
          data.push(offers[key].usedCount)
+         dataFav.push(offers[key].favoriteCount)
 
         }
        })
       self.setState(
         {offers: list,
         labels:labels,
-        data:data}) }
+        data:data,
+        dataFav:dataFav}) }
     })
   }
 
@@ -70,6 +74,21 @@ state = {
         }
       ]
     };
+   
+    const dataFavorite = {
+      labels: this.state.labels,
+      datasets: [
+        {
+          data: this.state.dataFav
+        }
+      ]
+    };
+
+    
+    
+
+
+
 
     return (
       <View style={styles.container}>
@@ -80,10 +99,9 @@ state = {
             الإحصائيات          
  </Text>
  <View style={{alignSelf:'center',justifyContent:'center',marginTop:150}}> 
-{/* check if there exists data  */}
-  
+{ this.state.data ?  
  <View>
- <Text style={{ alignSelf:'flex-end' ,fontSize: 22, color: colors.primaryGrey, marginBottom:20 }}>أكثر العروض استخداماً</Text>
+ <Text style={{ alignSelf:'center' ,fontSize: 22, color: colors.primaryGrey, marginBottom:20 }}>أكثر العروض استخداماً</Text>
 
  <BarChart
 
@@ -94,11 +112,35 @@ state = {
  verticalLabelRotation={30}
  backgroundColor="transparent"
 /> 
- </View>
-{/*: <View>
+ </View> 
+: <View>
 <Text style={{ alignSelf:'center' ,fontSize: 22, color: colors.primaryGrey, marginBottom:20 }}>لا توجد لديك عروض</Text>
-</View>}  */}
-</View> 
+</View>} 
+</View>
+
+
+
+
+
+ <View style={{alignSelf:'center',justifyContent:'center',marginTop:150}}> 
+{ this.state.dataFav ?  
+ <View>
+ <Text style={{ alignSelf:'center' ,fontSize: 22, color: colors.primaryGrey, marginBottom:20 }}>أكثر العروض المفضلة</Text>
+
+ <BarChart
+
+ data={dataFavorite}
+ width={screenWidth}
+ height={400}
+ chartConfig={chartConfig}
+ verticalLabelRotation={30}
+ backgroundColor="transparent"
+/> 
+ </View> 
+: <View>
+<Text style={{ alignSelf:'center' ,fontSize: 22, color: colors.primaryGrey, marginBottom:20 }}>  لا توجد عروض مفضلة</Text>
+</View>} 
+</View>
            
         </ScrollView>
       </View>

@@ -10,6 +10,7 @@ import usedOffers from '../screens/usedOffers'
 import colors from '../constants/colors';
 import {auth} from '../config/firebase'
 import { createStackNavigator } from "@react-navigation/stack";
+import usedStack from '../Navigation/UsedStack'
 
 
 
@@ -83,7 +84,7 @@ function CustomDrawerContent(props) { // fix navigation issue: error > navigatio
     
               }}/>
             
-            <Drawer.Screen name= 'usedOffers' component={usedOffers} options={{
+            <Drawer.Screen name= 'usedOffers' component={usedStack} options={{
                 title: 'العروض المستخدمة',
                 color:'white',
     

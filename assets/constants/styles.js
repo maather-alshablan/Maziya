@@ -59,7 +59,7 @@ const styles = {
   },
   header: {
     fontFamily: "Arial",
-    fontWeight: "Normal",
+    fontWeight: "normal",
     fontSize: 35,
     alignSelf: "center",
     color: colors.primaryBlue,
