@@ -1,8 +1,8 @@
 
 import React, { Component, useState } from "react";
 import { StyleSheet, Text, View, Linking, TextInput, 
-    Button, Card, FlatList, TouchableOpacity, Dimensions, Clipboard, LogBox, StatusBar, Image, ImageBackground, ScrollView, TabBarIOS } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+    Button, Card, FlatList, TouchableOpacity, Dimensions, Clipboard, LogBox, StatusBar, Image, SafeAreaView, ScrollView, TabBarIOS, Alert } from 'react-native';
+import { TouchThroughView, TouchThroughWrapper } from 'react-native-touch-through-view';
 import Modal from 'react-native-modal';
 import { database, auth, storage } from "../config/firebase";
 import { Entypo, MaterialCommunityIcons, MaterialIcons, FontAwesome, Ionicons, Feather } from '../constants/icons'
@@ -10,6 +10,7 @@ import colors from '../constants/colors'
 import styles from "../constants/styles";
 import { QRCode } from 'react-native-custom-qr-codes';
 import { Colors } from "react-native/Libraries/NewAppScreen";
+import MapView, { PROVIDER_GOOGLE , Marker, Callout } from 'react-native-maps';
 import Map from '../screens/map'
 import SignInButton from "../components/SignInButton";
 //import listOfferSP from '../components/ListOfferSP';
@@ -31,6 +32,13 @@ export default class serviceProvider extends Component {
             code: '',
             twitter: '',
             instagram: '',
+            coordinate: null,
+            region:{
+                latitude: 24.7136,
+                longitude: 46.6753,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+              },
             //image:'',
             offers: [],
             copied:false,
@@ -135,13 +143,15 @@ export default class serviceProvider extends Component {
                 var website = ((snapshot.val() && snapshot.val().website))
                 var twitter = ((snapshot.val() && snapshot.val().twitter))
                 var instagram = ((snapshot.val() && snapshot.val().instagram))
+                var coordinate = ((snapshot.val() && snapshot.val().coordinate))
+
                 // var image=((snapshot.val() && snapshot.val().image))
-                readData_(name, email, description, phone, website, twitter, instagram);
+                readData_(name, email, description, phone, website, twitter, instagram, coordinate);
             
             })
 
 
-        const readData_ = (name, email, description, phone, website, twitter, instagram) => {
+        const readData_ = (name, email, description, phone, website, twitter, instagram,coordinate) => {
             this.setState({
                 brand: name,
                 description: description,
@@ -150,6 +160,7 @@ export default class serviceProvider extends Component {
                 website: website,
                 twitter: twitter,
                 instagram: instagram,
+                coordinate: coordinate
                 //image:image
             })
         }
@@ -244,7 +255,7 @@ export default class serviceProvider extends Component {
         this.setState({used:true})
         database.ref().child('usedOffers').child(auth.currentUser.uid).child(this.state.offerDetails?.key)
         .set({ ...this.state.offerDetails, used:true});
-        
+       // Alert.alert('لقد تم استخدامك للعرض بنجاح')
         this.updateUsedCount();
 
     }
@@ -296,43 +307,29 @@ export default class serviceProvider extends Component {
         //LogBox.ignoreAllLogs()
         return (
 
-            <View style={styless.container}>
-                <ScrollView style={styles.scrollView}>
-
-                    <View style={styless.header}>
-                        {/* if page is accessed through offer View then show heart and and back page else offer is accessed through service provider thus don't show  */}
+            <SafeAreaView style={styless.container}>
+                <ScrollView style={{flex: 1 }}>
+                <View>
+                    <View >
                         {this.state.offerDetails ?  
-                        <View>
-                        <Entypo name='chevron-left' size={30} color={colors.primaryBlue}  style={{marginTop:40}} onPress={()=> this.props.navigation.pop()} />
-
-                       
+                        <View style={{flexDirection:'row' , justifyContent:'space-between'}}>
+                        <Entypo name='chevron-left' size={30} color={colors.primaryBlue}   onPress={()=> this.props.navigation.pop()} />
                         <TouchableOpacity 
                         onPress={this.toggleFavorite}>
                         <MaterialCommunityIcons
                             name={this.state.favorite ? "heart" : "heart-outline"}
                             color={colors.primaryBlue}
                             size={40}
-                            style={{alignSelf:'flex-end'}}
+                            style={{alignSelf:'flex-start'}}
                         />
                     </TouchableOpacity>
                     </View> : <View></View> }
-                        <Text style={[styles.header]}>{this.state.brand}</Text>
-                        <View >
-                            <Image source={require('../images/logoDis.jpg')} style={{ width: 100, height: 100, marginLeft: 120 }} />
+                        <View style={{flexDirection:'row-reverse', alignSelf:'center'}}>
+                        <Text style={[styless.headers]}>{this.state.brand}</Text>
+
+                            <Image source={require('../images/logoDis.jpg')} style={{ width: 100, height: 60, alignSelf:"center" }} />
                         </View>
                     </View>
-
-                    {/* {false ? <View></View> : <TouchableOpacity style={{
-                        marginTop: 10
-                    }}
-                        onPress={this.toggleFavorite}>
-                        <MaterialCommunityIcons
-                            name={this.state.favorite ? "heart" : "heart-outline"}
-                            color={colors.primaryBlue}
-                            size={40}
-                            style={{alignSelf:'flex-end'}}
-                        />
-                    </TouchableOpacity>} */}
 
 
                     <View style={styless.footer}>
@@ -346,7 +343,7 @@ export default class serviceProvider extends Component {
                         <View style={{ alignSelf: 'flex-end' }}>
                             <Text style={styless.text_footer}>للتواصل</Text>
                         </View>
-                        <View style={{ flexDirection: "row"  , alignItems:"center"}}>
+                        <View style={{ flexDirection: "row"  , alignItems:"center", alignSelf:'center'}}>
 
                             <TouchableOpacity>
                                 <MaterialCommunityIcons
@@ -412,6 +409,14 @@ export default class serviceProvider extends Component {
                         </View>
                         </View> : <View></View> } 
 
+                        {this.state.used == true ?
+                        <View>
+                        <View style={styles.UsedButtonContainer} >
+                        <Text style={styles.appButtonText} >استخدم العرض</Text>
+                   
+                        </View>
+                         <Text style={{color:'green',alignSelf:'center'}}>لقد تم استخدامك للعرض بنجاح</Text></View> : <View></View>}
+
                         {this.state.used == false && this.state.offerDetails ?
                         <View>
                         <TouchableOpacity style={styles.ButtonContainer} onPress={this.toggleModal}  >
@@ -427,12 +432,10 @@ export default class serviceProvider extends Component {
                                 size={30}
                                 style={{alignSelf:"flex-start",justifyContent:'center'}}
                                 onPress={this.toggleModal} />
-                                {/* <Text style={{ fontFamily: "Arial",fontWeight: "Normal",fontSize: 35,alignSelf: "center",color: colors.primaryBlue}}>استخدم العرض</Text> */}
                                 <Text style={[styless.subtext_footer],
                                     [{alignSelf:'flex-end',color:colors.primaryBlue, fontSize:30, margin:10,textDecorationLine:'underline'}]}> الطريقة الأولى</Text>
                              <View>
                                <TouchableOpacity 
-                            //    onPress={this.props.navigation.navigate('ScanQR')} 
                                >
                                 <Text style={
                                     [{alignSelf:'flex-end',color: '#05375a', fontSize:20, margin:10}]}>امسح العرض</Text>
@@ -453,6 +456,7 @@ export default class serviceProvider extends Component {
                                     size={30} 
                                     color= {this.state.copied ?  colors.primaryBlue : colors.primaryGrey} />
                                 </TouchableOpacity>
+                                
                                 </View> 
 
                                 <TouchableOpacity style={{flexDirection:'row-reverse',alignSelf:'center',margin:10}}  onPress={() => {
@@ -472,42 +476,65 @@ export default class serviceProvider extends Component {
 
                     </TouchableOpacity>
                     </View> : <View></View>}
-                        <View style={{ alignSelf: 'flex-end' }}>
-                            <Text style={styless.text_footer}>الفروع</Text>
                         </View>
+                      { this.state.coordinate ?  
+                      <View>
+                      <View style={{ alignSelf: 'flex-end' }}>
+                            <Text style={styless.text_footer}>الموقع</Text>
+                             </View>
                     
-                    </View>
-                    <View style={{height:50, width:250}}>
-                       <Map/>
-                       </View>
+                            <View>
+                                        
+                                <MapView
+                            provider={PROVIDER_GOOGLE} 
+                            style={styless.map}
+                            region={this.state.region}
+                            showsUserLocation={true}
 
-                  
+                        >
+                            <Marker 
+                            //key={1}
+                            coordinate={ this.state.coordinate}
+                            title={this.state.brand}
+                            pinColor={colors.primaryBlue} 
+                            >
+                            
+                            </Marker>
+                        </MapView>
+                        </View>
+                       
+                        </View>: <View></View>}
+
+                        </View>
                 </ScrollView>
-
-
-            </View>
+                
+            </SafeAreaView>
         )
     }
 
 }
 
 const { height } = Dimensions.get('screen');
+const maxHeight = Dimensions.get('screen').height
 const height_logo = height * 0.28;
 
 const styless = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'white'
+        backgroundColor: 'white',
+      //  maxHeight: maxHeight
 
     },
     header: {
-        flex: 1,
+       // flex: 1,
         paddingHorizontal: 20,
-        paddingTop: 20,
+        //marginTop: 20,
+        //alignSelf:'center',
+       // justifyContent:'center'
 
     },
     footer: {
-        flex: 3,
+        //flex: 3,
         backgroundColor: '#fff',
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
@@ -533,7 +560,7 @@ const styless = StyleSheet.create({
         color: '#05375a',
         fontSize: 20,
         marginLeft: 200,
-        marginTop: 10,
+        
         alignSelf: 'flex-end',
     },subtext_footer: {
         color: 'black',
@@ -592,10 +619,23 @@ const styless = StyleSheet.create({
         borderColor:colors.primaryGrey,
         borderWidth:4,
         overflow: 'hidden',
-
-
-
-    }
+    },
+    map: {
+        height: 200,
+      width: 400,
+      justifyContent: 'center',
+      alignItems: 'center',
+        ...StyleSheet.absoluteFillObject,
+      },
+      headers: {
+        fontFamily: "Arial",
+        fontWeight: "normal",
+        fontSize: 35,
+        alignSelf: "center",
+        color: colors.primaryBlue,
+        //marginTop: 15,
+        marginBottom: 15,
+      }
 
 
 

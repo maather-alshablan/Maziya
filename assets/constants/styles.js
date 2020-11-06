@@ -91,9 +91,21 @@ const styles = {
 
   errors: {
     color: "red",
-  }, ButtonContainer: {
+  }, 
+  ButtonContainer: {
     elevation: 8,
     backgroundColor: colors.primaryBlue,
+    borderRadius: 25,
+    paddingVertical: 15,
+    paddingHorizontal: 50,
+    alignItems:'center',
+    margin:20,
+    marginHorizontal:40,
+    marginTop:20
+  },
+  UsedButtonContainer: {
+    elevation: 8,
+    backgroundColor: colors.primaryGrey,
     borderRadius: 25,
     paddingVertical: 15,
     paddingHorizontal: 50,

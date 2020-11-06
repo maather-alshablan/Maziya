@@ -3,7 +3,6 @@ import { createDrawerNavigator, DrawerItem,  DrawerContentScrollView, DrawerItem
 import Tab from '../Navigation/memberTabNavigator'
 import {Entypo} from '../constants/icons'
 import Profile from '../screens/Memberprofile'
-import Courses from '../screens/courses'
 import Login from '../screens/LoginScreen'
 import resetPassword from '../screens/resetPasswordLoggedIn'
 import usedOffers from '../screens/usedOffers'

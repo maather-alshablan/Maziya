@@ -1,6 +1,7 @@
 import React , {Component , useEffect , useState, useMemo   } from 'react'
 import { Text, View,  TextInput, Dimensions  , StyleSheet,Image, ScrollView,Button, TouchableOpacity, Alert, AsyncStorage} from 'react-native'
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
+import MapView, { PROVIDER_GOOGLE , Marker, Callout } from 'react-native-maps';
 import {Entypo, MaterialCommunityIcons,MaterialIcons, FontAwesome, Ionicons} from '../constants/icons'
 //import {Dropdown }from 'react-native-material-dropdown';
 import {auth, database } from '../config/firebase'
@@ -35,6 +36,13 @@ const serviceProvider =({ navigation}) => {
   const [twitter, setTwitter] = useState('')
   const [instagram, setInstagram] = useState('')
   const [branch,setBranch]=useState('')
+  const [coordinate, setCoordinate] = useState(null)
+  const [region , setRegion] = useState({
+    latitude: 24.7136,
+    longitude: 46.6753,
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421,
+  })
 
   const [valid, setValid]= useState(true)
   const [errorMessage,setErrorMessage]=useState(null)
@@ -69,6 +77,7 @@ const userId = auth.currentUser.uid;
             setWebsite((snapshotinner.val() && snapshotinner.val().website))
             setTwitter((snapshotinner.val() && snapshotinner.val().twitter))
             setInstagram((snapshotinner.val() && snapshotinner.val().instagram))
+            setCoordinate((snapshotinner.val().coordinate))
        })})
        
       }
@@ -105,13 +114,14 @@ userRef.update(
 }
 ).catch(error => alert(error));
 
-database.ref('serviceProvider/'+nameBrand).update({
+database.ref('serviceProvider/'+auth.currentUser.uid).update({
     'description': Descripiton,
     'category': category,
     'phone': phoneNum,
     'website': website,
     'twitter': twitter,
-    'instagram': instagram
+    'instagram': instagram,
+    'coordinate': coordinate
 
 }).then(Alert.alert('تم حفظ التغييرات بنجاح')).then(auth.currentUser.updateEmail(email)).catch(setWrongEmailFormat)
 
@@ -395,110 +405,49 @@ const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[
             </View>
       );
 
-//         //function to add TextInput dynamically
-//   const addTextInput = (index) => {
-//     let input = textInput
-//     input.push(
-//     <TextInput style={styless.TextInput}
-//       onChangeText={(text) => this.addValues(text, index)} 
-//       />);
-//     setTextInput(input );
-//   }
 
-//   //function to remove TextInput dynamically
-//   const removeTextInput = () => {
-//     let input = textInput;
-//     let inputdata = inputData;
-//     input.pop();
-//     inputdata.pop();
-//     setTextInput(input)
-//     setInputData(inputdata)
-//   }
-
-//   //function to add text from TextInputs into single array
-//   const addValues = (text, index) => {
-//     let dataArray = inputData;
-//     let checkBool = false;
-//     if (dataArray.length !== 0){
-//       dataArray.forEach(element => {
-//         if (element.index === index ){
-//           element.text = text;
-//           checkBool = true;
-//         }
-//       });
-//     }
-//     if (checkBool){
-//     setInputData(dataArray)
-//   }
-//   else {
-//     dataArray.push({'text':text,'index':index});
-//     setInputData(dataArray)
-
-//   }
-//   }
-
-//   //function to console the output
-//  const getValues = () => {
-//     console.log('Data',inputData);
-//   }
       
-const handleBranches = (location)=>{
-  // let loc = branch;
-  // loc.push(location);
-  setBranch(location);
+const locationHandler = event =>{
 
+  const coord = event.nativeEvent.coordinate;
+  setCoordinate({
+    latitude: coord.latitude,
+    longitude: coord.longitude
+  })
 }
+
+
       const ThirdRoute = () =>{
         return (
         <View style={[styles.scene, { backgroundColor: 'white' }]} >
             <View>
+              <Text style={{color:colors.primaryBlue, alignSelf:'flex-end', fontSize:20}}>
+                 تحديد موقع الفرع
+              </Text>
+              </View>
+           <View>
+              <MapView
+        provider={PROVIDER_GOOGLE} 
+        style={styles.map}
+        region={region}
+        showsUserLocation={true}
+        zoom={10}
+      >
+        <Marker 
+        draggable
+        //key={1}
+        coordinate={ coordinate==null ? region : coordinate}
+        title={'موقعي '}
+        pinColor={colors.primaryBlue} 
+        onDragEnd = { e => locationHandler(e)}
+        >
+          
+        </Marker>
+      </MapView>
+      </View>
+
          
            
-
-                    <Entypo name="location" color={colors.primaryBlue} size={40} style={styless.fieldLabels} style={{alignSelf:'center',marginTop:20}}/> 
-                    
-                    <View style={{alignSelf:'center',margin:10 , alignItems:'flex-end',flexDirection:'row-reverse' , padding:10}}>
-                    {/* <Entypo name="plus" size={20} color={'black'}  /> */}
-                    <Text  style={{fontSize:20}} > فرع </Text>
-                    </View>
-                    {/* </TouchableOpacity>
-                    <View style={styless.fields}>  
-
-                   
-                      <TextInput
-                        style={styless.TextInput}
-                        placeholder=" مثال: فرع التحلية"
-                        onChangeText={location => handleBranches(location) }
-                        value={branch}
-                        autoCapitalize="none"
-                      />  */}
-                      </View>
-                         <Image
-                  source={require("../images/mapsmockup.png")}
-    
-                    style={{
-                      height: 400,
-                      width: 300,
-                      marginHorizontal:50
-
-                    }}
-                /> 
-                      {/* {textInput.map((value) => {
-                          return value
-                              })} 
-{/* <View>
-        <View style= {styles.row}>
-          
-        {/* <View style={{margin: 10}}>
-        <Button title='Remove' onPress={() => removeTextInput()} />
-        </View> 
-        </View>
-        {textInput.map((value) => {
-          return value
-        })}
-        <Button title='Get Values' onPress={() =>getValues()} />
-      </View>
-    */} 
                
         </View>
         );
@@ -646,6 +595,13 @@ const styles = StyleSheet.create({
         backgroundColor: colors.primaryBlue,
         padding: 20,
         margin: 10,
+      },
+      map: {
+        height: 400,
+      width: 400,
+      justifyContent: 'flex-end',
+      alignItems: 'center',
+        ...StyleSheet.absoluteFillObject,
       }
   });
   

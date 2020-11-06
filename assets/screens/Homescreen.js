@@ -164,7 +164,7 @@ retrieveServiceProviderName = (sp) =>{
           <Text style={{ fontSize: 22, color: colors.primaryBlue, alignSelf: "flex-end" }}>
             اكتشف مميزاتك..
             </Text>
-          <View
+          {/* <View
             style={{
               flexDirection: "row",
               alignItems: "center",
@@ -185,7 +185,7 @@ retrieveServiceProviderName = (sp) =>{
               <Text>الهدايا</Text>
             </TouchableOpacity>
 
-          </View>
+          </View> */}
           {/**for test */}
 
           <View style={styles.viewSearch}>

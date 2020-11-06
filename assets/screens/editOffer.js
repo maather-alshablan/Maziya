@@ -100,16 +100,7 @@ removeOffer=() => {
 
   }
 
-  // handletitleChange = title => {
-  //   this.setState({ title: title  });
-  // };
-
-
-// handletitleChange = title => {
-//   this.setState({ title: title  });
-// };
-
-
+ 
 
  handleDateChange = expdate => {
      this.setState({ expdate: expdate  });

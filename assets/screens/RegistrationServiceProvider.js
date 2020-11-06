@@ -33,6 +33,7 @@ import RegButton from "../components/RegButton";
 import { database, auth, storage } from "../config/firebase";
 import Notification from "../components/Notification";
 import * as ImagePicker from "expo-image-picker";
+import MapView, { PROVIDER_GOOGLE , Marker, Callout } from 'react-native-maps';
 import * as Permissions from "expo-permissions";
 // import ModalDropdown from 'react-native-modal-dropdown';
 
@@ -63,7 +64,15 @@ export default class RegistrationServiceProvider extends Component {
     instagram:"",
     errorMessage: null,
     isValid: false,
-    errors: false,
+    errors: false, 
+    region: {
+      latitude: 24.7136,
+      longitude: 46.6753,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+    },
+    coordinate:{}
+
   };
   validateEmail = (email) => {
     const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -252,6 +261,7 @@ export default class RegistrationServiceProvider extends Component {
         website:this.state.website,
         twitter:this.state.twitter,
         instagram:this.state.instagram,
+        coordinate: this.state.coordinate
       }).then(this.props.navigation.navigate("SPhomescreen"))
       .catch((error) => console.log(error));
   };
@@ -276,11 +286,18 @@ export default class RegistrationServiceProvider extends Component {
     //   subscrition()
     }
   
+    locationHandler = event =>{
 
+      const coord = event.nativeEvent.coordinate;
+      this.setState({coordinate:{
+        latitude: coord.latitude,
+        longitude: coord.longitude
+      }})
+    }
   render() {
     //const showNotification = this.state.Valid ? false : true;
     console.disableYellowBox = true;
-
+    console.log(this.state.coordinate)
 
    // console.log(this.validateEmail(this.state.email));
   //  console.log("state", this.state);
@@ -507,7 +524,33 @@ export default class RegistrationServiceProvider extends Component {
                  تحديد موقع الفرع
               </Text>
               </View>
-            <Map/>
+
+
+
+              <View>
+              <MapView
+        provider={PROVIDER_GOOGLE} 
+        style={style.map}
+        region={this.state.region }
+        showsUserLocation={true}
+        zoom={10}
+      >
+        {/* {this.mapMarkers()} */}
+        <Marker 
+        draggable
+        //key={1}
+        coordinate={{ latitude: 24.7561, longitude:46.6294 }}
+        title={'موقعي '}
+        pinColor={colors.primaryBlue} 
+        onDragEnd = { e => this.locationHandler(e)}
+        >
+          
+        </Marker>
+      </MapView>
+      </View>
+
+
+
             </ProgressStep>
           </ProgressSteps>
         </View>
@@ -521,5 +564,12 @@ const style = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.primaryBlue,
     padding: 20,
-    margin: 10,}
+    margin: 10,},
+    map: {
+      height: 400,
+    width: 400,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+      ...StyleSheet.absoluteFillObject,
+    }
   }) 

@@ -7,7 +7,8 @@ import colors from '../constants/colors'
 import homeStack from '../Navigation/MemberHomeStack'
 import Homescreen from '../screens/Homescreen'
 
-import Map from '../screens/map'
+import Map from '../Navigation/mapStack'
+
 import ScanQR from '../screens/ScanQR'
 import FavoriteStack from '../Navigation/FavoriteStack'
 
