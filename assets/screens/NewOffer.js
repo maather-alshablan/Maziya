@@ -106,8 +106,8 @@ export default class NewOffer extends Component {
       expdate: this.state.chosenDate.toDateString(),
       title: this.state.title,
       code: this.state.OfferId,
-      usedCount:0,
-      favoriteCount:0,
+      usedCount: 0,
+      favoriteCount: 0,
       serviceProvider: auth.currentUser.uid
     }
     console.log("offers");
@@ -119,7 +119,10 @@ export default class NewOffer extends Component {
       .child("offers")
       .child(OfferId)
       .set(newOffer)
-      .then(Alert.alert('تم إضافة العرض بنجاح'))
+      .then(() => {
+        Alert.alert('تم إضافة العرض بنجاح')
+        this.sendNotification(newOffer);
+      })
       .then(this.props.navigation.pop())
       .catch((error) => console.log(error));
     var updates = {};

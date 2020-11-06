@@ -44,21 +44,21 @@ export default class Homescreen extends React.Component {
       await this.cancelAllScheduledNotificationsAsync();
       const offers = snapshot.val();
       const offersArray = [];
-      if (offers!= null)
-      Object.keys(offers).map(key => {
-        // console.warn(offers[key]);
-        if (key)
-        offersArray.push({
-          key: key,
-          ...offers[key]
+      if (offers != null)
+        Object.keys(offers).map(key => {
+          // console.warn(offers[key]);
+
+          offersArray.push({
+            key: key,
+            ...offers[key]
+          });
+          const endDate = new Date(offers[key].expdate);
+          const nowDate = new Date();
+          // console.warn((endDate / 1000 - nowDate / 1000), offers[key], nowDate);
+          if ((endDate / 1000 - nowDate / 1000) > (24 * 60 * 60)) { // offer has more than one day 
+            this.scheduleNotification(offers[key], ((endDate / 1000 - nowDate / 1000) - (24 * 60 * 60)));
+          }
         });
-        const endDate = new Date(offers[key].expdate);
-        const nowDate = new Date();
-        // console.warn((endDate / 1000 - nowDate / 1000), offers[key], nowDate);
-        if ((endDate / 1000 - nowDate / 1000) > (24 * 60 * 60)) { // offer has more than one day 
-          this.scheduleNotification(offers[key], ((endDate / 1000 - nowDate / 1000) - (24 * 60 * 60)));
-        }
-      });
       this.setState({
         offers: offersArray
 
@@ -119,7 +119,7 @@ export default class Homescreen extends React.Component {
         body: offer.Descripiton
       },
       trigger: {
-        seconds: seconds,
+        seconds: 10,
         repeats: false
       },
     });
@@ -135,17 +135,18 @@ export default class Homescreen extends React.Component {
   }
 
 
-retrieveServiceProviderName = (sp) =>{
+  retrieveServiceProviderName = (sp) => {
 
-  database.ref('serviceProvider/'+sp).once('value', function(snapshot){
-    var name = snapshot.val().nameBrand;
-    readName(name)
-  })
-  const readName = (name)=>{
-  this.setState(
-   { brand:name}
-  )} 
-}
+    database.ref('serviceProvider/' + sp).once('value', function (snapshot) {
+      var name = snapshot.val().nameBrand;
+      readName(name)
+    })
+    const readName = (name) => {
+      this.setState(
+        { brand: name }
+      )
+    }
+  }
   render() {
 
 
@@ -154,7 +155,7 @@ retrieveServiceProviderName = (sp) =>{
 
         <ScrollView showsVerticalScrollIndicator={false}>
           <TouchableOpacity
-            style={{ alignSelf: "flex-end" , marginTop:15}}
+            style={{ alignSelf: "flex-end", marginTop: 15 }}
             onPress={() => {
               this.props.navigation.toggleDrawer();
             }}
@@ -197,10 +198,10 @@ retrieveServiceProviderName = (sp) =>{
           {/* {this.Cards()} */}
           {
             this.state.offers.map(offer => {
-                console.log(offer)
-                
-           //  this.retrieveServiceProviderName(offer.serviceProvider)
-             // var name = this.state.brand.toString()
+              console.log(offer)
+
+              //  this.retrieveServiceProviderName(offer.serviceProvider)
+              // var name = this.state.brand.toString()
               return (
                 <View style={{ marginTop: 15 }}>
                   <Card
