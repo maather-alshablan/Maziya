@@ -94,11 +94,8 @@ import { Entypo } from '../constants/icons'
          onChangeText={password => this.setState({ password })}
          value={this.state.password}
          autoCapitalize="none"
-         /></View>
-         {this.state.errorMessage &&
-          <Text style={{ color: 'red' }}>
-            {this.state.errorMessage}
-          </Text>}
+         /></View>{this.state.errorMessage &&<Text style={{ color: 'red' }}>
+        {this.state.errorMessage}</Text>}
          <TouchableOpacity onPress={this.handleLogin}>
          <SignInButton text={'تسجيل الدخول'} onPress={this.handleLogin}></SignInButton>
          </TouchableOpacity>
