@@ -512,7 +512,7 @@ export default class RegistrationServiceProvider extends Component {
               </Text>
               </View>
               <View style={styles.mapSize}>
-      <GooglePlacesAutocomplete
+              <GooglePlacesAutocomplete
         placeholder="Search"
         query={{
           key: GOOGLE_PLACES_API_KEY,
