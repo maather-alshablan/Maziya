@@ -92,8 +92,10 @@ export default class NewOffer extends Component {
   }
 
   writeOfferSP = (resp) => {
-
-
+    var spName;
+    database.ref('serviceProvider/'+auth.currentUser.uid).once('value',function(data){
+      spName = data.val().nameBrand
+    })
 
     /////
     // create new key to insert into table offers and use the same key to insert as a child to service provider
@@ -108,6 +110,7 @@ export default class NewOffer extends Component {
       code: this.state.OfferId,
       usedCount: 0,
       favoriteCount: 0,
+      nameBrand: spName,
       serviceProvider: auth.currentUser.uid
     }
     console.log("offers");

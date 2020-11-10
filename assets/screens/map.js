@@ -17,7 +17,7 @@ export default class Map extends React.Component{
   constructor(props) {
     super(props);
 
-    this.navigateToView = this.navigateToView.bind(this);
+  this.navigateToView = this.navigateToView.bind(this);
 }
   state = {
     locationResult: null,
@@ -32,7 +32,7 @@ export default class Map extends React.Component{
 
 
     componentDidMount() {
-      this._getLocationAsync();
+    //  this._getLocationAsync();
       var self = this;
      const refSP = database.ref('serviceProvider/')
      refSP.on('value', function(snapshot){
@@ -51,42 +51,57 @@ export default class Map extends React.Component{
 
 
 
-      _getLocationAsync = async () => {
-        // the following line causes error
+//       _getLocationAsync = async () => {
+//         // the following line causes error
         
-        let { status } = await Permissions.askAsync(Permissions.LOCATION);
-        if (status !== 'granted') {
-        this.setState({
-        locationResult: 'Permission to access location was denied',
-        });
-        }
+//         let { status } = await Permissions.askAsync(Permissions.LOCATION);
+//         if (status !== 'granted') {
+//         this.setState({
+//         locationResult: 'Permission to access location was denied',
+//         });
+//         }
 
-        let location = await Location.getCurrentPositionAsync({});
-        console.log(location)
-this.setState({ locationResult: location.coords });
-};
+//         let location = await Location.getCurrentPositionAsync({});
+//         console.log(location)
+// this.setState({ locationResult: location.coords });
+// };
 
-navigateToView(viewName) {
-   this.props.navigation.navigate('serviceProvider', { offer: viewName });
+navigateToView = (viewName) =>{
+  {console.log('hi')}
+  var param = Object.keys(viewName.offers)[0]
+  var offer;
+  database.ref('Offers').child(param).once('value', function(snap){
+  offer=snap.val()
+  })
+  {console.log(offer)}
+  if(offer)
+   this.props.navigation.navigate('serviceProvider', { offer: offer });
 
  // navigate(viewName);'serviceProvider', { offer: offer }
 }
 
+
 mapMarkers = () => {
-  return this.state.locations.map((location) => <Marker
-   // key={location.id}
+  return this.state.locations.map((location) =>
+  
+  <Marker
+    key={location.key}
     coordinate={location.coordinate}
     title={location.nameBrand}
-    description={location.description}
+   // description={location.description}
     pinColor={colors.primaryBlue} 
-
+    onCalloutPress={ ()=>this.navigateToView(location)}
   >
+     
+
+    
     <Callout>
       <Text style={{color:colors.primaryBlue}}>{location.nameBrand}</Text>
-      <TouchableOpacity  >
-      <Text onPress={this.navigateToView(location)}>
-        go to service provider 
+      <TouchableOpacity  onPress={()=>this.navigateToView(location)}>
+      <Text >
+        {location.description }
       </Text>
+      
       </TouchableOpacity>
     </Callout>
   </Marker >)

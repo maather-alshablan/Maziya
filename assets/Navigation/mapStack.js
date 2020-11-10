@@ -13,7 +13,7 @@ function MapStack() {
             <MapStack.Screen name='Home' component={Map}
                 option={{
                     headerTransparent: true
-                }} unmountOnBlur={true} />
+                }} />
             <MapStack.Screen name='serviceProvider' component={serviceProvider} option={{
                     headerTransparent: true
                 }} unmountOnBlur={true}  />

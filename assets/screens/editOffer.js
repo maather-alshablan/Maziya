@@ -73,12 +73,15 @@ componentDidMount(){
  
 removeOffer=() => {
   console.log(this.state.OfferId);
-  database
+ var spRef= database
       .ref()
       .child("serviceProvider")
       .child(auth.currentUser.uid)
-      .child("offers").child(this.state.OfferId)
-      .remove()
+      .child("offers").child(this.state.OfferId).remove()
+
+  database.ref().child('Offers').child(this.state.OfferId).remove()
+//  var usedofferRef = database.ref().child('usedOffers').child(this.state.OfferId)
+//  var favoriteofferRef = database.ref().child('favorites').child(this.state.OfferId)
 
     //also removed from used and favorited offers 
 

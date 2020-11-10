@@ -50,16 +50,16 @@ export default class RegistrationServiceProvider extends Component {
 
   state = {
     image: '',
-    userName: "",
-    phoneNum: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    nameBrand: "",
-    Description: "",
+    userName: "x",
+    phoneNum: "0555555555",
+    email: "sdffd@hotmail.com",
+    password: "pass1234",
+    confirmPassword: "pass1234",
+    nameBrand: "x",
+    Description: "x",
     category:"",
     imageref:'',
-    website:"",
+    website:"x.com",
     twitter:"",
     instagram:"",
     errorMessage: null,
@@ -71,7 +71,8 @@ export default class RegistrationServiceProvider extends Component {
       latitudeDelta: 0.0922,
       longitudeDelta: 0.0421,
     },
-    coordinate:{}
+    coordinate:null,
+    showMap:false
 
   };
   validateEmail = (email) => {
@@ -294,6 +295,11 @@ export default class RegistrationServiceProvider extends Component {
         longitude: coord.longitude
       }})
     }
+
+
+    showMap = () =>{
+      this.setState({showMap:true})
+    }
   render() {
     //const showNotification = this.state.Valid ? false : true;
     console.disableYellowBox = true;
@@ -471,10 +477,6 @@ export default class RegistrationServiceProvider extends Component {
                 
                 
                 <View style={styles.fields}>
-                  
-                </View>
-                <View style={styles.fields}>{/*<Upload/> */}</View>
-                <View style={styles.fields}>
                 <MaterialCommunityIcons name="web" color={colors.primaryBlue} size={30} style={styles.fieldLabels} />
                   <TextInput
                     style={styles.TextInput}
@@ -520,14 +522,25 @@ export default class RegistrationServiceProvider extends Component {
               nextBtnStyle={styles.nextButton}
             >
               <View>
-              <Text style={{color:colors.primaryBlue, alignSelf:'flex-end', fontSize:20}}>
-                 تحديد موقع الفرع
+              <Text style={{color:colors.primaryBlue, alignSelf:'flex-end', fontSize:25}}>
+                   الفرع
               </Text>
+      
               </View>
+            
+              <TouchableOpacity onPress={ this.showMap}>
+              {this.state.showMap ==false ?
+              <View style={{flexDirection:'row-reverse',margin:15}}>
+             
+              <MaterialCommunityIcons name="plus" color={colors.primaryBlue} size={30} />
+             <Text style={{fontSize:20}}>
+                إضافة فرع 
+              </Text>
+              </View> :<View></View>}
+                  </TouchableOpacity> 
+              
 
-
-
-              <View>
+             { this.state.showMap ? <View>
               <MapView
         provider={PROVIDER_GOOGLE} 
         style={style.map}
@@ -539,7 +552,7 @@ export default class RegistrationServiceProvider extends Component {
         <Marker 
         draggable
         //key={1}
-        coordinate={{ latitude: 24.7561, longitude:46.6294 }}
+        coordinate={this.state.region}
         title={'موقعي '}
         pinColor={colors.primaryBlue} 
         onDragEnd = { e => this.locationHandler(e)}
@@ -547,7 +560,16 @@ export default class RegistrationServiceProvider extends Component {
           
         </Marker>
       </MapView>
-      </View>
+      { this.state.coordinate?
+      <View>
+        <Text style={{color:'green',alignSelf:'center'}}> تم حفظ الموقع بنجاح</Text>
+        </View> : <View></View>}
+      </View> : <View></View>} 
+  
+        { this.state.coordinate==null && this.state.showMap ?
+      <View>
+        <Text style={{color:colors.primaryGrey,alignSelf:'center'}}> يرجى تحديد الموقع على الخارطة </Text>
+        </View> : <View></View>}
 
 
 
@@ -568,6 +590,7 @@ const style = StyleSheet.create({
     map: {
       height: 400,
     width: 400,
+    marginTop:40,
     justifyContent: 'flex-end',
     alignItems: 'center',
       ...StyleSheet.absoluteFillObject,

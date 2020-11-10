@@ -47,7 +47,7 @@ export default class Homescreen extends React.Component {
       if (offers != null)
         Object.keys(offers).map(key => {
           // console.warn(offers[key]);
-
+          
           offersArray.push({
             key: key,
             ...offers[key]
@@ -210,8 +210,7 @@ export default class Homescreen extends React.Component {
                     iconName="local-offer"
                     iconType="MaterialIcons"
                     iconBackgroundColor={colors.primaryBlue}
-                    bottomRightText={offer.expdate}
-                    //onPress= {() => this.props.navigation.navigate('editOffer', {offerKey: item.key })}/>
+                    bottomRightText={offer.nameBrand}
 
                     onPress={() => { this.props.navigation.navigate('serviceProvider', { offer: offer }) }}
                   />

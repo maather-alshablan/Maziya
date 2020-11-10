@@ -21,7 +21,7 @@ state = {
     console.log('hi');
 
     var self = this;
-    database.ref('Offers').on('value',function(snapshot){
+    database.ref().child('Offers').on('value',function(snapshot){
       const offers= snapshot.val()
       const list =[]
       const labels=[]
@@ -98,10 +98,11 @@ state = {
           <Text style={{ marginTop:60, fontSize: 35, color: colors.primaryBlue,  textAlign: "center" }}>
             الإحصائيات          
  </Text>
- <View style={{alignSelf:'center',justifyContent:'center',marginTop:150}}> 
+
+
 { this.state.data ?  
  <View>
- <Text style={{ alignSelf:'center' ,fontSize: 22, color: colors.primaryGrey, marginBottom:20 }}>أكثر العروض استخداماً</Text>
+ <Text style={{ alignSelf:'center' ,fontSize: 22, color: colors.primaryGrey, marginBottom:20 ,marginTop:20}}>أكثر العروض استخداماً</Text>
 
  <BarChart
 
@@ -111,21 +112,19 @@ state = {
  chartConfig={chartConfig}
  verticalLabelRotation={30}
  backgroundColor="transparent"
+ showValuesOnTopOfBars
+ 
 /> 
  </View> 
-: <View>
-<Text style={{ alignSelf:'center' ,fontSize: 22, color: colors.primaryGrey, marginBottom:20 }}>لا توجد لديك عروض</Text>
-</View>} 
-</View>
+:<View><Text style={{ alignSelf:'center' ,fontSize: 22, color: colors.primaryGrey, marginBottom:20,marginVertical:150 }}>لا توجد لديك عروض</Text></View>} 
 
 
 
 
 
- <View style={{alignSelf:'center',justifyContent:'center',marginTop:150}}> 
+ <View style={{alignSelf:'center',justifyContent:'center',marginTop:50}}> 
 { this.state.dataFav ?  
- <View>
- <Text style={{ alignSelf:'center' ,fontSize: 22, color: colors.primaryGrey, marginBottom:20 }}>أكثر العروض المفضلة</Text>
+ <View><Text style={{ alignSelf:'center' ,fontSize: 22, color: colors.primaryGrey, marginBottom:20 }}>أكثر العروض المفضلة</Text>
 
  <BarChart
 
@@ -137,10 +136,9 @@ state = {
  backgroundColor="transparent"
 /> 
  </View> 
-: <View>
-<Text style={{ alignSelf:'center' ,fontSize: 22, color: colors.primaryGrey, marginBottom:20 }}>  لا توجد عروض مفضلة</Text>
-</View>} 
+: <View></View>} 
 </View>
+
            
         </ScrollView>
       </View>
