@@ -71,8 +71,8 @@ export default class LoginScreen extends Component {
         Notifications.scheduleNotificationAsync({
             content: {
                 sound: 'default',
-                title: "-",
-                body: "-"
+                title: "مزية",
+                body: "افتقدناك ، شيك على اخر عروضنا"
             },
             trigger: {
                 seconds: seconds,
