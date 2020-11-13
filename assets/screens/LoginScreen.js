@@ -139,8 +139,14 @@ export default class LoginScreen extends Component {
 
         auth.
             signInWithEmailAndPassword(email, password)
-            .then(() =>
-                this.routeUser()
+            .then((response) => {
+                if (response?.user?.emailVerified) {
+
+                    this.routeUser()
+                } else {
+                    alert('الرجاء من تفعيل الايميل للتتمكن من تسجيل الدخول')
+                }
+            }
             ).catch(error => this.setState({ errorMessage: 'يرجى التأكد من ادخال البريد الالكتروني و كلمة المرور الصحيح' }))
 
         this.state.errorMessage = "";
@@ -185,46 +191,46 @@ export default class LoginScreen extends Component {
                     <Text style={styles.HeaderText}>
                         تسجيل الدخول
             </Text>
-  
-    
-
-       </View> 
 
 
 
-         <View style={styles.fields}>
-           
-             <Text style={styles.fieldLabels} >البريد الإلكتروني </Text>
-         <TextInput 
-         style={styles.TextInput}
-         placeholder='البريد الإلكتروني'
-         onChangeText={email => this.setState({ email })}
-        value={this.state.email}
-         autoCapitalize="none"
-         />
-         </View>
+                </View>
 
-         
-         <View style={styles.fields}>
-         <Text style={styles.fieldLabels} >كلمة المرور </Text>
-        <TextInput 
-         style={styles.TextInput}
-         placeholder='كلمة المرور'
-         secureTextEntry
-         onChangeText={password => this.setState({ password })}
-         value={this.state.password}
-         autoCapitalize="none"
-         /></View>{this.state.errorMessage &&<Text style={{ color: 'red' }}>
-        {this.state.errorMessage}</Text>}
-         <TouchableOpacity onPress={this.handleLogin}>
-         <SignInButton text={'تسجيل الدخول'} onPress={this.handleLogin}></SignInButton>
-         </TouchableOpacity>
 
-         
-         <TouchableOpacity style={styles.forgotPasswordView}>
-         <Text style={styles.forgotPassword} 
-               onPress = {()=> this.props.navigation.navigate('Forgot')}> 
-        نسيت كلمة المرور؟
+
+                <View style={styles.fields}>
+
+                    <Text style={styles.fieldLabels} >البريد الإلكتروني </Text>
+                    <TextInput
+                        style={styles.TextInput}
+                        placeholder='البريد الإلكتروني'
+                        onChangeText={email => this.setState({ email })}
+                        value={this.state.email}
+                        autoCapitalize="none"
+                    />
+                </View>
+
+
+                <View style={styles.fields}>
+                    <Text style={styles.fieldLabels} >كلمة المرور </Text>
+                    <TextInput
+                        style={styles.TextInput}
+                        placeholder='كلمة المرور'
+                        secureTextEntry
+                        onChangeText={password => this.setState({ password })}
+                        value={this.state.password}
+                        autoCapitalize="none"
+                    /></View>{this.state.errorMessage && <Text style={{ color: 'red' }}>
+                        {this.state.errorMessage}</Text>}
+                <TouchableOpacity onPress={this.handleLogin}>
+                    <SignInButton text={'تسجيل الدخول'} onPress={this.handleLogin}></SignInButton>
+                </TouchableOpacity>
+
+
+                <TouchableOpacity style={styles.forgotPasswordView}>
+                    <Text style={styles.forgotPassword}
+                        onPress={() => this.props.navigation.navigate('Forgot')}>
+                        نسيت كلمة المرور؟
          </Text>
                 </TouchableOpacity>
 

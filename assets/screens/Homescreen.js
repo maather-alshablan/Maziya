@@ -34,7 +34,10 @@ export default class Homescreen extends React.Component {
   state = {
     brand: '',
     description: '',
-    offers: []
+    originalOffers: [],
+    offers: [],
+    usedArray: {},
+    search: ''
   }
 
   componentDidMount() {
@@ -47,7 +50,7 @@ export default class Homescreen extends React.Component {
       if (offers != null)
         Object.keys(offers).map(key => {
           // console.warn(offers[key]);
-          
+
           offersArray.push({
             key: key,
             ...offers[key]
@@ -60,14 +63,43 @@ export default class Homescreen extends React.Component {
           }
         });
       this.setState({
-        offers: offersArray
-
+        offers: offersArray,
+        originalOffers: offersArray
 
       })
     })
     this.generateToken();
     this.getAllScheduledNotificationsAsync()
+    this.gtUsedOffers();
     // this.scheduleNotification();
+  }
+  gtUsedOffers = () => {
+    self = this
+    const subscribe = database.ref('usedOffers/' + auth.currentUser.uid)
+      .on('value', function (snapshot) {
+        const offers = snapshot.val();
+        var usedArray = {}
+
+        if (offers != null) {
+          Object.keys(offers).map(key => {
+            usedArray = {
+              ...usedArray,
+              [key]: true
+            }
+            // console.log(offers, self.state.offerDetails)
+            // usedArray.push(offers[key])
+          })
+          self.setState({
+            usedArray: usedArray,
+
+          })
+        }
+        else {
+
+
+        }
+      }
+      )
   }
 
   generateToken = async () => {
@@ -147,6 +179,13 @@ export default class Homescreen extends React.Component {
       )
     }
   }
+  handleSearch = (text) => {
+    const searchOffers = this.state.originalOffers.filter(offer => offer.nameBrand?.toLowerCase().indexOf(text.toLowerCase()) > -1 ? true : false)
+    this.setState({
+      offers: searchOffers,
+      search: text
+    })
+  }
   render() {
 
 
@@ -190,16 +229,22 @@ export default class Homescreen extends React.Component {
           {/**for test */}
 
           <View style={styles.viewSearch}>
-            <TextInput style={styles.inputSearch} />
+            <TextInput style={styles.inputSearch}
+              onChangeText={this.handleSearch}
+              value={this.state.search}
+            />
             <TouchableOpacity>
               <FontAwesome name="search" color="#fff" size={20} />
             </TouchableOpacity>
           </View>
           {/* {this.Cards()} */}
-          {
+          {this.state.offers.length == 0 && this.state.search != "" ?
+            <View style={{ paddingTop: 250 }}>
+              <Text style={{ textAlign: 'center', fontSize: 20, color: colors.primaryGrey, }}>عذرًا لا يوجد نتائج لبحثك</Text>
+            </View>
+            :
             this.state.offers.map(offer => {
-              console.log(offer)
-
+              if (this.state.usedArray[offer.key]) return null
               //  this.retrieveServiceProviderName(offer.serviceProvider)
               // var name = this.state.brand.toString()
               return (
@@ -211,7 +256,14 @@ export default class Homescreen extends React.Component {
                     iconType="MaterialIcons"
                     iconBackgroundColor={colors.primaryBlue}
                     bottomRightText={offer.nameBrand}
+                    titleStyle={{
+                      lineHeight: 18,
+                      letterSpacing: 0,
+                      textAlign: "left",
+                      color: colors.primaryBlue,
+                      width: '100%',
 
+                    }}
                     onPress={() => { this.props.navigation.navigate('serviceProvider', { offer: offer }) }}
                   />
                 </View>

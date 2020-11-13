@@ -12,11 +12,11 @@ import { database, auth, storage } from "../config/firebase";
 
 // add bottom navigation 
 // drawer navigation 
-export default class usedOffers  extends Component{
+export default class usedOffers extends Component {
   constructor() {
     super()
     this.state = {
-      existOffers:null,
+      existOffers: null,
       offers: []
     }
   }
@@ -26,75 +26,77 @@ export default class usedOffers  extends Component{
     const subscribe = database.ref('usedOffers/' + auth.currentUser.uid)
       .on('value', function (snapshot) {
         const offers = snapshot.val();
-       console.log(offers)
+        console.log(offers)
         const usedArray = []
-      
-        if (offers != null){
-        Object.keys(offers).map(key => {
-         console.log(offers, self.state.offerDetails)
-         usedArray.push(offers[key])
-        })
-        self.setState({
-          offers: usedArray,
-          existOffers: true
 
-        })
+        if (offers != null) {
+          Object.keys(offers).map(key => {
+            console.log(offers, self.state.offerDetails)
+            usedArray.push(offers[key])
+          })
+          self.setState({
+            offers: usedArray,
+            existOffers: true
+
+          })
+        }
+        else {
+          self.setState({
+            existOffers: false
+          })
+
+        }
       }
-      else{
-        self.setState({
-          existOffers: false
-        })
-        
-      }}
-      )}
+      )
+  }
 
 
-    render(){
-        return(
-            <View style={styles.container}>
-            <ScrollView showsVerticalScrollIndicator={false}>
-                <TouchableOpacity
-                    style={{ alignSelf: "flex-end" }}
-                    onPress={() => {
-                        this.props.navigation.toggleDrawer();
-                    }}
-                    >
+  render() {
+    return (
+      <View style={styles.container}>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <TouchableOpacity
+            style={{ alignSelf: "flex-end" }}
+            onPress={() => {
+              this.props.navigation.toggleDrawer();
+            }}
+          >
 
-                    <Entypo name="menu" size={30} style={{marginTop:30}} />
-                </TouchableOpacity>
+            <Entypo name="menu" size={30} style={{ marginTop: 30 }} />
+          </TouchableOpacity>
 
-                <TouchableOpacity>                
-                  <Entypo name='chevron-left' size={30} color={colors.primaryBlue}  style={{alignSelf:'flex-start'}} onPress={()=> this.props.navigation.goBack()} />
-                  </TouchableOpacity>
+          <TouchableOpacity>
+            <Entypo name='chevron-left' size={30} color={colors.primaryBlue} style={{ alignSelf: 'flex-start' }} onPress={() => this.props.navigation.goBack()} />
+          </TouchableOpacity>
 
 
-                <Text style={{ marginBottom:10 ,fontSize: 22, color: colors.primaryBlue, alignItems: "center", textAlign:"center" }}>
-                العروض المستخدمة
+          <Text style={{ marginBottom: 10, fontSize: 22, color: colors.primaryBlue, alignItems: "center", textAlign: "center" }}>
+            العروض المستخدمة
                 </Text>
-    
-          {this.state.existOffers ? 
-          this.state.offers.map(offer => {
-            return (
-              <View style={{ margin: 15 }}>
-                <Card
-                  title={offer.title}
-                  //content={'offer.description'}
-                  iconName="local-offer"
-                  iconType="MaterialIcons"
-                  iconBackgroundColor={colors.primaryBlue}
-                  //bottomRightText={'offer.expiration'}
-                  //onPress= {() => this.props.navigation.navigate('editOffer', {offerKey: item.key })}/>
 
-                  onPress={() => { this.props.navigation.navigate('serviceProvider', { offer: offer }) }}
-                />
-                  </View>
-            )
-          } 
-          ): <Text style={{alignSelf:'center', fontSize:20,color:colors.primaryGrey, marginTop:250}}>لا يوجد عروض مستخدمة</Text>}
+          {this.state.existOffers ?
+            this.state.offers.map(offer => {
+              return (
+                <View style={{ margin: 15 }}>
+                  <Card
+                    title={offer.title}
+                    //content={'offer.description'}
+                    iconName="local-offer"
+                    iconType="MaterialIcons"
+                    iconBackgroundColor={colors.primaryBlue}
+                    //bottomRightText={'offer.expiration'}
+                    //onPress= {() => this.props.navigation.navigate('editOffer', {offerKey: item.key })}/>
 
-            </ScrollView>
-          </View>
-    
+                    onPress={() => { this.props.navigation.navigate('serviceProvider', { offer: offer }) }}
+                  />
+                </View>
+              )
+            }
+            ) : <Text style={{ alignSelf: 'center', fontSize: 20, color: colors.primaryGrey, marginTop: 250 }}>لا يوجد عروض مستخدمة</Text>}
+
+        </ScrollView>
+      </View>
+
 
 
 

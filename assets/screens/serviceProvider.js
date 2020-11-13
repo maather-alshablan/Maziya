@@ -1,7 +1,9 @@
 
 import React, { Component, useState } from "react";
-import { StyleSheet, Text, View, Linking, TextInput, 
-    Button, Card, FlatList, TouchableOpacity, Dimensions, Clipboard, LogBox, StatusBar, Image, SafeAreaView, ScrollView, TabBarIOS, Alert } from 'react-native';
+import {
+    StyleSheet, Text, View, Linking, TextInput,
+    Button, Card, FlatList, TouchableOpacity, Dimensions, Clipboard, LogBox, StatusBar, Image, SafeAreaView, ScrollView, TabBarIOS, Alert
+} from 'react-native';
 import { TouchThroughView, TouchThroughWrapper } from 'react-native-touch-through-view';
 import Modal from 'react-native-modal';
 import { database, auth, storage } from "../config/firebase";
@@ -10,7 +12,7 @@ import colors from '../constants/colors'
 import styles from "../constants/styles";
 import { QRCode } from 'react-native-custom-qr-codes';
 import { Colors } from "react-native/Libraries/NewAppScreen";
-import MapView, { PROVIDER_GOOGLE , Marker, Callout } from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
 import Map from '../screens/map'
 import SignInButton from "../components/SignInButton";
 //import listOfferSP from '../components/ListOfferSP';
@@ -33,15 +35,15 @@ export default class serviceProvider extends Component {
             twitter: '',
             instagram: '',
             coordinate: null,
-            region:{
+            region: {
                 latitude: 24.7136,
                 longitude: 46.6753,
                 latitudeDelta: 0.0922,
                 longitudeDelta: 0.0421,
-              },
+            },
             //image:'',
             offers: [],
-            copied:false,
+            copied: false,
             offerDetails: props?.route?.params?.offer,
             favoriteId: '',
             used: false
@@ -49,7 +51,7 @@ export default class serviceProvider extends Component {
     }
 
     componentDidMount() {
-     
+
         const readData = (favId, used = false) => {
             if (used) {
                 this.setState({
@@ -63,35 +65,37 @@ export default class serviceProvider extends Component {
                     favorite: true,
 
                 })
-            } }
-
-        const setUsed = ()=>{
-            
-                this.setState({
-                    used: true,
-                })
+            }
         }
 
-            
-            var self = this;
-        database.ref('users/'+auth.currentUser.uid).once('value').then(function(snapshot){
-       
+        const setUsed = () => {
+
+            this.setState({
+                used: true,
+            })
+        }
+
+
+        var self = this;
+        database.ref('users/' + auth.currentUser.uid).once('value').then(function (snapshot) {
+
             const user = snapshot.val().accountType
             console.log("this")
-            
 
-        if (user == 'serviceProvider') 
-        var sp =     auth.currentUser.uid
-    
-        else if (self.state.offerDetails != null ){
-        var sp = self.state.offerDetails.serviceProvider}
-        
-        console.log(sp)
-        fetchData(sp);
-        
-        } )
 
- 
+            if (user == 'serviceProvider')
+                var sp = auth.currentUser.uid
+
+            else if (self.state.offerDetails != null) {
+                var sp = self.state.offerDetails.serviceProvider
+            }
+
+            console.log(sp)
+            fetchData(sp);
+
+        })
+
+
 
         console.log('hi1')
 
@@ -102,16 +106,16 @@ export default class serviceProvider extends Component {
                 //console.log(favorites)
                 var favoriteDetails = {}
                 if (favorites != null)
-                Object.keys(favorites).map(key => {
-                    //console.log(favorites, self.state.offerDetails)
-                    if (favorites[key].key == self.state.offerDetails?.key) {
-                        console.log('added');
-                        console.log('hi');
-                        
-                        readData(key);
-                        fetchData(self.state.offerDetails.serviceProvider)
-                    }
-                })
+                    Object.keys(favorites).map(key => {
+                        //console.log(favorites, self.state.offerDetails)
+                        if (favorites[key].key == self.state.offerDetails?.key) {
+                            console.log('added');
+                            console.log('hi');
+
+                            readData(key);
+                            fetchData(self.state.offerDetails.serviceProvider)
+                        }
+                    })
             })
 
         database.ref('usedOffers/' + auth.currentUser.uid)
@@ -121,22 +125,22 @@ export default class serviceProvider extends Component {
                 console.warn(usedOffers)
                 var usedDetails = {}
                 if (usedOffers != null)
-                Object.keys(usedOffers).map(key => {
-                    console.warn(usedOffers, self.state.offerDetails)
-                    if (usedOffers[key].key == self.state.offerDetails?.key) {
-                        //console.warn('added')
-                        setUsed();
+                    Object.keys(usedOffers).map(key => {
+                        console.warn(usedOffers, self.state.offerDetails)
+                        if (usedOffers[key].key == self.state.offerDetails?.key) {
+                            //console.warn('added')
+                            setUsed();
 
-                    }
-                })
+                        }
+                    })
             })
 
-     const fetchData = (sp) => {
-      
-        console.log('hi')
+        const fetchData = (sp) => {
+
+            console.log('hi')
 
             database.ref().child('serviceProvider/' + sp).once("value").then(function (snapshot) {
-                var name = ((snapshot.val() && snapshot.val().nameBrand)) 
+                var name = ((snapshot.val() && snapshot.val().nameBrand))
                 var description = ((snapshot.val() && snapshot.val().description))
                 var email = ((snapshot.val() && snapshot.val().email))
                 var phone = ((snapshot.val() && snapshot.val().phone))
@@ -147,25 +151,26 @@ export default class serviceProvider extends Component {
 
                 // var image=((snapshot.val() && snapshot.val().image))
                 readData_(name, email, description, phone, website, twitter, instagram, coordinate);
-            
+
             })
 
 
-        const readData_ = (name, email, description, phone, website, twitter, instagram,coordinate) => {
-            this.setState({
-                brand: name,
-                description: description,
-                phone: phone,
-                email: email,
-                website: website,
-                twitter: twitter,
-                instagram: instagram,
-                coordinate: coordinate
-                //image:image
-            })
+            const readData_ = (name, email, description, phone, website, twitter, instagram, coordinate) => {
+                this.setState({
+                    brand: name,
+                    description: description,
+                    phone: phone,
+                    email: email,
+                    website: website,
+                    twitter: twitter,
+                    instagram: instagram,
+                    coordinate: coordinate
+                    //image:image
+                })
+            }
+
         }
-
-    }}
+    }
 
     fetchOffers = () => {
 
@@ -251,11 +256,11 @@ export default class serviceProvider extends Component {
 
     copyToClipboard = () => {
         Clipboard.setString(this.state.offerDetails.code)
-        this.setState({copied:true})
-        this.setState({used:true})
+        this.setState({ copied: true })
+        this.setState({ used: true })
         database.ref().child('usedOffers').child(auth.currentUser.uid).child(this.state.offerDetails?.key)
-        .set({ ...this.state.offerDetails, used:true});
-       // Alert.alert('لقد تم استخدامك للعرض بنجاح')
+            .set({ ...this.state.offerDetails, used: true });
+        // Alert.alert('لقد تم استخدامك للعرض بنجاح')
         this.updateUsedCount();
 
     }
@@ -280,234 +285,234 @@ export default class serviceProvider extends Component {
                 .set({ ...this.state.offerDetails, uid: auth.currentUser.uid }).then(this.updateFavoriteCount('increment'))
         }
     }
-        
-    updateUsedCount = () =>{
-      
-         database.ref('Offers/'+this.state.offerDetails?.key+'/usedCount').transaction(function(data){
+
+    updateUsedCount = () => {
+
+        database.ref('Offers/' + this.state.offerDetails?.key + '/usedCount').transaction(function (data) {
 
             return ++data;
-         })
+        })
     }
 
-    updateFavoriteCount = (type) =>{
+    updateFavoriteCount = (type) => {
 
-        database.ref('Offers/'+this.state.offerDetails?.key+'/favoriteCount').transaction(function(data){
-            if(type =='increment')
-           return ++data;
-           if(type =='decrement')
-           return ++data;
+        database.ref('Offers/' + this.state.offerDetails?.key + '/favoriteCount').transaction(function (data) {
+            if (type == 'increment')
+                return ++data;
+            if (type == 'decrement')
+                return ++data;
 
         })
     }
 
     render() {
-      //  console.log('hi')
-       
+        //  console.log('hi')
+
 
         //LogBox.ignoreAllLogs()
         return (
 
             <SafeAreaView style={styless.container}>
-                <ScrollView style={{flex: 1 }}>
-                <View>
-                    <View >
-                        {this.state.offerDetails ?  
-                        <View style={{flexDirection:'row' , justifyContent:'space-between'}}>
-                        <Entypo name='chevron-left' size={30} color={colors.primaryBlue}   onPress={()=> this.props.navigation.pop()} />
-                        <TouchableOpacity 
-                        onPress={this.toggleFavorite}>
-                        <MaterialCommunityIcons
-                            name={this.state.favorite ? "heart" : "heart-outline"}
-                            color={colors.primaryBlue}
-                            size={40}
-                            style={{alignSelf:'flex-start'}}
-                        />
-                    </TouchableOpacity>
-                    </View> : <View></View> }
-                        <View style={{flexDirection:'row-reverse', alignSelf:'center'}}>
-                        <Text style={[styless.headers]}>{this.state.brand}</Text>
+                <ScrollView style={{ flex: 1 }}>
+                    <View>
+                        <View >
+                            {this.state.offerDetails ?
+                                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                    <Entypo name='chevron-left' size={30} color={colors.primaryBlue} onPress={() => this.props.navigation.pop()} />
+                                    <TouchableOpacity
+                                        onPress={this.toggleFavorite}>
+                                        <MaterialCommunityIcons
+                                            name={this.state.favorite ? "heart" : "heart-outline"}
+                                            color={colors.primaryBlue}
+                                            size={40}
+                                            style={{ alignSelf: 'flex-start' }}
+                                        />
+                                    </TouchableOpacity>
+                                </View> : <View></View>}
+                            <View style={{ flexDirection: 'row-reverse', alignSelf: 'center' }}>
+                                <Text style={[styless.headers]}>{this.state.brand}</Text>
 
-                            <Image source={require('../images/logoDis.jpg')} style={{ width: 100, height: 60, alignSelf:"center" }} />
-                        </View>
-                    </View>
-
-
-                    <View style={styless.footer}>
-                        <Text style={styless.text_footer}>عن  {this.state.brand}</Text>
-
-                        <Text style={{ alignSelf: 'flex-end' }}>
-                            {this.state.description}
-
-                        </Text>
-
-                        <View style={{ alignSelf: 'flex-end' }}>
-                            <Text style={styless.text_footer}>للتواصل</Text>
-                        </View>
-                        <View style={{ flexDirection: "row"  , alignItems:"center", alignSelf:'center'}}>
-
-                            <TouchableOpacity>
-                                <MaterialCommunityIcons
-                                    name="email"
-                                    color={colors.primaryBlue}
-                                    size={30}
-                                    style={styles.fieldLabels}
-                                    accessibilityValue={this.state.email}
-                                    onPress={() => { Linking.openURL('mailto:' + this.state.email) }} />
-                            </TouchableOpacity>
-
-                            {this.state.phone == '' ? <View></View> :
-                                <TouchableOpacity>
-                                    <FontAwesome name="phone" color={colors.primaryBlue} size={30} style={styles.fieldLabels}
-                                        accessibilityValue={this.state.phone} />
-                                </TouchableOpacity>}
-
-                            {this.state.website == '' ? <View></View> :
-                                <TouchableOpacity>
-                                    <MaterialCommunityIcons name="web" color={colors.primaryBlue} size={30} style={styles.fieldLabels}
-                                        accessibilityValue={this.state.website} onPress={() => {
-                                            Linking.openURL('https://' + this.state.website);
-                                        }} />
-                                </TouchableOpacity>}
-
-                            {this.state.twitter == '' ? <View></View> :
-                                <TouchableOpacity>
-                                    <MaterialCommunityIcons name="twitter" color={colors.primaryBlue} size={30} style={styles.fieldLabels}
-                                        accessibilityValue={this.state.twitter}
-                                        onPress={() => {
-                                            Linking.openURL('https://twitter.com/' + this.state.twitter);
-                                        }}
-
-                                    />
-                                </TouchableOpacity>}
-
-                            {this.state.instagram == '' ? <View></View> :
-                                <TouchableOpacity>
-                                    <MaterialCommunityIcons name="instagram" color={colors.primaryBlue} size={30} style={styles.fieldLabels}
-                                        onPress={() => {
-                                            Linking.openURL('https://instagram.com/' + this.state.instagram);
-                                        }} />
-                                </TouchableOpacity>}
-                        </View>
-
-                     
-                        {this.state.offerDetails ? 
-                      <View>
-                        <Text style={styless.text_footer}>العنوان</Text>
-                        <Text style={styless.subtext_footer}>{this.state.offerDetails.title}</Text>
-                        <View style={styless.action}>
-                        </View>
-
-                        <Text style={styless.text_footer}>الوصف</Text>
-                        <Text style={styless.subtext_footer}>{this.state.offerDetails.Descripiton}</Text>
-                        <View style={styless.action}>
-
-                        </View>
-
-                        <Text style={styless.text_footer}>تاريخ إنتهاء العرض</Text>
-                        <Text style={styless.subtext_footer}>{this.state.offerDetails.expdate}</Text>
-                        <View style={styless.action}> 
-                        </View>
-                        </View> : <View></View> } 
-
-                        {this.state.used == true ?
-                        <View>
-                        <View style={styles.UsedButtonContainer} >
-                        <Text style={styles.appButtonText} >استخدم العرض</Text>
-                   
-                        </View>
-                         <Text style={{color:'green',alignSelf:'center'}}>لقد تم استخدامك للعرض بنجاح</Text></View> : <View></View>}
-
-                        {this.state.used == false && this.state.offerDetails ?
-                        <View>
-                        <TouchableOpacity style={styles.ButtonContainer} onPress={this.toggleModal}  >
-                        <Text style={styles.appButtonText} >استخدم العرض</Text>
-                        <Modal
-                            isVisible={this.state.modal}
-                            onBackdropPress={() => this.setState({ modal: false })}>
-                                
-                            <View style={styless.modal}>
-                                <FontAwesome 
-                                name={'close'}
-                                color={colors.primaryGrey}
-                                size={30}
-                                style={{alignSelf:"flex-start",justifyContent:'center'}}
-                                onPress={this.toggleModal} />
-                                <Text style={[styless.subtext_footer],
-                                    [{alignSelf:'flex-end',color:colors.primaryBlue, fontSize:30, margin:10,textDecorationLine:'underline'}]}> الطريقة الأولى</Text>
-                             <View>
-                               <TouchableOpacity 
-                               >
-                                <Text style={
-                                    [{alignSelf:'flex-end',color: '#05375a', fontSize:20, margin:10}]}>امسح العرض</Text>
-                                 </TouchableOpacity>
-                                 </View>
-                                  < View>
-                                  <QRCode content={this.state.offerDetails.code}
-                                  logo={require('../images/logo.png')} />
-
-                                    
-
-                                   <Text style={[styless.subtext_footer],
-                                    [{alignSelf:'flex-end',color:colors.primaryBlue, fontSize:30, margin:7,textDecorationLine:'underline'}]}> الطريقة الثانية</Text>
-                                <TouchableOpacity style={{flexDirection:'row-reverse',alignSelf:'center'}} onPress={() => this.copyToClipboard()}>
-                                
-                                    <Text style={{fontSize: 20,alignSelf:"center", margin:20,color: '#05375a'}} > 1 - انسخ الكود </Text>
-                                    <Feather name={'copy'} 
-                                    size={30} 
-                                    color= {this.state.copied ?  colors.primaryBlue : colors.primaryGrey} />
-                                </TouchableOpacity>
-                                
-                                </View> 
-
-                                <TouchableOpacity style={{flexDirection:'row-reverse',alignSelf:'center',margin:10}}  onPress={() => {
-                                    Linking.openURL('https://' + this.state.website);
-                                }}>
-                                    <Text style={{ alignSelf:"center", margin:10, color: '#05375a', fontSize:20}}> 2 - {this.state.brand}  انقلني لصفحة  </Text>
-                                
-                                <Feather name={'external-link'} 
-                                    size={30} 
-                                    color= {  colors.primaryGrey }/>
-                              </TouchableOpacity>
+                                <Image source={require('../images/logoDis.jpg')} style={{ width: 100, height: 60, alignSelf: "center" }} />
                             </View>
-                        </Modal>
-
-
-
-
-                    </TouchableOpacity>
-                    </View> : <View></View>}
                         </View>
-                      { this.state.coordinate ?  
-                      <View>
-                      <View style={{ alignSelf: 'flex-end' }}>
-                            <Text style={styless.text_footer}>الموقع</Text>
-                             </View>
-                    
+
+
+                        <View style={styless.footer}>
+                            <Text style={styless.text_footer}>عن  {this.state.brand}</Text>
+
+                            <Text style={{ alignSelf: 'flex-end' }}>
+                                {this.state.description}
+
+                            </Text>
+
+                            <View style={{ alignSelf: 'flex-end' }}>
+                                <Text style={styless.text_footer}>للتواصل</Text>
+                            </View>
+                            <View style={{ flexDirection: "row", alignItems: "center", alignSelf: 'center' }}>
+
+                                <TouchableOpacity>
+                                    <MaterialCommunityIcons
+                                        name="email"
+                                        color={colors.primaryBlue}
+                                        size={30}
+                                        style={styles.fieldLabels}
+                                        accessibilityValue={this.state.email}
+                                        onPress={() => { Linking.openURL('mailto:' + this.state.email) }} />
+                                </TouchableOpacity>
+
+                                {this.state.phone == '' ? <View></View> :
+                                    <TouchableOpacity>
+                                        <FontAwesome name="phone" color={colors.primaryBlue} size={30} style={styles.fieldLabels}
+                                            accessibilityValue={this.state.phone} />
+                                    </TouchableOpacity>}
+
+                                {this.state.website == '' ? <View></View> :
+                                    <TouchableOpacity>
+                                        <MaterialCommunityIcons name="web" color={colors.primaryBlue} size={30} style={styles.fieldLabels}
+                                            accessibilityValue={this.state.website} onPress={() => {
+                                                Linking.openURL('https://' + this.state.website);
+                                            }} />
+                                    </TouchableOpacity>}
+
+                                {this.state.twitter == '' ? <View></View> :
+                                    <TouchableOpacity>
+                                        <MaterialCommunityIcons name="twitter" color={colors.primaryBlue} size={30} style={styles.fieldLabels}
+                                            accessibilityValue={this.state.twitter}
+                                            onPress={() => {
+                                                Linking.openURL('https://twitter.com/' + this.state.twitter);
+                                            }}
+
+                                        />
+                                    </TouchableOpacity>}
+
+                                {this.state.instagram == '' ? <View></View> :
+                                    <TouchableOpacity>
+                                        <MaterialCommunityIcons name="instagram" color={colors.primaryBlue} size={30} style={styles.fieldLabels}
+                                            onPress={() => {
+                                                Linking.openURL('https://instagram.com/' + this.state.instagram);
+                                            }} />
+                                    </TouchableOpacity>}
+                            </View>
+
+
+                            {this.state.offerDetails ?
+                                <View>
+                                    <Text style={styless.text_footer}>العنوان</Text>
+                                    <Text style={styless.subtext_footer}>{this.state.offerDetails.title}</Text>
+                                    <View style={styless.action}>
+                                    </View>
+
+                                    <Text style={styless.text_footer}>الوصف</Text>
+                                    <Text style={styless.subtext_footer}>{this.state.offerDetails.Descripiton}</Text>
+                                    <View style={styless.action}>
+
+                                    </View>
+
+                                    <Text style={styless.text_footer}>تاريخ إنتهاء العرض</Text>
+                                    <Text style={styless.subtext_footer}>{this.state.offerDetails.expdate}</Text>
+                                    <View style={styless.action}>
+                                    </View>
+                                </View> : <View></View>}
+
+                            {this.state.used == true ?
+                                <View>
+                                    <View style={styles.UsedButtonContainer} >
+                                        <Text style={styles.appButtonText} >استخدم العرض</Text>
+
+                                    </View>
+                                    <Text style={{ color: 'green', alignSelf: 'center' }}>لقد تم استخدامك للعرض بنجاح</Text></View> : <View></View>}
+
+                            {this.state.used == false && this.state.offerDetails ?
+                                <View>
+                                    <TouchableOpacity style={styles.ButtonContainer} onPress={this.toggleModal}  >
+                                        <Text style={styles.appButtonText} >استخدم العرض</Text>
+                                        <Modal
+                                            isVisible={this.state.modal}
+                                            onBackdropPress={() => this.setState({ modal: false })}>
+
+                                            <View style={styless.modal}>
+                                                <FontAwesome
+                                                    name={'close'}
+                                                    color={colors.primaryGrey}
+                                                    size={30}
+                                                    style={{ alignSelf: "flex-start", justifyContent: 'center' }}
+                                                    onPress={this.toggleModal} />
+                                                <Text style={[styless.subtext_footer],
+                                                    [{ alignSelf: 'flex-end', color: colors.primaryBlue, fontSize: 30, margin: 10, textDecorationLine: 'underline' }]}> الطريقة الأولى</Text>
+                                                <View>
+                                                    <TouchableOpacity
+                                                    >
+                                                        <Text style={
+                                                            [{ alignSelf: 'flex-end', color: '#05375a', fontSize: 20, margin: 10 }]}>امسح العرض</Text>
+                                                    </TouchableOpacity>
+                                                </View>
+                                                < View>
+                                                    <QRCode content={this.state.offerDetails.code}
+                                                        logo={require('../images/logo.png')} />
+
+
+
+                                                    <Text style={[styless.subtext_footer],
+                                                        [{ alignSelf: 'flex-end', color: colors.primaryBlue, fontSize: 30, margin: 7, textDecorationLine: 'underline' }]}> الطريقة الثانية</Text>
+                                                    <TouchableOpacity style={{ flexDirection: 'row-reverse', alignSelf: 'center' }} onPress={() => this.copyToClipboard()}>
+
+                                                        <Text style={{ fontSize: 20, alignSelf: "center", margin: 20, color: '#05375a' }} > 1 - انسخ الكود </Text>
+                                                        <Feather name={'copy'}
+                                                            size={30}
+                                                            color={this.state.copied ? colors.primaryBlue : colors.primaryGrey} />
+                                                    </TouchableOpacity>
+
+                                                </View>
+
+                                                <TouchableOpacity style={{ flexDirection: 'row-reverse', alignSelf: 'center', margin: 10 }} onPress={() => {
+                                                    Linking.openURL('https://' + this.state.website);
+                                                }}>
+                                                    <Text style={{ alignSelf: "center", margin: 10, color: '#05375a', fontSize: 20 }}> 2 - {this.state.brand}  انقلني لصفحة  </Text>
+
+                                                    <Feather name={'external-link'}
+                                                        size={30}
+                                                        color={colors.primaryGrey} />
+                                                </TouchableOpacity>
+                                            </View>
+                                        </Modal>
+
+
+
+
+                                    </TouchableOpacity>
+                                </View> : <View></View>}
+                        </View>
+                        {this.state.coordinate ?
                             <View>
-                                        
-                                <MapView
-                            provider={PROVIDER_GOOGLE} 
-                            style={styless.map}
-                            region={this.state.region}
-                            showsUserLocation={true}
+                                <View style={{ alignSelf: 'flex-end' }}>
+                                    <Text style={styless.text_footer}>الموقع</Text>
+                                </View>
 
-                        >
-                            <Marker 
-                            //key={1}
-                            coordinate={ this.state.coordinate}
-                            title={this.state.brand}
-                            pinColor={colors.primaryBlue} 
-                            >
-                            
-                            </Marker>
-                        </MapView>
-                        </View>
-                       
-                        </View>: <View></View>}
+                                <View>
 
-                        </View>
+                                    <MapView
+                                        provider={PROVIDER_GOOGLE}
+                                        style={styless.map}
+                                        region={this.state.region}
+                                        showsUserLocation={true}
+
+                                    >
+                                        <Marker
+                                            //key={1}
+                                            coordinate={this.state.coordinate}
+                                            title={this.state.brand}
+                                            pinColor={colors.primaryBlue}
+                                        >
+
+                                        </Marker>
+                                    </MapView>
+                                </View>
+
+                            </View> : <View></View>}
+
+                    </View>
                 </ScrollView>
-                
+
             </SafeAreaView>
         )
     }
@@ -522,15 +527,15 @@ const styless = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: 'white',
-      //  maxHeight: maxHeight
+        //  maxHeight: maxHeight
 
     },
     header: {
-       // flex: 1,
+        // flex: 1,
         paddingHorizontal: 20,
         //marginTop: 20,
         //alignSelf:'center',
-       // justifyContent:'center'
+        // justifyContent:'center'
 
     },
     footer: {
@@ -559,13 +564,11 @@ const styless = StyleSheet.create({
     text_footer: {
         color: '#05375a',
         fontSize: 20,
-        marginLeft: 200,
-        
+
         alignSelf: 'flex-end',
-    },subtext_footer: {
+    }, subtext_footer: {
         color: 'black',
         fontSize: 15,
-        marginLeft: 200,
         marginTop: 10,
         alignSelf: 'flex-end',
     },
@@ -608,26 +611,26 @@ const styless = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         width: 330,
-        alignSelf:"center",
+        alignSelf: "center",
         marginVertical: 115,
-        marginHorizontal:50,
+        marginHorizontal: 50,
         borderTopLeftRadius: 10,
         borderTopRightRadius: 10,
         borderBottomEndRadius: 10,
         borderBottomLeftRadius: 10,
         borderBottomRightRadius: 10,
-        borderColor:colors.primaryGrey,
-        borderWidth:4,
+        borderColor: colors.primaryGrey,
+        borderWidth: 4,
         overflow: 'hidden',
     },
     map: {
         height: 200,
-      width: 400,
-      justifyContent: 'center',
-      alignItems: 'center',
+        width: 400,
+        justifyContent: 'center',
+        alignItems: 'center',
         ...StyleSheet.absoluteFillObject,
-      },
-      headers: {
+    },
+    headers: {
         fontFamily: "Arial",
         fontWeight: "normal",
         fontSize: 35,
@@ -635,7 +638,7 @@ const styless = StyleSheet.create({
         color: colors.primaryBlue,
         //marginTop: 15,
         marginBottom: 15,
-      }
+    }
 
 
 
