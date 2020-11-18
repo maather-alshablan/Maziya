@@ -35,9 +35,6 @@ export default class editOffer extends React.Component  {
     
       };
     
-      handleOfferIdChange = () => {
-        this.setState({ code: this.state.OfferId  });
-      }
     
 componentDidMount(){
    
@@ -154,18 +151,6 @@ render(){
             </View>
           </View>
 
-          <View style={styles.container} >
-            <TouchableOpacity onPress={this.confirmDelete}>
-              <MaterialCommunityIcons
-                name="delete"
-                color={"red"}
-                size={30}
-                style={styles.fieldLabels}
-
-              />
-            </TouchableOpacity>
-          </View>
-
           <View style={styless.footer}>
             <Text style={styless.text_footer}>العنوان</Text>
             <View style={styless.action}>
@@ -200,6 +185,11 @@ render(){
                   
                 </View> */}
                  <Text style={styless.text_footer}>تاريخ إنتهاء العرض</Text>
+                 <TouchableOpacity style={styles.forgotPasswordView}>
+                    <Text style={styles.forgotPassword}>
+                        {this.state.expdate}
+         </Text>
+                </TouchableOpacity>
             <View style={styless.action}>
               <DatePicker
                 defaultDate={new Date()}
@@ -210,11 +200,11 @@ render(){
                 modalTransparent={false}
                 animationType={"fade"}
                 mode={'date'}
-                placeHolderText="التاريخ"
+                placeHolderText={this.state.expdate}
                 textStyle={{ color: "green" }}
                 placeHolderTextStyle={{ color: "#d3d3d3" }}
                 textAlign={'right'}
-                onDateChange={date => this.handleDateChange(date)}
+                onDateChange={expdate => this.handleDateChange(expdate)}
                 disabled={false}
               />
             </View>
@@ -232,21 +222,22 @@ render(){
                    onChangeText={code =>this.setState( { code: code} ) }
                    value={this.state.code}/>
                     </View>
-                    <View style={styles.container}>
-                        <TouchableOpacity onPress={this.handleOfferIdChange}>
-                        <SignInButton text={'QR تحديث'} onPress={this.handleOfferIdChange}></SignInButton>
-                        </TouchableOpacity>
-                      </View>
-                    <View style={styles.container} >
-                   
-                     <QRCode content={this.state.code} 
-                     logo={require('../images/logo.png')} /> 
-                   </View>
-                </View>
- 
- 
+
+                    {this.state.code == '' ? <View></View> :
+                <View style={styles.container}>
+                  <QRCode content={this.state.code}
+                    logo={require('../images/logo.png')} />
+                </View>}
+
+            
+
+              {/* </ImageBackground> */}
+            </View>
                 
-                <View style={styless.buttom}>
+ 
+ 
+                <View style={{ flexDirection: 'row-reverse'}}>
+                {/* <View style={styless.buttom}> */}
                     <TouchableOpacity style={styless.signIn} onPress={this.handleUpdate} >
                     <LinearGradient
                         colors={['#0278ae', '#0278ae']}
@@ -256,7 +247,7 @@ render(){
 
                     </LinearGradient>  
                     </TouchableOpacity> 
-                    <View style={styles.container} >
+                    {/* <View style={styles.container} > */}
                         <TouchableOpacity  onPress={this.confirmDelete}>
                    <MaterialCommunityIcons
                     name="delete"
@@ -266,7 +257,8 @@ render(){
                    
                   />
                   </TouchableOpacity>
-                   </View>
+                   {/* </View> */}
+                {/* </View> */}
                 </View>
 
                 {

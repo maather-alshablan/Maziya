@@ -46,7 +46,8 @@ export default class serviceProvider extends Component {
             copied: false,
             offerDetails: props?.route?.params?.offer,
             favoriteId: '',
-            used: false
+            used: false,
+            keyRoom:null
         }
     }
 
@@ -82,23 +83,36 @@ export default class serviceProvider extends Component {
             const user = snapshot.val().accountType
             console.log("this")
 
-
+           
             if (user == 'serviceProvider')
                 var sp = auth.currentUser.uid
 
             else if (self.state.offerDetails != null) {
                 var sp = self.state.offerDetails.serviceProvider
-            }
+                const chatRooms = snapshot.val().ChatRooms
 
+                if (chatRooms)
+                {
+                    Object.keys(chatRooms).map(key => {
+                        console.log('reading room key > ')
+                        console.log(key)
+                        
+                       
+                        if (chatRooms[key].serviceProvider == sp)
+                         self.setState({keyRoom: key})
+                })
+            }
+        
+            }
             console.log(sp)
+           
+
             fetchData(sp);
+            
 
         })
 
-
-
-        console.log('hi1')
-
+        
         database.ref('favorites/' + auth.currentUser.uid)
             .once('value')
             .then(function (snapshot) {
@@ -204,42 +218,6 @@ export default class serviceProvider extends Component {
 
     }
 
-
-    listOffers = () => {
-        return null;
-
-        // return (
-        //     <View  style={{flex:1,alignSelf:'center', justifyContent:'center'}}>
-        //     <FlatList
-        //     style={{width:'100%'}}
-        //     data= {this.state.offers}
-        //     keyExtractor={(item)=>item.key}
-        //     renderItem={({item})=>
-
-        //     {
-
-        //       return(
-        //     <View style={{marginTop:15}}>
-        //     <Card 
-        //   title= {item.title}
-        //   content={item.Descripiton}
-        //   iconName="local-offer"
-        //   iconType="MaterialIcons"
-        //   iconBackgroundColor= {colors.primaryBlue}
-        //   //bottomRightText="30"
-        //   onPress= {() => this.props.navigation.navigate('editOffer')}/>
-
-        //   </View>
-        //       )
-        //     }} />
-        //      </View>
-
-
-        // )
-    }
-
-
-
     //implementing favorite/ unfavorite a SP logic 
     toggleModal = () => {
         this.setState({ modal: !this.state.modal });
@@ -305,6 +283,8 @@ export default class serviceProvider extends Component {
         })
     }
 
+
+
     render() {
         //  console.log('hi')
 
@@ -359,6 +339,22 @@ export default class serviceProvider extends Component {
                                         accessibilityValue={this.state.email}
                                         onPress={() => { Linking.openURL('mailto:' + this.state.email) }} />
                                 </TouchableOpacity>
+                                {this.state.offerDetails? 
+                                <View>
+                                      <TouchableOpacity>
+                                    <Entypo
+                                        name="chat"
+                                        color={colors.primaryBlue}
+                                        size={30}
+                                        style={styles.fieldLabels}
+                                        onPress={() => this.props.navigation.navigate('chatRoom', { keyRoom: this.state.keyRoom,
+                                            member: auth.currentUser.uid, 
+                                            serviceProvider: this.state.offerDetails.serviceProvider, nameBrand:this.state.brand})} />
+                                </TouchableOpacity>
+                                </View>:
+                                <View></View>
+                                
+                            }
 
                                 {this.state.phone == '' ? <View></View> :
                                     <TouchableOpacity>

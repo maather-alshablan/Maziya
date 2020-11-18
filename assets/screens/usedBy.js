@@ -21,7 +21,7 @@ state = {
     console.log('hi');
 
     var self = this;
-    database.ref().child('Offers').on('value',function(snapshot){
+    database.ref().child('Offers').limitToLast(5).on('value',function(snapshot){
       const offers= snapshot.val()
       const list =[]
       const labels=[]

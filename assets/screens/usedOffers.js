@@ -49,6 +49,7 @@ export default class usedOffers extends Component {
       }
       )
   }
+  
 
 
   render() {

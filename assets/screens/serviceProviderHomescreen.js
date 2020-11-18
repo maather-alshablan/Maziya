@@ -127,12 +127,16 @@ export default class serviceProviderHomescreen extends React.Component {
             onPress={() => this.props.navigation.navigate('addOffer')} >
             <Entypo name="plus" size={35} color='white' />
 
-            <Text style={styles.appButtonText} > إضافة عرض </Text>
+            <Text style={styles.appButtonText} 
+            > إضافة عرض </Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.appButtonContainer]} >
+
+
+          <TouchableOpacity style={[styles.appButtonContainer]} 
+           onPress={() => this.props.navigation.navigate('chatRooms',{serviceProvider: true})}>
             <Entypo name="chat" size={35} color='white' />
 
-            <Text style={styles.appButtonText} >       الرسائل    </Text>
+            <Text style={styles.appButtonText}>       الرسائل    </Text>
           </TouchableOpacity>
         </View>
         <Text style={styles.header}>عروضي </Text>

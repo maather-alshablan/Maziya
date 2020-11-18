@@ -10,6 +10,7 @@ import colors from '../constants/colors';
 import {auth} from '../config/firebase'
 import { createStackNavigator } from "@react-navigation/stack";
 import usedStack from '../Navigation/UsedStack'
+import chatRooms from '../Navigation/chatStack'
 
 
 
@@ -44,6 +45,7 @@ function CustomDrawerContent(props) { // fix navigation issue: error > navigatio
           </DrawerContentScrollView>
   );
 }
+
 
  
 
@@ -87,6 +89,12 @@ function CustomDrawerContent(props) { // fix navigation issue: error > navigatio
                 title: 'العروض المستخدمة',
                 color:'white',
     
+              }}/>
+                <Drawer.Screen name= 'chatRooms' component={chatRooms} 
+                initialParams={{member:true}}
+                options={{
+                title: 'الرسائل',
+                color:'white',
               }}/>
               <Drawer.Screen name= 'Logout' component={Login} options={{
                 title: 'تسجيل الخروج',
