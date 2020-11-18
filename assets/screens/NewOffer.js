@@ -267,15 +267,7 @@ export default class NewOffer extends Component {
 
                 <TextInput placeholder='ادخل الرمز' style={styles.textInput, { paddingTop: 20, marginLeft: 132 }} autoCapitalize="none" onChangeText={(OfferId) => this.setState({ OfferId })} value={this.state.OfferId} />
               </View>
-              {/* {this.state.OfferId} */}
 
-              {/* <View style={styles.container}>
-                        <TouchableOpacity onPress={this.handleOfferIdChange}>
-                        <SignInButton 
-                        text={'QR تحديث'} 
-                        onPress={this.handleOfferIdChange}></SignInButton>
-                        </TouchableOpacity>
-                      </View> */}
 
               {this.state.code == '' ? <View></View> :
                 <View style={styles.container}>
