@@ -337,8 +337,7 @@ export default class RegistrationServiceProvider extends Component {
             <ProgressStep
               label="الحساب"
               nextBtnText="التالي"
-              nextBtnTextStyle={{ color: "white", fontSize: 20 }}
-              nextBtnStyle={styles.nextButton}
+              nextBtnTextStyle={{ color: colors.primaryBlue, fontSize: 18  }}
               onNext={this.onNextFirstStep}
               errors={this.state.errors}
             >
@@ -434,18 +433,18 @@ export default class RegistrationServiceProvider extends Component {
               nextBtnText="التالي"
               onNext={this.onNextsecondtStep} 
               errors={this.state.errors} 
-              nextBtnTextStyle={{ color: "white", fontSize: 20 }}
-              nextBtnStyle={styles.nextButton}
+              nextBtnTextStyle={{ color: colors.primaryBlue, fontSize: 18  }}
+              previousBtnTextStyle={{ color: colors.primaryBlue, fontSize: 18  }}
             >
               <View style={{ alignItems: "center" }}>
-                <View style={style.container}
+                <View style={styles.container}
                  >
-                  <Image
+                   <TouchableOpacity onPress={this.openImagePickerAsync}>
+                   <Image style={styles.newImage} source={{ uri: this.state.image }} />
+                  {/* <Image
                     style={styles.image}
                     source={{ uri: this.state.image }}
-                  />
-                  <TouchableOpacity onPress={this.openImagePickerAsync}>
-                    <RegButton text={"choose photo"} ></RegButton>
+                  /> */}
                   </TouchableOpacity>
                 </View>
                 
@@ -466,7 +465,9 @@ export default class RegistrationServiceProvider extends Component {
                 
 
                 <View style={styles.action}>
-                    <TextInput style={{ height: 100 ,width : 200, borderColor: 'gray', borderWidth: 1 }} 
+                    <TextInput style={{ height: 100 ,width : 300, borderColor: 'gray', borderWidth: 1 }} 
+                    multiline={true}
+                    numberOfLines={4}
                     autoCapitalize="none" 
                     textAlign='right'
                     placeholder=" وصف العلامة التجارية"
@@ -480,7 +481,6 @@ export default class RegistrationServiceProvider extends Component {
                 <MaterialCommunityIcons name="web" color={colors.primaryBlue} size={30} style={styles.fieldLabels} />
                   <TextInput
                     style={styles.TextInput}
-                  
                     placeholder=" الموقع الإلكتروني"
                     onChangeText={website => this.setState({ website })}
                     value={this.state.website}
@@ -518,8 +518,8 @@ export default class RegistrationServiceProvider extends Component {
               finishBtnText="إنشاء حساب"
               isComplete={true}
               onSubmit={this.handleSignUp}
-              nextBtnTextStyle={{ color: "white", fontSize: 20 }}
-              nextBtnStyle={styles.nextButton}
+              nextBtnTextStyle={{ color: colors.primaryBlue, fontSize: 18  }}
+              previousBtnTextStyle={{ color: colors.primaryBlue, fontSize: 18  }}
             >
               <View>
               <Text style={{color:colors.primaryBlue, alignSelf:'flex-end', fontSize:25}}>
