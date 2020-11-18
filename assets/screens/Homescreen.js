@@ -147,7 +147,7 @@ export default class Homescreen extends React.Component {
     Notifications.scheduleNotificationAsync({
       content: {
         sound: 'default',
-        title: "هذا العرض سوف ينتهي بعد يوم" + offer.title,
+        title: offer.title + "هذا العرض سوف ينتهي بعد يوم",
         body: offer.Descripiton
       },
       trigger: {
