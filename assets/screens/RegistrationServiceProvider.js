@@ -65,6 +65,8 @@ export default class RegistrationServiceProvider extends Component {
     errorMessage: null,
     isValid: false,
     errors: false, 
+    isName:false,isEmail:false,isPass:false,isConfPass:false,isPhone:false,isBrand:false, isDes:false,
+    errorMessageName:null,errorMessageEmail:null,errorMessagePass:null,errorMessageConfPass:null,errorMessagePhone:null,errorMessageBrand:null,errorMessageDis:null,
     region: {
       latitude: 24.7136,
       longitude: 46.6753,
@@ -85,24 +87,43 @@ export default class RegistrationServiceProvider extends Component {
     if (this.state.phoneNum.length != 10) {
       valid = false;
       this.setState({
+        isPhone:true , 
         errors: true,
-        errorMessage: " يرجى التأكد من ادخال رقم التواصل يالصيغة  0XXXXXXXXX ",
+        errorMessagePhone: " *يرجى التأكد من ادخال رقم التواصل يالصيغة  0XXXXXXXXX ",
+      });
+    }
+    else {
+      this.setState({ 
+        isPhone:false , 
+        
       });
     }
 
-    if (this.state.password !== this.state.confirmPassword) {
+    if (this.state.password !== this.state.confirmPassword ) {
       valid = false;
       this.setState({
+        isConfPass:true,
         errors: true,
-        errorMessage: "يرجى التأكد من مطابقة كلمة المرور",
+        errorMessageConfPass: "*يرجى التأكد من مطابقة كلمة المرور",
       });
     }
-
+    else {
+      this.setState({
+        isConfPass:false,
+      });
+    }
     if (this.state.email === "" && !this.validateEmail(this.state.email)) {
       valid = false; // reem
       this.setState({
+        isEmail:true,
         errors: true,
-        errorMessage: "يرجى كتابة بريد الكتروني صحيح",
+        errorMessageEmail: "*يرجى كتابة بريد الكتروني صحيح",
+      });
+    }
+    else {
+      this.setState({
+        // errors: false,
+        isEmail:false
       });
     }
 
@@ -110,21 +131,42 @@ export default class RegistrationServiceProvider extends Component {
       valid = false;
       this.setState({
         errors: true,
-        errorMessage: "يرجى ادخال جميع البيانات",
+        errorMessageName: "*يرجى ادخال إسم",
+        isName:true
+      });
+    }
+    else {
+      this.setState({
+        // errors: false,
+        isName:false
       });
     }
     if (this.state.password === "" ) {
       valid = false;
       this.setState({
+        isPass:true,
         errors: true,
-        errorMessage: "يرجى ادخال جميع البيانات",
+        errorMessagePass: "*يرجى ادخال كلمة المرور",
+      });
+    }
+    else {
+      this.setState({
+        isPass:false , 
+        // errors: false,
       });
     }
     if (this.state.password.length < 8) {
       valid = false;
       this.setState({
+        isPass:true,
         errors: true,
-        errorMessage: "يرجى ادخال كلمة مرور مكونة من ٨ خانات او اكثر",
+        errorMessagePass: "*يرجى ادخال كلمة مرور مكونة من ٨ خانات او اكثر",
+      });
+    }
+    else {
+      this.setState({
+        isPass:false , 
+        // errors: false,
       });
     }
     if (valid) {
@@ -139,15 +181,27 @@ export default class RegistrationServiceProvider extends Component {
     if (this.state.nameBrand === "" ) {
       valid = false;
       this.setState({
+        isBrand:true , 
         errors: true,
-        errorMessage: "يرجى ادخال جميع البيانات",
+        errorMessageBrand: "*يرجى ادخال اسم العلامة التجارية",
+      });
+    }
+    else{
+      this.setState({
+        isBrand:false , 
       });
     }
     if (this.state.Description === "" ) {
       valid = false;
       this.setState({
+        isDes:true , 
         errors: true,
-        errorMessage: "يرجى ادخال جميع البيانات",
+        errorMessageDis: "يرجى ادخال الوصف ",
+      });
+    }
+    else{
+      this.setState({
+        isDes:false , 
       });
     }
  
@@ -321,11 +375,11 @@ export default class RegistrationServiceProvider extends Component {
           <Text style={styles.header}>تسجيل مزود الخدمة</Text>
         </View>
 
-        {this.state.errors && (
+        {/* {this.state.errors && (
           <View style={styles.header}>
             <Text style={styles.errors}>{this.state.errorMessage}</Text>
           </View>
-        )}
+        )} */}
         
         <View style={{ flex: 1 }}>
           <ProgressSteps
@@ -358,6 +412,10 @@ export default class RegistrationServiceProvider extends Component {
                     autoCapitalize="none"
                   />
                 </View>
+                <View style={styles.ErrorView} >
+                { this.state.isName ?
+<               Text style={styles.ErrorView}>{this.state.errorMessageName}</Text> : <Text></Text>}
+                </View>
                 <View style={styles.fields}>
                   <MaterialCommunityIcons
                     name="email"
@@ -375,6 +433,10 @@ export default class RegistrationServiceProvider extends Component {
                     autoCapitalize="none"
                   />
                 </View>
+                <View style={styles.ErrorView} >
+                { this.state.isEmail ?
+<               Text style={styles.ErrorView}>{this.state.errorMessageEmail}</Text> : <Text></Text>}
+                </View>
                 <View style={styles.fields}>
                   <FontAwesome
                     name="phone"
@@ -391,21 +453,9 @@ export default class RegistrationServiceProvider extends Component {
                     autoCapitalize="none"
                   />
                 </View>
-                <View style={styles.fields}>
-                  <FontAwesome
-                    name="lock"
-                    color={colors.primaryBlue}
-                    size={30}
-                    style={styles.fieldLabels}
-                  />
-                  <TextInput
-                    style={styles.TextInput}
-                    secureTextEntry
-                    placeholder="*كلمة المرور"
-                    onChangeText={(password) => this.setState({ password })}
-                    value={this.state.password}
-                    autoCapitalize="none"
-                  />
+                <View style={styles.ErrorView} >
+                { this.state.isPhone ?
+<               Text style={styles.ErrorView}>{this.state.errorMessagePhone}</Text> : <Text></Text>}
                 </View>
                 <View style={styles.fields}>
                   <FontAwesome
@@ -415,8 +465,29 @@ export default class RegistrationServiceProvider extends Component {
                     style={styles.fieldLabels}
                   />
                   <TextInput
-                    style={styles.TextInput}
-                    secureTextEntry
+                    style={styles.TextInputPass}
+                    secureTextEntry = {true}
+                    placeholder="*كلمة المرور"
+                    onChangeText={(password) => this.setState({ password })}
+                    value={this.state.password}
+                    autoCapitalize="none"
+                  />
+                  
+                </View>
+                <View style={styles.ErrorView} >
+                { this.state.isPass ?
+<               Text style={styles.ErrorView}>{this.state.errorMessagePass}</Text> : <Text></Text>}
+                </View>
+                <View style={styles.fields}>
+                  <FontAwesome
+                    name="lock"
+                    color={colors.primaryBlue}
+                    size={30}
+                    style={styles.fieldLabels}
+                  />
+                  <TextInput
+                    style={styles.TextInputPass}
+                    secureTextEntry = {true}
                     placeholder="*تأكيد كلمة المرور"
                     onChangeText={(confirmPassword) =>
                       this.setState({ confirmPassword })
@@ -424,6 +495,10 @@ export default class RegistrationServiceProvider extends Component {
                     value={this.state.confirmPassword}
                     autoCapitalize="none"
                   />
+                </View>
+                <View style={styles.ErrorView} >
+                { this.state.isConfPass ?
+<               Text style={styles.ErrorView}>{this.state.errorMessageConfPass}</Text> : <Text></Text>}
                 </View>
               </View>
             </ProgressStep>
@@ -462,8 +537,13 @@ export default class RegistrationServiceProvider extends Component {
                     autoCapitalize="none"
                   />
                 </View>
-                
-
+                <View style={styles.ErrorView} >
+                { this.state.isBrand ?
+<               Text style={styles.ErrorView}>{this.state.errorMessageBrand}</Text> : <Text></Text>}
+                </View>
+<View></View>
+<View></View>
+<View></View>
                 <View style={styles.action}>
                     <TextInput style={{ height: 100 ,width : 300, borderColor: 'gray', borderWidth: 1 }} 
                     multiline={true}
@@ -475,11 +555,15 @@ export default class RegistrationServiceProvider extends Component {
                     value= {this.state.Description}/>
 
                 </View>
-                
+                <View style={styles.ErrorView} >
+                { this.state.isDes ?
+<               Text style={styles.ErrorView}>{this.state.errorMessageDis}</Text> : <Text></Text>}
+                </View>
                 
                 <View style={styles.fields}>
-                <MaterialCommunityIcons name="web" color={colors.primaryBlue} size={30} style={styles.fieldLabels} />
+                <FontAwesome name="link" color={colors.primaryBlue} size={30} style={styles.fieldLabels} />
                   <TextInput
+                  secureTextEntry = {false}
                     style={styles.TextInput}
                     placeholder=" الموقع الإلكتروني"
                     onChangeText={website => this.setState({ website })}
@@ -491,6 +575,7 @@ export default class RegistrationServiceProvider extends Component {
                 <View style={styles.fields}>
                 <MaterialCommunityIcons name="twitter" color={colors.primaryBlue} size={30} style={styles.fieldLabels} />
                   <TextInput
+                  secureTextEntry = {false}
                     style={styles.TextInput}
                     placeholder=" تويتر"
                     onChangeText={twitter => this.setState({ twitter })}
@@ -502,6 +587,7 @@ export default class RegistrationServiceProvider extends Component {
                 <View style={styles.fields}>
                 <MaterialCommunityIcons name="instagram" color={colors.primaryBlue} size={30} style={styles.fieldLabels} />
                   <TextInput
+                  secureTextEntry = {false}
                     style={styles.TextInput}
                     placeholder=" انستغرام"
                     onChangeText={instagram => this.setState({ instagram })}
