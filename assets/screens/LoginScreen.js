@@ -22,7 +22,7 @@ Notifications.setNotificationHandler({
 });
 
 export default class LoginScreen extends Component {
-    state = { email: '', password: '', errorMessage: null }
+    state = { email: '438200192@student.ksu.edu.sa', password: 'nouf1212', errorMessage: null }
 
     componentDidMount() {
 
@@ -140,12 +140,12 @@ export default class LoginScreen extends Component {
         auth.
             signInWithEmailAndPassword(email, password)
             .then((response) => {
-                if (response?.user?.emailVerified) {
+                //if (response?.user?.emailVerified) {
 
                     this.routeUser()
-                } else {
-                    alert('الرجاء من تفعيل الايميل للتتمكن من تسجيل الدخول')
-                }
+                // } else {
+                //     alert('الرجاء من تفعيل الايميل للتتمكن من تسجيل الدخول')
+                // }
             }
             ).catch(error => this.setState({ errorMessage: 'يرجى التأكد من ادخال البريد الالكتروني و كلمة المرور الصحيح' }))
 

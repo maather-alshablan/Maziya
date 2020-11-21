@@ -17,15 +17,18 @@ export default class ChatRooms extends Component {
         this.state = {
             rooms:[],
             existMessages:false,
-            isMember: props?.route?.params?.member ,
-            isServiceProvider: props?.route?.params?.serviceProvider 
+            isMember: props?.route?.params?.isMember ,
+            isServiceProvider: props?.route?.params?.isServiceProvider,
+            userType:'' 
           }}
 
           componentDidMount(){
            
+           
             var self = this;
+
             //Determine location of reference
-            if (this.state.isServiceProvider)
+            if (this.state.isServiceProvider )
             var reference = database.ref('serviceProvider/'+auth.currentUser.uid+'/ChatRooms')
             else 
             var reference = database.ref('users/'+auth.currentUser.uid+'/ChatRooms')
@@ -37,19 +40,24 @@ export default class ChatRooms extends Component {
                 const roomList = data.val()
                 //console.log(data.val())
                 if (roomList){
+
                   self.setState({
                     existMessages: true
                   })
-                }
+              console.log(this.state.existMessages, 'exist messages')
                 const rooms_ =[]
-                if (roomList){
+              
 
                 Object.keys(roomList).map(key=>{
+                //var lastText= this.retrieveLastText(key)
                     //console.log(key)
                   var obj = {
                     roomKey: key,
                     member: roomList[key].member,
-                    serviceProvider:roomList[key].member
+                    serviceProvider:roomList[key].serviceProvider,
+                    memberName:  roomList[key].memberName , 
+                    brandName: roomList[key].brandName,
+                    //lastText: lastText
                    }
                   
                         rooms_.push(obj)
@@ -57,14 +65,23 @@ export default class ChatRooms extends Component {
                     //  console.log(key)
 
                    
-                })}
                 self.setState({rooms:rooms_})
+                })}
              })
               console.log('hi')
              
           }
-     
 
+          // retrieveLastText = (roomKey) =>{
+          //   var lastText=''
+          //   var sub = database.ref('Rooms/'+roomKey+'/messages').limitToLast(1).on('child_added',function(data) {
+              
+          //   lastText = data.exportVal().text
+
+            
+          //   })
+          //   return lastText
+          // }
 
     render(){
        
@@ -107,16 +124,18 @@ export default class ChatRooms extends Component {
         )}
       /></View> */}
       {/* {console.log('here')}*/}
-            {this.state.existMessages ? 
+            {!!this.state.existMessages? 
              this.state.rooms.map(room => {
                 return(  
                   <View style={{alignSelf:'center', marginVertical:20}}>
                     {console.log(room.roomKey)}
                 <Card 
                 iconDisable  
-                title={this.state.isServiceProvider? room.member: room.serviceProvider}
+               title={this.state.isServiceProvider ? room.memberName: room.brandName}
+              description={"hi"}
                 styles={{ width: 200 }}
-                onPress={() => this.props.navigation.navigate('chatRoom', {keyRoom: room.roomKey, })}/>
+                onPress={() => 
+                this.props.navigation.navigate('chatRoom', {keyRoom: room.roomKey,isMember: this.state.isMember })}/>
                   </View>
                )})
             :<View>

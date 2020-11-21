@@ -26,6 +26,7 @@ export default class serviceProvider extends Component {
             key: null,
             modal: false,
             favorite: false,
+           
             brand: '',
             description: '',
             email: '',
@@ -47,7 +48,8 @@ export default class serviceProvider extends Component {
             offerDetails: props?.route?.params?.offer,
             favoriteId: '',
             used: false,
-            keyRoom:null
+            keyRoom:null,
+            memberName:'',
         }
     }
 
@@ -90,24 +92,22 @@ export default class serviceProvider extends Component {
             else if (self.state.offerDetails != null) {
                 var sp = self.state.offerDetails.serviceProvider
                 const chatRooms = snapshot.val().ChatRooms
-
-                if (chatRooms)
-                {
-                    Object.keys(chatRooms).map(key => {
-                        console.log('reading room key > ')
-                        console.log(key)
+                fetchChatRoom(chatRooms,sp)
+            //     if (chatRooms)
+            //     {
+            //         Object.keys(chatRooms).map(key => {
+            //             console.log('reading room key > ')
+            //             console.log(key)
                         
                        
-                        if (chatRooms[key].serviceProvider == sp)
-                         self.setState({keyRoom: key})
-                })
-            }
+            //             if (chatRooms[key].serviceProvider == sp)
+            //              self.setState({keyRoom: key})
+            //     })
+            // }
         
             }
-            console.log(sp)
-           
 
-            fetchData(sp);
+             fetchData(sp);
             
 
         })
@@ -149,9 +149,23 @@ export default class serviceProvider extends Component {
                     })
             })
 
-        const fetchData = (sp) => {
+        const fetchChatRoom = async (chatRooms,sp)=>{
+            if (chatRooms)
+            { console.log('fetching room')
+                Object.keys(chatRooms).map(key => {
+                    console.log('reading room key > ')
+                    console.log(key)
+                    
+                   
+                    if (chatRooms[key].serviceProvider == sp)
+                     self.setState({keyRoom: key})
+                     console.log('key room is ', this.state.keyRoom)
+            })
+        }
+  
+        }
 
-            console.log('hi')
+        const fetchData = (sp) => {
 
             database.ref().child('serviceProvider/' + sp).once("value").then(function (snapshot) {
                 var name = ((snapshot.val() && snapshot.val().nameBrand))
@@ -283,7 +297,49 @@ export default class serviceProvider extends Component {
         })
     }
 
+       //Creating chat room is only member side
+        createRoom =  async ()=>{
+        console.log('creating new room.. ')
 
+        var key = database.ref().child('Rooms').push().key
+
+        await database.ref('users/'+auth.currentUser.uid).once('value', user => {
+          var name = user.val().name
+
+          this.setState({
+            memberName: name,
+            keyRoom: key
+        })
+       
+    })
+
+       
+    var room ={
+        member: auth.currentUser.uid,
+        roomKey: key,
+        memberName: this.state.memberName, 
+        serviceProvider: this.state.offerDetails.serviceProvider,
+        brandName: this.state.brand
+ }
+        var updates = {}
+        updates['Rooms/'+key] = room
+        updates['users/'+auth.currentUser.uid+'/ChatRooms/'+key] = room
+        updates['serviceProvider/'+  this.state.offerDetails.serviceProvider+'/ChatRooms/'+key] = room
+        database.ref().update(updates).then(() => console.log('new room created')).then(this.navigateToRoom()).catch(e => console.warn('room creation'))
+        
+          
+        }
+
+        navigateToRoom= async ()=>{
+
+           
+            if(this.state.keyRoom){
+            this.props.navigation.navigate('chatRoom', { keyRoom: this.state.keyRoom,
+                member: auth.currentUser.uid, 
+                serviceProvider: this.state.offerDetails.serviceProvider, nameBrand:this.state.brand,
+                isMember:true})}
+                else this.createRoom();
+        }
 
     render() {
         //  console.log('hi')
@@ -347,9 +403,7 @@ export default class serviceProvider extends Component {
                                         color={colors.primaryBlue}
                                         size={30}
                                         style={styles.fieldLabels}
-                                        onPress={() => this.props.navigation.navigate('chatRoom', { keyRoom: this.state.keyRoom,
-                                            member: auth.currentUser.uid, 
-                                            serviceProvider: this.state.offerDetails.serviceProvider, nameBrand:this.state.brand})} />
+                                        onPress={() => this.navigateToRoom()} />
                                 </TouchableOpacity>
                                 </View>:
                                 <View></View>

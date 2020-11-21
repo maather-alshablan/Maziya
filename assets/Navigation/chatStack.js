@@ -14,7 +14,7 @@ screenOptions={{ headerShown: false }}
 <ChatStack.Screen name = 'Home' component= {chatRooms}
 option={{
 headerTransparent: true}} unmountOnBlur={true}/>
- <ChatStack.Screen name= 'Room' component={chatRoom}/> 
+ <ChatStack.Screen name= 'Room' component={chatRoom} initialParams={{isMember:true}} /> 
 
 </ChatStack.Navigator>
 )}

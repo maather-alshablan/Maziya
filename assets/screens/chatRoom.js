@@ -19,7 +19,9 @@ export default class ChatRoom extends Component {
         nameBrand: props?.route?.params?.nameBrand,
         roomKey: props?.route?.params?.keyRoom ,
         serviceProvider: props?.route?.params?.serviceProvider,
-        memberName: null,
+        memberName: '',
+        isMember: props?.route?.params?.isMember,
+        sentMessage: false
       
         
       }}
@@ -27,31 +29,49 @@ export default class ChatRoom extends Component {
       componentDidMount(){
         var self = this
 
-        //Retrieve user name SERVICE PROVIDER SIDE
-        if(this.state.roomKey != null ){
-       database.ref('Rooms/'+ this.state.roomKey).on('value', snapshot=>{
-        var member = snapshot.val().member
-        var sp = snapshot.val().serviceProvider
+        
+        // if (this.state.roomKey === null && this.state.sentMessage)
+        // this.createRoom();
 
-       database.ref('users/'+member).once('value', user => {
-         var name = user.val().name
-         self.setState({memberName: name})
-       })
+        if(this.state.roomKey){
+       database.ref('Rooms/'+ this.state.roomKey).once('value', snapshot=>{
+        var memberID = snapshot.val().member
+        var memberName = snapshot.val().memberName
+        var spID = snapshot.val().serviceProvider
+        var brand = snapshot.val().brandName
 
-       database.ref('serviceProvider/'+sp).once('value', sp_ =>{
-         var brand = sp_.val().nameBrand
-         self.setState({nameBrand: brand})
-       })
+        self.setState({
+          
+          member: memberID,
+          memberName: memberName,
+          serviceProvider:spID,
+          nameBrand:brand,
         })
-        database.ref('Rooms/'+ this.state.roomKey).set({
-          brandName: this.state.nameBrand,
-          memberName: this.state.memberName
+        console.log(this.state.roomKey,this.state.member,this.state.memberName,this.state.serviceProvider,this.state.nameBrand)
 
+
+
+       database.ref('users/'+auth.currentUser.uid).once('value', user => {
+      //    var name = user.val().name
+      //    self.setState({memberName: name})
+      //  })
+      var accountType = user.val().accountType
+      if (accountType == 'member')
+      self.setState({isMember:true})
+       })
+      //  database.ref('serviceProvider/'+sp).once('value', sp_ =>{
+      //    var brand = sp_.val().nameBrand
+      //    self.setState({nameBrand: brand})
+      //  })
         })
+        // database.ref('Rooms/'+ this.state.roomKey).set({
+        //   brandName: this.state.nameBrand,
+        //   memberName: this.state.memberName
+        // })
       }
 
         //Retrieve messages 
-        if(this.state.roomKey != null)
+        if(this.state.roomKey ) //possible error of messages here 
          database.ref('Rooms/'+ this.state.roomKey+'/messages').on('value', snapshot=>{
            let messages = [];
            snapshot.forEach((snap)=>{
@@ -61,39 +81,51 @@ export default class ChatRoom extends Component {
 
          }
          )
-
-         
       }
 
-        //Creating room is only member side
-      createRoom = ()=>{
-        console.log('creating new room.. ')
-        var key = database.ref().child('Rooms').push().key
-        this.setState({roomKey: key})
-        var room ={
-               member: auth.currentUser.uid,
-               roomKey: key,
-               //memberName: this.state.member?  this.state.memberName : this.state.brand , 
-               serviceProvider: this.state.serviceProvider
-            
-        }
-        var updates = {}
-        updates['Rooms/'+key] = room
-        updates['users/'+auth.currentUser.uid+'/ChatRooms/'+key] = room
-        updates['serviceProvider/'+ this.state.serviceProvider+'/ChatRooms/'+key] = room
-        database.ref().update(updates).then(() => console.log('new room created')).catch(e => console.warn('room creation'))
+      //   //Creating room is only member side
+      // createRoom = ()=>{
+      //   console.log('creating new room.. ')
+      //   var key = database.ref().child('Rooms').push().key
+
+      //   database.ref('users/'+auth.currentUser.uid).once('value', user => {
+      //     var name = user.val().name
+
+      //     this.setState({
+      //       memberName: name,
+      //       roomKey: key
+      //   })})
+
+      //   var room ={
+      //          member: auth.currentUser.uid,
+      //          roomKey: this.state.roomKey,
+      //          memberName:  this.state.memberName , 
+      //          serviceProvider: this.state.serviceProvider,
+      //          brandName: this.state.nameBrand
+      //   }
+      //   this.setState({
+      //   member: auth.currentUser.uid,
+      //   roomKey: this.state.roomKey,
+      //   memberName:  this.state.memberName , 
+      //   serviceProvider: this.state.serviceProvider,
+      //   brandName: this.state.nameBrand})
+
+      //   var updates = {}
+      //   updates['Rooms/'+key] = room
+      //   updates['users/'+auth.currentUser.uid+'/ChatRooms/'+key] = room
+      //   updates['serviceProvider/'+ this.state.serviceProvider+'/ChatRooms/'+key] = room
+      //   database.ref().update(updates).then(() => console.log('new room created')).catch(e => console.warn('room creation'))
         
-    
-        }
+          
+      //   }
    
 
       onSend(messages = []) {
 
-        if (this.state.roomKey == null)
-        this.createRoom()
-
+       
         this.setState(previousState => ({
           messages: GiftedChat.append(previousState.messages, messages),
+         // sentMessage: true
         }))
         console.log('   break')
         console.log(this.state.messages)
@@ -102,12 +134,12 @@ export default class ChatRoom extends Component {
       }
 
       writeDatabase(){
-
-       
-      
-        database.ref('Rooms/'+this.state.roomKey).set({
+        console.log(this.state.roomKey)
+        if(this.state.roomKey)
+        database.ref('Rooms/'+this.state.roomKey).update({
           messages: this.state.messages
         }).catch('unable to write')
+        else console.log('unable to write')
     
       }
 
@@ -144,7 +176,7 @@ export default class ChatRoom extends Component {
 
 
     render(){
-      const name = this.state.member? 
+      const sender = this.state.isMember? 
          this.state.memberName : this.state.nameBrand 
 
         return(
@@ -153,13 +185,11 @@ export default class ChatRoom extends Component {
                     <View style={styles.headerContainer}>
                     <TouchableOpacity>
                      <Entypo name='chevron-left' size={30} color={colors.primaryBlue} style={{ alignSelf: 'flex-start' }} 
-                      onPress={() => this.state.member ? this.props.navigation.pop() :
-                      this.props.navigation.pop()
-                    } />
+                      onPress={() => this.props.navigation.pop() } />
                       </TouchableOpacity>
 
                     <Text style={styles.headerText} >
-                      {this.state.member? 
+                      {this.state.isMember? 
                       this.state.nameBrand : this.state.memberName}
                     </Text>
                     </View>
@@ -169,13 +199,15 @@ export default class ChatRoom extends Component {
             messages={this.state.messages}
             user={{
                 _id: auth.currentUser.uid,
-                name: name
+                name: sender
               }}
-              renderAvatar={null}
+              showUserAvatar
               renderBubble={this.renderBubble}
               onSend={newMessage => this.onSend(newMessage)}
             placeholder='Type your message here....'
             alwaysShowSend
+            timeFormat={'LT'}
+            isTyping={true}
             renderSend={this.renderSend}
             scrollToBottom
       />
@@ -204,7 +236,8 @@ const styles = StyleSheet.create({
         color:colors.primaryBlue,
         fontSize:30,
         alignSelf: "center",
-        marginHorizontal:50 
+        textAlign:'center',
+         marginHorizontal:90 
     },
     sendingContainer: {
         justifyContent: 'center',

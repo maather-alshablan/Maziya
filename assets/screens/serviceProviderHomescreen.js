@@ -133,7 +133,7 @@ export default class serviceProviderHomescreen extends React.Component {
 
 
           <TouchableOpacity style={[styles.appButtonContainer]} 
-           onPress={() => this.props.navigation.navigate('chatRooms',{serviceProvider: true})}>
+           onPress={() => this.props.navigation.navigate('chatRooms',{ isServiceProvider: true, isMember:false})}>
             <Entypo name="chat" size={35} color='white' />
 
             <Text style={styles.appButtonText}>       الرسائل    </Text>

@@ -91,7 +91,7 @@ function CustomDrawerContent(props) { // fix navigation issue: error > navigatio
     
               }}/>
                 <Drawer.Screen name= 'chatRooms' component={chatRooms} 
-                initialParams={{member:true}}
+                initialParams={{isMember:true}}
                 options={{
                 title: 'الرسائل',
                 color:'white',
