@@ -72,7 +72,7 @@ export default class ChatRoom extends Component {
 
         //Retrieve messages 
         if(this.state.roomKey ) //possible error of messages here 
-         database.ref('Rooms/'+ this.state.roomKey+'/messages').on('value', snapshot=>{
+         database.ref('Rooms/'+ this.state.roomKey+'/messages').once('value', snapshot=>{
            let messages = [];
            snapshot.forEach((snap)=>{
              messages.push(snap.val())
@@ -131,7 +131,7 @@ export default class ChatRoom extends Component {
         }))
         console.log('   break')
       //  console.log(this.state.messages)
-         this.writeDatabase();
+        this.writeDatabase();
 
       }
 
