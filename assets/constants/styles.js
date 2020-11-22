@@ -9,7 +9,16 @@ const styles = {
     alignItems: "center",
     backgroundColor: "white",
   },
-
+  QRcontainer: {
+    flex: 3,
+    marginTop: 30,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "white",
+    marginRight: 10,
+    marginTop: 13,
+    marginLeft: 18,
+  },
   fieldLabels: {
     marginRight: 10,
     marginTop: 13,
@@ -36,6 +45,17 @@ const styles = {
     paddingRight: 50,
     alignItems: "center",
   },
+  TextInputPass: {
+    flexDirection: "row-reverse",
+    height: 30,
+    width: Dimensions.get("window").width * 0.5,
+    borderColor: colors.primaryGrey,
+    borderWidth: 1,
+    borderLeftColor: "white",
+    borderRightColor: "white",
+    borderTopColor: "white",
+    textAlign: "right",
+  },
   TextInput: {
     flexDirection: "row-reverse",
     height: 30,
@@ -47,6 +67,11 @@ const styles = {
     borderTopColor: "white",
     textAlign: "right",
   },
+  ErrorView :{
+    textAlign: "right",
+    color: "red",
+  },
+
   Header: {
     flexDirection: "row-reverse",
     alignItems: "stretch",
