@@ -81,6 +81,7 @@ export default class ChatRoom extends Component {
 
          }
          )
+       
       }
 
       //   //Creating room is only member side
@@ -122,19 +123,20 @@ export default class ChatRoom extends Component {
 
       onSend(messages = []) {
 
-       
+        console.log(messages)
+
         this.setState(previousState => ({
           messages: GiftedChat.append(previousState.messages, messages),
          // sentMessage: true
         }))
         console.log('   break')
-        console.log(this.state.messages)
+      //  console.log(this.state.messages)
          this.writeDatabase();
 
       }
 
       writeDatabase(){
-        console.log(this.state.roomKey)
+        console.log('writing message to database..')
         if(this.state.roomKey)
         database.ref('Rooms/'+this.state.roomKey).update({
           messages: this.state.messages
