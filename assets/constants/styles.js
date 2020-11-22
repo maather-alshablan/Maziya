@@ -9,7 +9,16 @@ const styles = {
     alignItems: "center",
     backgroundColor: "white",
   },
-
+  QRcontainer: {
+    flex: 3,
+    marginTop: 30,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "white",
+    marginRight: 10,
+    marginTop: 13,
+    marginLeft: 18,
+  },
   fieldLabels: {
     marginRight: 10,
     marginTop: 13,

@@ -5,8 +5,8 @@ import { database, auth, storage } from "../config/firebase";
 import { Entypo, MaterialCommunityIcons, MaterialIcons, FontAwesome, Ionicons } from '../constants/icons'
 import colors from '../constants/colors'
 import styles from "../constants/styles";
-import { QRCode } from 'react-native-custom-qr-codes';
 import SignInButton from "../components/SignInButton";
+import QRCode from 'react-native-qrcode-svg';
 
 import { DatePicker } from 'native-base'
 
@@ -263,23 +263,26 @@ export default class NewOffer extends Component {
               {/* <ImageBackground source={require('../images/image.png')} style={{width:200,height:200,marginLeft:50}}> */}
               <View style={styless.action}>
 
-                <TextInput placeholder='ادخل الرمز' style={styles.textInput, { paddingTop: 20, marginLeft: 132 }} autoCapitalize="none" onChangeText={(OfferId) => this.setState({ OfferId })} value={this.state.OfferId} />
+                <TextInput placeholder='ادخل الرمز' style={styles.textInput, { paddingTop: 20, marginLeft: 132 }} autoCapitalize="none" onChangeText={(code) => this.setState({ code })} value={this.state.code} />
               </View>
 
+              {/* <QRCode
+      value="http://awesome.link.qr"
+    /> */}
 
               {this.state.code == '' ? <View></View> :
-                <View style={styles.container}>
-                  <QRCode content={this.state.code}
-                    logo={require('../images/logo.png')} />
+                <View style={styles.QRcontainer}>
+                  <QRCode
+                  value={this.state.code}
+                  logo={require('../images/logo.png')} 
+                  size={190}
+                    />
                 </View>}
+                
 
-              <View style={styles.container} >
+              
 
-                {this.state.OfferId ? <QRCode content={this.state.OfferId}
-                  logo={require('../images/logo.png')} />
-                  : null}
-
-              </View>
+  
 
               {/* </ImageBackground> */}
             </View>
