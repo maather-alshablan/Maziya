@@ -9,6 +9,8 @@ import {auth, database } from '../config/firebase'
 import colors from '../constants/colors';
 import styless from "../constants/styles";
 import { render } from 'react-dom';
+import { Input } from 'react-native-elements';
+
 import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
 import RegButton from "../components/RegButton";
@@ -29,13 +31,12 @@ const serviceProvider =({ navigation}) => {
   const [phoneNum, setphoneNum] = useState('')
   const [password, setPassword] = useState('')
   const [nameBrand, setnameBrand] = useState('')
-  const [category, setCategory] = useState('')
+  const [category, setCategory] = useState(null)
   const [image, setImage] = useState('https://imgplaceholder.com/72x80')
   const [Descripiton, setDescripiton] = useState('')
-  const [website, setWebsite] = useState('')
-  const [twitter, setTwitter] = useState('')
-  const [instagram, setInstagram] = useState('')
-  const [branch,setBranch]=useState('')
+  const [website, setWebsite] = useState(null)
+  const [twitter, setTwitter] = useState(null)
+  const [instagram, setInstagram] = useState(null)
   const [coordinate, setCoordinate] = useState(null)
   const [region , setRegion] = useState({
     latitude: 24.7136,
@@ -196,7 +197,7 @@ const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[
   }
   
 
- 
+ if(twitter)
   if (!twitter.startsWith('@')){
     setValid(false);
     setErrorMessage("يرجى ادخال حساب تويتر بالصيغة @example")
@@ -205,6 +206,7 @@ const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[
 
 
   const twitterExp =  /^(?:@)([A-Za-z0-9_]){1,15}$/
+  if(twitter)
   if (!twitterExp.test(twitter) ){
     setValid(false);
     setErrorMessage("يرجى ادخال حساب تويتر بالشكل الصحيح")
@@ -212,6 +214,7 @@ const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[
   }
 
   const instagramExp = new RegExp('^([A-Za-z0-9_](?:(?:[A-Za-z0-9_]|(?:\.(?!\.))){0,28}(?:[A-Za-z0-9_]))?)$')
+  if(instagram)
   if (instagram != '' && !instagramExp.test(instagram) ){
     setValid(false);
     setErrorMessage("يرجى ادخال حساب الإنستغرام بالشكل الصحيح")
@@ -253,7 +256,7 @@ const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[
                   </View>
               <View style={styless.fields}>
 
-                  <TextInput
+                  {/* <TextInput
                     style={[styless.TextInput],[styles.textArea]}
                     placeholder=" وصف العلامة التجارية"
                     onChangeText={Descripiton => setDescripiton( Descripiton ) }
@@ -263,7 +266,8 @@ const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[
                     textAlignVertical
                     textAlign='right'
                     autoCapitalize="none"
-                  />
+                  /> */}
+                  <Input   placeholder='BASIC INPUT' />
                 </View>
                 <View style={[styless.fields]}>
           
@@ -457,7 +461,7 @@ const locationHandler = event =>{
       
         const [index, setIndex] = React.useState(2);
         const [routes] = React.useState([
-          { key: 'third', title: 'المواقع' },
+          { key: 'third', title: 'الموقع' },
           { key: 'first', title: 'التفاصيل' },
           { key: 'second', title: 'حسابي' },
         ])

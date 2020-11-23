@@ -1,5 +1,5 @@
 import React, { Component, useState } from "react";
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Dimensions, Platform, StatusBar, Image, ImageBackground, ScrollView, Alert, } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, SafeAreaView,Dimensions, Platform, StatusBar, Image, ImageBackground, ScrollView, Alert, } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { database, auth, storage } from "../config/firebase";
 import { Entypo, MaterialCommunityIcons, MaterialIcons, FontAwesome, Ionicons } from '../constants/icons'
@@ -160,36 +160,7 @@ export default class NewOffer extends Component {
       // console.warn(snapshot.val(), "data")
     })
 
-
-    // console.warn({ response })
-    // this.props.navigation.pop()
   }
-
-  //      const writeOfferSP = () => {
-
-  //       const serviceProvider=''
-  //       var currentUser = auth.currentUser.uid
-  //       var ref = database.ref().child("users/"+currentUser).once('value').then(function(snapshot) {
-  //         serviceProvider= (snapshot.val() && snapshot.val().serviceProvider) })
-
-  //         this.setState({serviceProvider: serviceProvider})
-
-  //       var OfferId =  database.ref().child("Offers").push().key
-
-  //       var newOffer = {
-  //         serviceProvider:this.state.serviceProvider,
-  //         descripiton: this.state.Descripiton,
-  //         expiration: this.state.expDate ,
-  //         title: this.state.title,
-  //         code:this.state.code
-  //       }
-  //       var updates = {};
-  //       updates['/Offers/' + OfferId] = newOffer;
-  //       updates['/serviceProvider/' + this.state.serviceProvider + '/Offers/' + OfferId] = newOffer;
-
-  //        database.ref().update(updates).then(Alert.alert('successful upload')).then(this.props.navigation.pop());
-  //     };
-  //   }
 
   render() {
 
@@ -199,21 +170,26 @@ export default class NewOffer extends Component {
 
         <StatusBar backgroundColor='#0278ae' barStyle='light-content' />
         <ScrollView style={styles.scrollView}>
-          <TouchableOpacity>
-            <Entypo name='chevron-left' size={30} color={colors.primaryBlue} style={{ marginTop: 30 }} onPress={() => this.props.navigation.pop()} />
-          </TouchableOpacity>
-          <View style={styless.header} style={{ margin: 0 }}>
-            <Text style={styless.header1}>اضافة عرض جديد</Text>
+        <SafeAreaView > 
+                    <View style={styless.headerContainer}>
+                    <TouchableOpacity>
+                     <Entypo name='chevron-left' size={30} color={colors.primaryBlue} style={{ alignSelf: 'flex-start' }} onPress={() => this.props.navigation.pop()} />
+                      </TouchableOpacity>
+                      <View style={{ flexDirection: 'row-reverse',alignSelf:'flex-start'}}>
+                    <Text style={styless.headerText} >
+                     عرض جديد
+                    </Text>
+                    <Image source={require('../images/logoDis.jpg')} style={{ width: 100, height: 60, alignSelf: "center" }} />
+                    </View>
+                    </View>
+              </SafeAreaView> 
             {/* error message appear here */}
             {this.state.errors && (
               <View style={styles.header}>
                 <Text style={styles.errors}>{this.state.errorMessage}</Text>
               </View>
             )}
-            <View >
-              <Image source={require('../images/logoDis.jpg')} style={{ width: 100, height: 100, marginLeft: 120 }} />
-            </View>
-          </View>
+         
 
 
           <View style={styless.footer}>
@@ -258,7 +234,7 @@ export default class NewOffer extends Component {
 
 
             <View>
-              <Text style={{ color: '#05375a', fontSize: 18, marginTop: 20, alignSelf: 'flex-end' }}>رمز العرض الترويجي</Text>
+              <Text style={{ color: '#05375a', fontSize: 18, marginTop: 20, alignSelf: 'flex-end' }}>الرمز الترويجي</Text>
 
               {/* <ImageBackground source={require('../images/image.png')} style={{width:200,height:200,marginLeft:50}}> */}
               <View style={styless.action}>
@@ -314,6 +290,8 @@ export default class NewOffer extends Component {
   }
 
 }
+
+const screenWidth  = Dimensions.get("window").width;
 
 
 const { height } = Dimensions.get('screen');
@@ -399,7 +377,16 @@ const styless = StyleSheet.create({
   textSign: {
     fontSize: 18,
     fontWeight: 'bold'
-  }
+  }, 
+    headerContainer:{
+    width: screenWidth,
+    height:80,
+    flexDirection:'row',
+    alignItems:'center'
+},
+headerText:{
+    color:colors.primaryBlue,
+    fontSize:30,}
 
 
 

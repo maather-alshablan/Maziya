@@ -534,7 +534,8 @@ export default class serviceProvider extends Component {
                         </View>
                         {this.state.coordinate ?
                             <View>
-                                <View style={{ alignSelf: 'flex-end' }}>
+                                <View style={styless.footer}>
+
                                     <Text style={styless.text_footer}>الموقع</Text>
                                 </View>
 
@@ -614,6 +615,7 @@ const styless = StyleSheet.create({
     text_footer: {
         color: '#05375a',
         fontSize: 20,
+        marginVertical:10,
 
         alignSelf: 'flex-end',
     }, subtext_footer: {

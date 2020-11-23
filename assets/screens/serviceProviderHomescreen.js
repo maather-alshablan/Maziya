@@ -210,7 +210,8 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: "#fff",
     alignSelf: "center",
-    textTransform: "uppercase"
+    textTransform: "uppercase",
+    textAlign:'center'
   },
   OfferCard: {
     elevation: 8,

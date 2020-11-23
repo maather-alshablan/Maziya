@@ -45,6 +45,7 @@ const Tab = createBottomTabNavigator()
         showLabel: false,
         activeTintColor: colors.primaryBlue,
         activeBackgroundColor:'white'
+
       }}>
         
         <Tab.Screen name='HomescreenServiceProvider' component={HomeStack}
@@ -53,7 +54,7 @@ const Tab = createBottomTabNavigator()
           tabBarIcon:  ({ tintColor, focused }) => (
             <MaterialCommunityIcons 
             name={focused ? "home" : "home-outline"} 
-            color={colors.primaryBlue} 
+            color={focused ? colors.primaryBlue:colors.primaryGrey} 
             size={30} />
           )
 
@@ -63,8 +64,8 @@ const Tab = createBottomTabNavigator()
           
           tabBarIcon: ({ tintColor, focused }) => (
             <MaterialCommunityIcons 
-            name={focused ? "store" : "store"} 
-            color={colors.primaryBlue} 
+            name={"account-box-multiple" } 
+            color={focused ? colors.primaryBlue:colors.primaryGrey} 
             size={30} />
           )
 
@@ -73,9 +74,9 @@ const Tab = createBottomTabNavigator()
          options={{
           
           tabBarIcon: ({ tintColor, focused }) => (
-            <Fontisto 
-            name={"bar-chart"} 
-            color={colors.primaryBlue} 
+            <Entypo 
+            name={"bar-graph"} 
+            color={focused ? colors.primaryBlue:colors.primaryGrey} 
             size={30} />
           )
 
@@ -85,8 +86,8 @@ const Tab = createBottomTabNavigator()
           
           tabBarIcon: ({ tintColor, focused }) => (
             <MaterialCommunityIcons 
-            name={focused ? "account" : "account-outline"} 
-            color={colors.primaryBlue} 
+            name={ "account" } 
+            color={focused ? colors.primaryBlue:colors.primaryGrey} 
             size={30} />
           )
         }} />

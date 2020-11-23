@@ -33,7 +33,7 @@ function memberTabNavigator() {
           tabBarIcon: ({ tintColor, focused }) => (
             <MaterialCommunityIcons
               name={focused ? "home" : "home-outline"}
-              color={colors.primaryBlue}
+              color={focused ? colors.primaryBlue:colors.primaryGrey} 
               size={30} />
           )
 
@@ -43,7 +43,7 @@ function memberTabNavigator() {
           tabBarIcon: ({ tintColor, focused }) => (
             <FontAwesome
               name={focused ? "map" : "map-o"}
-              color={colors.primaryBlue}
+              color={focused ? colors.primaryBlue:colors.primaryGrey} 
               size={25} />
           )
         }} />
@@ -51,8 +51,8 @@ function memberTabNavigator() {
         options={{
           tabBarIcon: ({ tintColor, focused }) => (
             <MaterialCommunityIcons
-              name={focused ? "heart" : "heart-outline"}
-              color={colors.primaryBlue}
+              name={"heart"}
+              color={focused ? colors.primaryBlue:colors.primaryGrey} 
               size={30} />
           )
         }} />
@@ -61,7 +61,7 @@ function memberTabNavigator() {
           tabBarIcon: ({ tintColor, focused }) => (
             <MaterialCommunityIcons
               name={focused ? "qrcode-scan" : "qrcode-scan"}
-              color={colors.primaryBlue}
+              color={focused ? colors.primaryBlue:colors.primaryGrey} 
               size={30} />
           )
         }} />

@@ -22,7 +22,7 @@ Notifications.setNotificationHandler({
 });
 
 export default class LoginScreen extends Component {
-    state = { email: '43820000@student.ksu.edu.sa', password: 'Maather12345', errorMessage: null }
+    state = { email: 'noufalfakhri99@gmail.com', password: 'pass1234', errorMessage: null }
 
     componentDidMount() {
 

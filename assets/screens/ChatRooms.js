@@ -169,10 +169,5 @@ const styles = StyleSheet.create({
         alignSelf: "center",
         marginHorizontal:120
       
-    },listTitle: {
-      fontSize: 22
     },
-    listDescription: {
-      fontSize: 16
-    }
 });
