@@ -88,9 +88,9 @@ export default class LoginScreen extends Component {
         if (true) {
             const nowDate = new Date();
 
-            for (let i = 2; i <= 30; i += 2) {
+            for (let i = 2; i <= 3; i += 2) {
                 const newTime = (nowDate / 1000) + (24 * 60 * 60 * i)
-                this.scheduleNotification(5 * i);//5*i for start after 10 sec , replace it with newTime
+                this.scheduleNotification(1 * i);//5*i for start after 10 sec , replace it with newTime
 
             }
             // this.storeData('yes') apllay it with check 
@@ -128,7 +128,7 @@ export default class LoginScreen extends Component {
 
     getAllScheduledNotificationsAsync = async () => {
         console.log('ffff')
-        console.warn(await Notifications.getAllScheduledNotificationsAsync())
+        //console.warn(await Notifications.getAllScheduledNotificationsAsync())
     }
 
     handleLogin = () => {
