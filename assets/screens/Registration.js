@@ -166,7 +166,7 @@ export default class Registration extends Component {
 
     return (
 
-      <KeyboardAvoidingView
+      <View
         style={[pg.wrapper]}
         behavior="padding"
       >
@@ -242,14 +242,13 @@ export default class Registration extends Component {
 
         <NextArrowButton handelPress={this.handleSignUp} disabled={false} />
 
-        <Notification
+        {/* <Notification
           showNotification={showNotification}
           handleCloseNotification={this.handleCloseNotification}
           title="Error"
           message={this.state.errorMessage}
-        />
-
-      </KeyboardAvoidingView>
+        /> */}
+</View>
 
 
     );

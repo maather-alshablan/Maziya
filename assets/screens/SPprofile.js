@@ -108,14 +108,14 @@ const userId = auth.currentUser.uid;
 
 const handleUpdate  = ()=>{
 
-userRef.update(
+userRef.set(
     {
     'name': userName,
     'email': email, 
 }
 ).catch(error => alert(error));
 
-database.ref('serviceProvider/'+auth.currentUser.uid).update({
+database.ref('serviceProvider/'+auth.currentUser.uid).set({
     'description': Descripiton,
     'category': category,
     'phone': phoneNum,
@@ -267,7 +267,17 @@ const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[
                     textAlign='right'
                     autoCapitalize="none"
                   /> */}
-                  <Input   placeholder='BASIC INPUT' />
+                  <Input  
+                    style={[styless.TextInput],[styles.textArea]}
+                    placeholder=" وصف العلامة التجارية"
+                    onChangeText={Descripiton => setDescripiton( Descripiton ) }
+                    defaultValue={Descripiton}
+                    multiline={true}
+                    numberOfLines={4}
+                    textAlignVertical
+                    textAlign='right'
+                    autoCapitalize="none" 
+                   />
                 </View>
                 <View style={[styless.fields]}>
           

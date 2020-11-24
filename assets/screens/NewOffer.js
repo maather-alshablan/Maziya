@@ -6,7 +6,7 @@ import { Entypo, MaterialCommunityIcons, MaterialIcons, FontAwesome, Ionicons } 
 import colors from '../constants/colors'
 import styles from "../constants/styles";
 import SignInButton from "../components/SignInButton";
-//import QRCode from 'react-native-qrcode-svg';
+import QRCode from 'react-native-qrcode-svg';
 
 import { DatePicker } from 'native-base'
 

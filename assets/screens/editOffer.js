@@ -151,7 +151,7 @@ render(){
           <SafeAreaView > 
                     <View style={styless.headerContainer}>
                     <TouchableOpacity>
-                     <Entypo name='chevron-left' size={30} color={colors.primaryBlue} style={{ alignSelf: 'flex-start' }} onPress={() => this.props.navigation.goBack()} />
+                     <Entypo name='chevron-left' size={30} color={colors.primaryBlue} style={{ alignSelf: 'flex-start' }} onPress={() => this.props.navigation.pop()} />
                       </TouchableOpacity>
                       <View style={{ flexDirection: 'row-reverse',alignSelf:'flex-end' }}>
                     <Text style={styless.headerText} >
