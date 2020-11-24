@@ -48,6 +48,7 @@ export default class serviceProvider extends Component {
             offerDetails: props?.route?.params?.offer,
             favoriteId: '',
             used: false,
+            memberName:'',
             keyRoom: null
         }
     }
@@ -95,7 +96,7 @@ export default class serviceProvider extends Component {
                 if (chatRooms) {
                     Object.keys(chatRooms).map(key => {
                         console.log('reading room key > ')
-                        console.log(key)
+                        //console.log(key)
 
 
                         if (chatRooms[key].serviceProvider == sp)
@@ -298,7 +299,7 @@ export default class serviceProvider extends Component {
     }
 
        //Creating chat room is only member side
-        createRoom =  async ()=>{
+        createRoom = async  ()=>{
         console.log('creating new room.. ')
 
         var key = database.ref().child('Rooms').push().key
@@ -406,11 +407,7 @@ export default class serviceProvider extends Component {
                                                 color={colors.primaryBlue}
                                                 size={30}
                                                 style={styles.fieldLabels}
-                                                onPress={() => this.props.navigation.navigate('chatRoom', {
-                                                    keyRoom: this.state.keyRoom,
-                                                    member: auth.currentUser.uid,
-                                                    serviceProvider: this.state.offerDetails.serviceProvider, nameBrand: this.state.brand
-                                                })} />
+                                                onPress={() => this.navigateToRoom()}/>
                                         </TouchableOpacity>
                                     </View> :
                                     <View></View>
