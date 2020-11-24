@@ -154,13 +154,14 @@ export default class serviceProvider extends Component {
             if (chatRooms)
             { console.log('fetching room')
                 Object.keys(chatRooms).map(key => {
-                    console.log('reading room key > ')
-                    console.log(key)
+                    
                     
                    
-                    if (chatRooms[key].serviceProvider == sp)
+                    if (chatRooms[key].serviceProvider == sp){
                      self.setState({keyRoom: key})
-                     console.log('key room is ', this.state.keyRoom)
+                     console.log('reading room key > ')
+                    console.log(key)
+                     console.log('key room is ', this.state.keyRoom)}
             })
         }
   

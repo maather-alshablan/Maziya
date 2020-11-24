@@ -49,8 +49,8 @@ export default class ChatRooms extends Component {
               
 
                 Object.keys(roomList).map(key=>{
-                var lastText= this.retrieveLastText(key)
-                var time = this.retrieveTime(key)
+                var lastText= this.retrieveLastText(key);
+                var time = this.retrieveTime(key);
                     console.log(key)
 
                     console.log(lastText, 'last text')
