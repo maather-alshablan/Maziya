@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
   StyleSheet,
- 
+  Alert
 
 } from "react-native";
 import colors from "../constants/colors";
@@ -24,7 +24,7 @@ import {
 import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
 import { database, auth, storage } from "../config/firebase";
 import * as ImagePicker from "expo-image-picker";
-import MapView, { PROVIDER_GOOGLE , Marker, Callout } from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
 import * as Permissions from "expo-permissions";
 // import ModalDropdown from 'react-native-modal-dropdown';
 
@@ -37,6 +37,7 @@ export default class RegistrationServiceProvider extends Component {
 
     this.onNextFirstStep = this.onNextFirstStep.bind(this);
     this.handleSignUp = this.handleSignUp.bind(this);
+
   }
 
   state = {
@@ -48,24 +49,24 @@ export default class RegistrationServiceProvider extends Component {
     confirmPassword: "",
     nameBrand: "",
     Description: "",
-    category:"",
-    imageref:'',
-    website:"",
-    twitter:"",
-    instagram:"",
+    category: "",
+    imageref: '',
+    website: "",
+    twitter: "",
+    instagram: "",
     errorMessage: null,
     isValid: false,
-    errors: false, 
-    isName:false,isEmail:false,isPass:false,isConfPass:false,isPhone:false,isBrand:false, isDes:false,
-    errorMessageName:null,errorMessageEmail:null,errorMessagePass:null,errorMessageConfPass:null,errorMessagePhone:null,errorMessageBrand:null,errorMessageDis:null,
+    errors: false,
+    isName: false, isEmail: false, isPass: false, isConfPass: false, isPhone: false, isBrand: false, isDes: false,
+    errorMessageName: null, errorMessageEmail: null, errorMessagePass: null, errorMessageConfPass: null, errorMessagePhone: null, errorMessageBrand: null, errorMessageDis: null,
     region: {
       latitude: 24.7136,
       longitude: 46.6753,
       latitudeDelta: 0.0922,
       longitudeDelta: 0.0421,
     },
-    coordinate:null,
-    showMap:false
+    coordinate: null,
+    showMap: false
 
   };
   validateEmail = (email) => {
@@ -78,35 +79,35 @@ export default class RegistrationServiceProvider extends Component {
     if (this.state.phoneNum.length != 10) {
       valid = false;
       this.setState({
-        isPhone:true , 
+        isPhone: true,
         errors: true,
         errorMessagePhone: " *يرجى التأكد من ادخال رقم التواصل يالصيغة  0XXXXXXXXX ",
       });
     }
     else {
-      this.setState({ 
-        isPhone:false , 
-        
+      this.setState({
+        isPhone: false,
+
       });
     }
 
-    if (this.state.password !== this.state.confirmPassword ) {
+    if (this.state.password !== this.state.confirmPassword) {
       valid = false;
       this.setState({
-        isConfPass:true,
+        isConfPass: true,
         errors: true,
         errorMessageConfPass: "*يرجى التأكد من مطابقة كلمة المرور",
       });
     }
     else {
       this.setState({
-        isConfPass:false,
+        isConfPass: false,
       });
     }
     if (this.state.email === "" && !this.validateEmail(this.state.email)) {
       valid = false; // reem
       this.setState({
-        isEmail:true,
+        isEmail: true,
         errors: true,
         errorMessageEmail: "*يرجى كتابة بريد الكتروني صحيح",
       });
@@ -114,49 +115,49 @@ export default class RegistrationServiceProvider extends Component {
     else {
       this.setState({
         // errors: false,
-        isEmail:false
+        isEmail: false
       });
     }
 
-    if (this.state.userName === ""){ 
+    if (this.state.userName === "") {
       valid = false;
       this.setState({
         errors: true,
         errorMessageName: "*يرجى ادخال إسم",
-        isName:true
+        isName: true
       });
     }
     else {
       this.setState({
         // errors: false,
-        isName:false
+        isName: false
       });
     }
-    if (this.state.password === "" ) {
+    if (this.state.password === "") {
       valid = false;
       this.setState({
-        isPass:true,
+        isPass: true,
         errors: true,
         errorMessagePass: "*يرجى ادخال كلمة المرور",
       });
     }
     else {
       this.setState({
-        isPass:false , 
+        isPass: false,
         // errors: false,
       });
     }
     if (this.state.password.length < 8) {
       valid = false;
       this.setState({
-        isPass:true,
+        isPass: true,
         errors: true,
         errorMessagePass: "*يرجى ادخال كلمة مرور مكونة من ٨ خانات او اكثر",
       });
     }
     else {
       this.setState({
-        isPass:false , 
+        isPass: false,
         // errors: false,
       });
     }
@@ -168,70 +169,70 @@ export default class RegistrationServiceProvider extends Component {
   };
 
   onNextsecondtStep = () => {
-    let valid = true; 
-    if (this.state.nameBrand === "" ) {
+    let valid = true;
+    if (this.state.nameBrand === "") {
       valid = false;
       this.setState({
-        isBrand:true , 
+        isBrand: true,
         errors: true,
         errorMessageBrand: "*يرجى ادخال اسم العلامة التجارية",
       });
     }
-    else{
+    else {
       this.setState({
-        isBrand:false , 
+        isBrand: false,
       });
     }
-    if (this.state.Description === "" ) {
+    if (this.state.Description === "") {
       valid = false;
       this.setState({
-        isDes:true , 
+        isDes: true,
         errors: true,
         errorMessageDis: "يرجى ادخال الوصف ",
       });
     }
-    else{
+    else {
       this.setState({
-        isDes:false , 
+        isDes: false,
       });
     }
- 
-    
-    var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
-    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
-    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
-    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-    '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
-     
-  //   if (!pattern.test(this.state.website)){
-  //     setValid(false);
-  //     setErrorMessage("يرجى ادخال الموقع الإلكتروني بالشكل الصحيح")
-  //     return; 
-  //   }
-    
-  
-   
-  //   if (!this.state.twitter.startsWith('@')){
-  //     setValid(false);
-  //     setErrorMessage("يرجى ادخال حساب تويتر بالصيغة @example")
-  //     return; 
-  //   }
-  
-  
-  //   const twitterExp =  /^(?:@)([A-Za-z0-9_]){1,15}$/
-  //   if (!twitterExp.test(this.state.twitter) ){
-  //     setValid(false);
-  //     setErrorMessage("يرجى ادخال حساب تويتر بالشكل الصحيح")
-  //     return;
-  //   }
-  //   if (valid) {
-  //     this.setState({
-  //       errors: false,
-  //     });
-  //   }
-  
-  // }
+
+
+    var pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
+      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+      '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+      '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+      '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
+
+    //   if (!pattern.test(this.state.website)){
+    //     setValid(false);
+    //     setErrorMessage("يرجى ادخال الموقع الإلكتروني بالشكل الصحيح")
+    //     return; 
+    //   }
+
+
+
+    //   if (!this.state.twitter.startsWith('@')){
+    //     setValid(false);
+    //     setErrorMessage("يرجى ادخال حساب تويتر بالصيغة @example")
+    //     return; 
+    //   }
+
+
+    //   const twitterExp =  /^(?:@)([A-Za-z0-9_]){1,15}$/
+    //   if (!twitterExp.test(this.state.twitter) ){
+    //     setValid(false);
+    //     setErrorMessage("يرجى ادخال حساب تويتر بالشكل الصحيح")
+    //     return;
+    //   }
+    //   if (valid) {
+    //     this.setState({
+    //       errors: false,
+    //     });
+    //   }
+
+    // }
 
   }
   async componentDidMount() {
@@ -240,7 +241,7 @@ export default class RegistrationServiceProvider extends Component {
       const newPermission = await Permissions.askAsync(Permissions.CAMERA_ROLL);
       if (newPermission.status === "granted") {
       }
-    } 
+    }
   }
 
   openImagePickerAsync = async () => {
@@ -249,17 +250,20 @@ export default class RegistrationServiceProvider extends Component {
       aspect: 1,
       allowsEditing: true,
     });
-    if (!result.cancelled) this.setState({ image: result.uri});
+    if (!result.cancelled) this.setState({ image: result.uri });
   };
 
 
 
   handleSignUp = () => {
+
     auth
       .createUserWithEmailAndPassword(this.state.email, this.state.password)
-      .then((resp) => this.writeUserData())
+      .then((resp) => {
+        this.successfulRegistration();
+      })
       .catch((e) => {
-        console.log("error", e);
+        alert("error", e);
         this.setState({
           errorMessage: e.message,
           errors: true,
@@ -267,10 +271,20 @@ export default class RegistrationServiceProvider extends Component {
       });
   };
 
-  writeUserData = () => {
-  //  console.log("writeUserData");
 
-    
+  successfulRegistration = () => {
+    auth.currentUser.sendEmailVerification().then((response) => {
+      this.writeUserData()
+
+    }).catch(function (error) {
+      // An error happened.
+      console.log('did not qritrw')
+    });
+  }
+  writeUserData = () => {
+    //  console.log("writeUserData");
+
+
     // first let us upload the image on storage, no need to insert it into database
     // we will use the UID as image name for exmaple,
     // let say uid is 1dsdsmn it will be 1dsdsmn.jpg on storage
@@ -300,15 +314,17 @@ export default class RegistrationServiceProvider extends Component {
       .child(auth.currentUser.uid)
       .set({
         description: this.state.Description,
-        nameBrand:this.state.nameBrand , 
+        nameBrand: this.state.nameBrand,
         category: this.state.category,
-        email:auth.currentUser.email,
+        email: auth.currentUser.email,
         phone: this.state.phoneNum,
-        website:this.state.website,
-        twitter:this.state.twitter,
-        instagram:this.state.instagram,
+        website: this.state.website,
+        twitter: this.state.twitter,
+        instagram: this.state.instagram,
         coordinate: this.state.coordinate
-      }).then(this.props.navigation.navigate("SPhomescreen"))
+      }).then(() => {
+        Alert.alert('لطفًا فعل حسابك عن طريق الايميل ')
+      })
       .catch((error) => console.log(error));
   };
 
@@ -317,41 +333,43 @@ export default class RegistrationServiceProvider extends Component {
     const metadata = {
       contentType: 'image/jpeg',
     };
-    const imageRef = "images/"+imgName+'.png';
+    const imageRef = "images/" + imgName + '.png';
     const StorageRef = storage.ref().child(imageRef)
-    const task = StorageRef.put(this.state.image,metadata)
-    .then(console.log('successfully uploaded to firebase' ))
-    .catch(console.log('failure image upload'))
-    .then( this.setState({image: imageRef}))
+    const task = StorageRef.put(this.state.image, metadata)
+      .then(console.log('successfully uploaded to firebase'))
+      .catch(console.log('failure image upload'))
+      .then(this.setState({ image: imageRef }))
 
-   
+
     //incase of memory leak error
     // return() =>{
     //   StorageRef();
     //   task()
     //   subscrition()
-    }
-  
-    locationHandler = event =>{
+  }
 
-      const coord = event.nativeEvent.coordinate;
-      this.setState({coordinate:{
+  locationHandler = event => {
+
+    const coord = event.nativeEvent.coordinate;
+    this.setState({
+      coordinate: {
         latitude: coord.latitude,
         longitude: coord.longitude
-      }})
-    }
+      }
+    })
+  }
 
 
-    showMap = () =>{
-      this.setState({showMap:true})
-    }
+  showMap = () => {
+    this.setState({ showMap: true })
+  }
   render() {
     //const showNotification = this.state.Valid ? false : true;
     console.disableYellowBox = true;
     console.log(this.state.coordinate)
 
-   // console.log(this.validateEmail(this.state.email));
-  //  console.log("state", this.state);
+    // console.log(this.validateEmail(this.state.email));
+    //  console.log("state", this.state);
     return (
       <View style={styles.container}>
         <Entypo
@@ -371,7 +389,7 @@ export default class RegistrationServiceProvider extends Component {
             <Text style={styles.errors}>{this.state.errorMessage}</Text>
           </View>
         )} */}
-        
+
         <View style={{ flex: 1 }}>
           <ProgressSteps
             activeStepIconBorderColor={colors.primaryBlue}
@@ -382,8 +400,9 @@ export default class RegistrationServiceProvider extends Component {
             <ProgressStep
               label="الحساب"
               nextBtnText="التالي"
-              nextBtnTextStyle={{ color: colors.primaryBlue, fontSize: 18  }}
+              nextBtnTextStyle={{ color: colors.primaryBlue, fontSize: 18 }}
               onNext={this.onNextFirstStep}
+              // onNext={this.handleSignUp}
               errors={this.state.errors}
             >
               <View>
@@ -404,8 +423,8 @@ export default class RegistrationServiceProvider extends Component {
                   />
                 </View>
                 <View style={styles.ErrorView} >
-                { this.state.isName ?
-<               Text style={styles.ErrorView}>{this.state.errorMessageName}</Text> : <Text></Text>}
+                  {this.state.isName ?
+                    <               Text style={styles.ErrorView}>{this.state.errorMessageName}</Text> : <Text></Text>}
                 </View>
                 <View style={styles.fields}>
                   <MaterialCommunityIcons
@@ -425,8 +444,8 @@ export default class RegistrationServiceProvider extends Component {
                   />
                 </View>
                 <View style={styles.ErrorView} >
-                { this.state.isEmail ?
-<               Text style={styles.ErrorView}>{this.state.errorMessageEmail}</Text> : <Text></Text>}
+                  {this.state.isEmail ?
+                    <               Text style={styles.ErrorView}>{this.state.errorMessageEmail}</Text> : <Text></Text>}
                 </View>
                 <View style={styles.fields}>
                   <FontAwesome
@@ -445,8 +464,8 @@ export default class RegistrationServiceProvider extends Component {
                   />
                 </View>
                 <View style={styles.ErrorView} >
-                { this.state.isPhone ?
-<               Text style={styles.ErrorView}>{this.state.errorMessagePhone}</Text> : <Text></Text>}
+                  {this.state.isPhone ?
+                    <               Text style={styles.ErrorView}>{this.state.errorMessagePhone}</Text> : <Text></Text>}
                 </View>
                 <View style={styles.fields}>
                   <FontAwesome
@@ -457,17 +476,17 @@ export default class RegistrationServiceProvider extends Component {
                   />
                   <TextInput
                     style={styles.TextInputPass}
-                    secureTextEntry = {true}
+                    secureTextEntry={true}
                     placeholder="*كلمة المرور"
                     onChangeText={(password) => this.setState({ password })}
                     value={this.state.password}
                     autoCapitalize="none"
                   />
-                  
+
                 </View>
                 <View style={styles.ErrorView} >
-                { this.state.isPass ?
-<               Text style={styles.ErrorView}>{this.state.errorMessagePass}</Text> : <Text></Text>}
+                  {this.state.isPass ?
+                    <               Text style={styles.ErrorView}>{this.state.errorMessagePass}</Text> : <Text></Text>}
                 </View>
                 <View style={styles.fields}>
                   <FontAwesome
@@ -478,7 +497,7 @@ export default class RegistrationServiceProvider extends Component {
                   />
                   <TextInput
                     style={styles.TextInputPass}
-                    secureTextEntry = {true}
+                    secureTextEntry={true}
                     placeholder="*تأكيد كلمة المرور"
                     onChangeText={(confirmPassword) =>
                       this.setState({ confirmPassword })
@@ -488,8 +507,8 @@ export default class RegistrationServiceProvider extends Component {
                   />
                 </View>
                 <View style={styles.ErrorView} >
-                { this.state.isConfPass ?
-<               Text style={styles.ErrorView}>{this.state.errorMessageConfPass}</Text> : <Text></Text>}
+                  {this.state.isConfPass ?
+                    <               Text style={styles.ErrorView}>{this.state.errorMessageConfPass}</Text> : <Text></Text>}
                 </View>
               </View>
             </ProgressStep>
@@ -497,27 +516,27 @@ export default class RegistrationServiceProvider extends Component {
               label="الوصف"
               previousBtnText="السابق"
               nextBtnText="التالي"
-              onNext={this.onNextsecondtStep} 
-              errors={this.state.errors} 
-              nextBtnTextStyle={{ color: colors.primaryBlue, fontSize: 18  }}
-              previousBtnTextStyle={{ color: colors.primaryBlue, fontSize: 18  }}
+              onNext={this.onNextsecondtStep}
+              errors={this.state.errors}
+              nextBtnTextStyle={{ color: colors.primaryBlue, fontSize: 18 }}
+              previousBtnTextStyle={{ color: colors.primaryBlue, fontSize: 18 }}
             >
               <View style={{ alignItems: "center" }}>
                 <View style={styles.container}
-                 >
-                   <TouchableOpacity onPress={this.openImagePickerAsync}>
-                   <Image style={styles.newImage} source={{ uri: this.state.image }} />
-                  {/* <Image
+                >
+                  <TouchableOpacity onPress={this.openImagePickerAsync}>
+                    <Image style={styles.newImage} source={{ uri: this.state.image }} />
+                    {/* <Image
                     style={styles.image}
                     source={{ uri: this.state.image }}
                   /> */}
                   </TouchableOpacity>
                 </View>
-                
-                  
-    
+
+
+
                 <View style={styles.fields}>
-                <FontAwesome name="tags" color={colors.primaryBlue} size={30} />
+                  <FontAwesome name="tags" color={colors.primaryBlue} size={30} />
                   <TextInput
                     style={styles.TextInput}
                     placeholder=" اسم العلامة التجارية"
@@ -529,32 +548,32 @@ export default class RegistrationServiceProvider extends Component {
                   />
                 </View>
                 <View style={styles.ErrorView} >
-                { this.state.isBrand ?
-<               Text style={styles.ErrorView}>{this.state.errorMessageBrand}</Text> : <Text></Text>}
+                  {this.state.isBrand ?
+                    <               Text style={styles.ErrorView}>{this.state.errorMessageBrand}</Text> : <Text></Text>}
                 </View>
-<View></View>
-<View></View>
-<View></View>
+                <View></View>
+                <View></View>
+                <View></View>
                 <View style={styles.action}>
-                    <TextInput style={{ height: 100 ,width : 300, borderColor: 'gray', borderWidth: 1 }} 
+                  <TextInput style={{ height: 100, width: 300, borderColor: 'gray', borderWidth: 1 }}
                     multiline={true}
                     numberOfLines={4}
-                    autoCapitalize="none" 
+                    autoCapitalize="none"
                     textAlign='right'
                     placeholder=" وصف العلامة التجارية"
-                    onChangeText={ Description =>this.setState({ Description })}
-                    value= {this.state.Description}/>
+                    onChangeText={Description => this.setState({ Description })}
+                    value={this.state.Description} />
 
                 </View>
                 <View style={styles.ErrorView} >
-                { this.state.isDes ?
-<               Text style={styles.ErrorView}>{this.state.errorMessageDis}</Text> : <Text></Text>}
+                  {this.state.isDes ?
+                    <               Text style={styles.ErrorView}>{this.state.errorMessageDis}</Text> : <Text></Text>}
                 </View>
-                
+
                 <View style={styles.fields}>
-                <FontAwesome name="link" color={colors.primaryBlue} size={30} style={styles.fieldLabels} />
+                  <FontAwesome name="link" color={colors.primaryBlue} size={30} style={styles.fieldLabels} />
                   <TextInput
-                  secureTextEntry = {false}
+                    secureTextEntry={false}
                     style={styles.TextInput}
                     placeholder=" الموقع الإلكتروني"
                     onChangeText={website => this.setState({ website })}
@@ -564,9 +583,9 @@ export default class RegistrationServiceProvider extends Component {
                 </View>
 
                 <View style={styles.fields}>
-                <MaterialCommunityIcons name="twitter" color={colors.primaryBlue} size={30} style={styles.fieldLabels} />
+                  <MaterialCommunityIcons name="twitter" color={colors.primaryBlue} size={30} style={styles.fieldLabels} />
                   <TextInput
-                  secureTextEntry = {false}
+                    secureTextEntry={false}
                     style={styles.TextInput}
                     placeholder=" تويتر"
                     onChangeText={twitter => this.setState({ twitter })}
@@ -574,11 +593,11 @@ export default class RegistrationServiceProvider extends Component {
                     autoCapitalize="none"
                   />
                 </View>
-                
+
                 <View style={styles.fields}>
-                <MaterialCommunityIcons name="instagram" color={colors.primaryBlue} size={30} style={styles.fieldLabels} />
+                  <MaterialCommunityIcons name="instagram" color={colors.primaryBlue} size={30} style={styles.fieldLabels} />
                   <TextInput
-                  secureTextEntry = {false}
+                    secureTextEntry={false}
                     style={styles.TextInput}
                     placeholder=" انستغرام"
                     onChangeText={instagram => this.setState({ instagram })}
@@ -595,58 +614,58 @@ export default class RegistrationServiceProvider extends Component {
               finishBtnText="إنشاء حساب"
               isComplete={true}
               onSubmit={this.handleSignUp}
-              nextBtnTextStyle={{ color: colors.primaryBlue, fontSize: 18  }}
-              previousBtnTextStyle={{ color: colors.primaryBlue, fontSize: 18  }}
+              nextBtnTextStyle={{ color: colors.primaryBlue, fontSize: 18 }}
+              previousBtnTextStyle={{ color: colors.primaryBlue, fontSize: 18 }}
             >
               <View>
-              <Text style={{color:colors.primaryBlue, alignSelf:'flex-end', fontSize:25}}>
-                   الفرع
+                <Text style={{ color: colors.primaryBlue, alignSelf: 'flex-end', fontSize: 25 }}>
+                  الفرع
               </Text>
-      
-              </View>
-            
-              <TouchableOpacity onPress={ this.showMap}>
-              {this.state.showMap ==false ?
-              <View style={{flexDirection:'row-reverse',margin:15}}>
-             
-              <MaterialCommunityIcons name="plus" color={colors.primaryBlue} size={30} />
-             <Text style={{fontSize:20}}>
-                إضافة فرع 
-              </Text>
-              </View> :<View></View>}
-                  </TouchableOpacity> 
-              
 
-             { this.state.showMap ? <View>
-              <MapView
-        provider={PROVIDER_GOOGLE} 
-        style={style.map}
-        region={this.state.region }
-        showsUserLocation={true}
-        zoom={10}
-      >
-        {/* {this.mapMarkers()} */}
-        <Marker 
-        draggable
-        //key={1}
-        coordinate={this.state.region}
-        title={'موقعي '}
-        pinColor={colors.primaryBlue} 
-        onDragEnd = { e => this.locationHandler(e)}
-        >
-          
-        </Marker>
-      </MapView>
-      { this.state.coordinate?
-      <View>
-        <Text style={{color:'green',alignSelf:'center'}}> تم حفظ الموقع بنجاح</Text>
-        </View> : <View></View>}
-      </View> : <View></View>} 
-  
-        { this.state.coordinate==null && this.state.showMap ?
-      <View>
-        <Text style={{color:colors.primaryGrey,alignSelf:'center'}}> يرجى تحديد الموقع على الخارطة </Text>
-        </View> : <View></View>}
+              </View>
+
+              <TouchableOpacity onPress={this.showMap}>
+                {this.state.showMap == false ?
+                  <View style={{ flexDirection: 'row-reverse', margin: 15 }}>
+
+                    <MaterialCommunityIcons name="plus" color={colors.primaryBlue} size={30} />
+                    <Text style={{ fontSize: 20 }}>
+                      إضافة فرع
+              </Text>
+                  </View> : <View></View>}
+              </TouchableOpacity>
+
+
+              {this.state.showMap ? <View>
+                <MapView
+                  provider={PROVIDER_GOOGLE}
+                  style={style.map}
+                  region={this.state.region}
+                  showsUserLocation={true}
+                  zoom={10}
+                >
+                  {/* {this.mapMarkers()} */}
+                  <Marker
+                    draggable
+                    //key={1}
+                    coordinate={this.state.region}
+                    title={'موقعي '}
+                    pinColor={colors.primaryBlue}
+                    onDragEnd={e => this.locationHandler(e)}
+                  >
+
+                  </Marker>
+                </MapView>
+                {this.state.coordinate ?
+                  <View>
+                    <Text style={{ color: 'green', alignSelf: 'center' }}> تم حفظ الموقع بنجاح</Text>
+                  </View> : <View></View>}
+              </View> : <View></View>}
+
+              {this.state.coordinate == null && this.state.showMap ?
+                <View>
+                  <Text style={{ color: colors.primaryGrey, alignSelf: 'center' }}> يرجى تحديد الموقع على الخارطة </Text>
+                </View> : <View></View>}
 
 
 
@@ -663,13 +682,14 @@ const style = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.primaryBlue,
     padding: 20,
-    margin: 10,},
-    map: {
-      height: 500,
+    margin: 10,
+  },
+  map: {
+    height: 500,
     width: 420,
-    marginTop:40,
+    marginTop: 40,
     justifyContent: 'flex-end',
     alignItems: 'center',
-      ...StyleSheet.absoluteFillObject,
-    }
-  }) 
+    ...StyleSheet.absoluteFillObject,
+  }
+}) 

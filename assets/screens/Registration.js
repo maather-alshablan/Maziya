@@ -63,15 +63,19 @@ export default class Registration extends Component {
           return 
     }*/
 
-
+    console.warn('successfulRegistration[before]', this.state.email, this.state.password)
     auth.
       createUserWithEmailAndPassword(this.state.email, this.state.password)
       .then((response) => {
+        console.warn('successfulRegistration')
         this.successfulRegistration()
       }
       )
       .catch(
-        () => this.setState({ errorMessage: 'يرجى التأكد من ادخال البيانات بالشكل الصحيح', formValid: false }))
+        (e) => {
+          console.warn('successfulRegistration[error]', e)
+          this.setState({ errorMessage: 'يرجى التأكد من ادخال البيانات بالشكل الصحيح', formValid: false })
+        })
 
     if (this.state.errorMessage == '') {
 
@@ -79,33 +83,35 @@ export default class Registration extends Component {
   }
 
   successfulRegistration = () => {
+    self = this
     auth.currentUser.sendEmailVerification().then((response) => {
-      // this.writeUserData
-      this.setState({
-        name: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-      })
-      Alert.alert('لطفًا فعل حسابك عن طريق الايميل ')
+
+      const userid = auth.currentUser.uid;
+      database.ref().child('users').child(userid).set({
+        name: this.state.name,
+        email: this.state.email,
+        password: this.state.password,
+        accountType: 'member',
+      }).then(() => {
+        this.setState({
+          name: '',
+          email: '',
+          password: '',
+          confirmPassword: '',
+        })
+        Alert.alert('لطفًا فعل حسابك عن طريق الايميل ')
+      }).catch(error => console.warn(error)
+      );
+      console.warn('after')
     }).catch(function (error) {
       // An error happened.
-      console.log('did not qritrw')
+      warn.log('did not qritrw')
     });
 
   }
 
   writeUserData = () => {
 
-    userid = auth.currentUser.uid;
-
-    database.ref().child('users').child(userid).set({
-      name: this.state.name,
-      email: this.state.email,
-      password: this.state.password,
-      accountType: 'member',
-    }).then(this.props.navigation.navigate('Homescreen')).catch(error => console.log(error)
-    );
   }
 
   // validate email 
@@ -248,7 +254,7 @@ export default class Registration extends Component {
           title="Error"
           message={this.state.errorMessage}
         /> */}
-</View>
+      </View>
 
 
     );
