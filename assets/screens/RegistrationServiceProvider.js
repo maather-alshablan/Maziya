@@ -7,14 +7,8 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  Label,
   StyleSheet,
-  Dimensions,
-  Button,
-  ColorPropType,
-  Alert,
-  LogBox,
-  KeyboardAvoidingView ,
+ 
 
 } from "react-native";
 import colors from "../constants/colors";
@@ -28,10 +22,7 @@ import {
   FontAwesome,
 } from "../constants/icons";
 import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
-import SignUpButton from "../components/SignUpButton";
-import RegButton from "../components/RegButton";
 import { database, auth, storage } from "../config/firebase";
-import Notification from "../components/Notification";
 import * as ImagePicker from "expo-image-picker";
 import MapView, { PROVIDER_GOOGLE , Marker, Callout } from 'react-native-maps';
 import * as Permissions from "expo-permissions";
@@ -674,8 +665,8 @@ const style = StyleSheet.create({
     padding: 20,
     margin: 10,},
     map: {
-      height: 400,
-    width: 400,
+      height: 500,
+    width: 420,
     marginTop:40,
     justifyContent: 'flex-end',
     alignItems: 'center',

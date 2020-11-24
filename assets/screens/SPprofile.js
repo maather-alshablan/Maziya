@@ -38,6 +38,8 @@ const serviceProvider =({ navigation}) => {
   const [twitter, setTwitter] = useState(null)
   const [instagram, setInstagram] = useState(null)
   const [coordinate, setCoordinate] = useState(null)
+  const [locationChanged, setlocationChanged] = useState(false)
+
   const [region , setRegion] = useState({
     latitude: 24.7136,
     longitude: 46.6753,
@@ -234,6 +236,12 @@ const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[
     const FirstRoute = () => (
       
       <View style={[styles.scene, { backgroundColor: 'white' }]} >
+          <View>
+              <Text style={{color:colors.primaryBlue, alignSelf:'flex-end', fontSize:25, margin:15}}>
+                   معلومات العلامة التجارية
+              </Text>
+      
+              </View>
              <View style={{alignSelf:'flex-end',flexDirection:'row-reverse',marginTop:10,marginLeft:10}}>
             <MaterialCommunityIcons name="image-search-outline" color={colors.primaryBlue} size={30} />
                   <Text style={[styless.fieldLabels],[{fontSize:17}]}>  صورة العلامة التجارية</Text>
@@ -254,7 +262,6 @@ const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[
             <MaterialCommunityIcons name="tooltip-text-outline" color={colors.primaryBlue} size={30} />
                   <Text style={[styless.fieldLabels],[{fontSize:17}]}> الوصف</Text>
                   </View>
-              <View style={styless.fields}>
 
                   {/* <TextInput
                     style={[styless.TextInput],[styles.textArea]}
@@ -278,8 +285,8 @@ const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[
                     textAlign='right'
                     autoCapitalize="none" 
                    />
-                </View>
-                <View style={[styless.fields]}>
+               
+                {/* <View style={[styless.fields]}> */}
           
                 {/* <FontAwesome name="tags" color={colors.primaryBlue} size={25}/>
                     <Text style={[styless.fieldLabels],[{fontSize:17,marginRight:10}]}> الفئة</Text>
@@ -290,7 +297,7 @@ const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[
                     value={category}
                     autoCapitalize="none"
                   /> */}
-                </View>
+                {/* </View> */}
                   {/* <Dropdown
                     label="الفئة"
                     data={categories}
@@ -360,7 +367,12 @@ const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[
       
       const SecondRoute = () => (
         <View style={[styles.scene, { backgroundColor: 'white' }]} >
-             
+               <View>
+              <Text style={{color:colors.primaryBlue, alignSelf:'flex-end', fontSize:25, margin:15}}>
+                   معلومات الحساب
+              </Text>
+      
+              </View>
                 <View style={styless.fields}>
                   
                   <MaterialCommunityIcons name="account" color={colors.primaryBlue} size={30} style={styless.fieldLabels} />
@@ -428,6 +440,8 @@ const locationHandler = event =>{
     latitude: coord.latitude,
     longitude: coord.longitude
   })
+
+  setlocationChanged(true)
 }
 
 
@@ -435,18 +449,26 @@ const locationHandler = event =>{
         return (
         <View style={[styles.scene, { backgroundColor: 'white' }]} >
             <View>
-              <Text style={{color:colors.primaryBlue, alignSelf:'flex-end', fontSize:20}}>
-                 تحديد موقع الفرع
+              <Text style={{color:colors.primaryBlue, alignSelf:'flex-end', fontSize:25, margin:15}}>
+                    موقع الفرع
               </Text>
+      
               </View>
-           <View>
+        
+        { coordinate ==null?
+      <View>
+        <Text style={{color:colors.primaryGrey,alignSelf:'center'}}> يرجى تحديد الموقع على الخارطة </Text>
+        </View> : <View></View>} 
+
+       <View style={{marginBottom:10, alignSelf:'flex-start'}}>
               <MapView
         provider={PROVIDER_GOOGLE} 
         style={styles.map}
-        region={region}
+        region={region }
         showsUserLocation={true}
         zoom={10}
       >
+      
         <Marker 
         draggable
         //key={1}
@@ -458,8 +480,10 @@ const locationHandler = event =>{
           
         </Marker>
       </MapView>
-      </View>
-
+     
+      </View> 
+  
+        
          
            
                
@@ -582,7 +606,6 @@ const styles = StyleSheet.create({
         width:250,
         paddingTop: 30,
         borderColor:'black',
-        borderBottomWidth:1,
         textAlign: 'center',
         height: 50,
         borderWidth: 2,
@@ -612,7 +635,7 @@ const styles = StyleSheet.create({
       },
       map: {
         height: 400,
-      width: 400,
+      width: 420,
       justifyContent: 'flex-end',
       alignItems: 'center',
         ...StyleSheet.absoluteFillObject,

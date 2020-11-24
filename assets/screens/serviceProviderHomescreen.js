@@ -76,23 +76,6 @@ export default class serviceProviderHomescreen extends React.Component {
   }
 
 
-  // listOffer = () => {
-
-  //   if( this.state.offers.length-1)
-  //   return (
-
-  //   this.state.offers.map( offer => 
-  //     <Card 
-  //   title={offer.title}
-  //   content={offer.Descripiton}
-  //   iconName="local-offer"
-  //   iconType="MaterialIcons"
-  //   iconBackgroundColor= {colors.primaryBlue}
-  //   //bottomRightText="30"
-  //   onPress= {() => this.props.navigation.navigate('editOffer')}/>
-  //   )
-  //   )
-  // }
   listOffer = (title, description) => {
 
     return (

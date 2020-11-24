@@ -29,9 +29,6 @@ export default class editOffer extends React.Component  {
         OfferId:'',
         expdate:"",
         code:"",
-        
-        
-    
       };
     
     
@@ -260,7 +257,7 @@ render(){
                 
  
  
-                <View style={{ flexDirection: 'row-reverse',alignItems:'center',justifyContent:'space-evenly'}}>
+                <View style={{ flexDirection: 'row-reverse',alignItems:'center',justifyContent:'space-evenly',marginTop:20}}>
                 {/* <View style={styless.buttom}> */}
                     <TouchableOpacity style={[styless.signIn,{backgroundColor:colors.primaryBlue,alignSelf:'center'}]} onPress={this.handleUpdate} >
                     <View

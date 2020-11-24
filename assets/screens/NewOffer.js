@@ -49,34 +49,40 @@ export default class NewOffer extends Component {
   }
   checkvalid = () => {
     let valid = true;
+
+
     if (this.state.title === "") {
       valid = false;
       this.setState({
         errors: true,
-        errorMessage: "يرجى ادخال جميع البيانات",
+        errorMessage: "يرجى ادخال العنوان ",
       });
     }
+    console.log(this.state.title ," exists")
 
     if (this.state.Descripiton === "") {
       valid = false;
       this.setState({
         errors: true,
-        errorMessage: "يرجى ادخال جميع البيانات",
+        errorMessage: "يرجى ادخال الوصف ",
       });
     }
+    console.log(this.state.Descripiton ," exists")
 
-    if (this.state.OfferId === "") {
+    if (this.state.code === "") {
       valid = false;
       this.setState({
         errors: true,
-        errorMessage: "يرجى ادخال جميع البيانات",
+        errorMessage: "يرجى ادخال الرمز الترويجي ",
       });
     }
+
+    
     if (this.state.chosenDate === "") {
       valid = false;
       this.setState({
         errors: true,
-        errorMessage: "يرجى ادخال جميع البيانات",
+        errorMessage: "يرجى ادخال تاريخ الانتهاء ",
       });
     }
 
@@ -99,13 +105,11 @@ export default class NewOffer extends Component {
     // create new key to insert into table offers and use the same key to insert as a child to service provider
     var OfferId = database.ref().child("Offers").push().key
 
-    console.log("serviceProvider");
-    console.log(this.state.OfferId, "Code");
     var newOffer = {
       Descripiton: this.state.Descripiton,
       expdate: this.state.chosenDate.toDateString(),
       title: this.state.title,
-      code: this.state.OfferId,
+      code: this.state.code,
       usedCount: 0,
       favoriteCount: 0,
       nameBrand: spName,
@@ -239,7 +243,11 @@ export default class NewOffer extends Component {
               {/* <ImageBackground source={require('../images/image.png')} style={{width:200,height:200,marginLeft:50}}> */}
               <View style={styless.action}>
 
-                <TextInput placeholder='ادخل الرمز' style={styles.textInput, { paddingTop: 20, marginLeft: 132 }} autoCapitalize="none" onChangeText={(code) => this.setState({ code })} value={this.state.code} />
+                <TextInput placeholder='ادخل الرمز'
+                style={styless.textInput, { paddingTop: 20, marginLeft: 132 }} 
+                autoCapitalize="none" 
+                onChangeText={(code) => this.setState({ code })}
+                 />
               </View>
 
               {/* <QRCode
@@ -363,7 +371,7 @@ const styless = StyleSheet.create({
     flex: 1,
     marginTop: -12,
     paddingLeft: 10,
-    color: '#05375a'
+    color: 'grey'
   },
 
   signIn: {
