@@ -14,7 +14,7 @@ export default class Favorite extends Component {
   constructor() {
     super()
     this.state = {
-      existOffers:null,
+      existOffers: null,
       offers: []
     }
   }
@@ -24,26 +24,27 @@ export default class Favorite extends Component {
     const subscribe = database.ref('favorites/' + auth.currentUser.uid)
       .on('value', function (snapshot) {
         const favorites = snapshot.val();
-       console.log(favorites)
+        console.log(favorites)
         const favoritesArray = []
-      
-        if (favorites != null){
-        Object.keys(favorites).map(key => {
-         console.log(favorites, self.state.offerDetails)
-          favoritesArray.push(favorites[key])
-        })
-        self.setState({
-          offers: favoritesArray,
-          existOffers: true
 
-        })
+        if (favorites != null) {
+          Object.keys(favorites).map(key => {
+            console.log(favorites, self.state.offerDetails)
+            favoritesArray.push(favorites[key])
+          })
+          self.setState({
+            offers: favoritesArray,
+            existOffers: true
+
+          })
+        }
+        else {
+          self.setState({
+            existOffers: false
+          })
+
+        }
       }
-      else{
-        self.setState({
-          existOffers: false
-        })
-        
-      }} 
       )
 
 
@@ -103,25 +104,25 @@ export default class Favorite extends Component {
           <Text style={{ marginBottom: 10, fontSize: 22, color: colors.primaryBlue, alignItems: "center", textAlign: "center" }}>
             العروض المفضلة
             </Text>
-          {this.state.existOffers ? 
-          this.state.offers.map(offer => {
-            return (
-              <View style={{ margin: 15 }}>
-                <Card
-                  title={offer.title}
-                  //content={'offer.description'}
-                  iconName="local-offer"
-                  iconType="MaterialIcons"
-                  iconBackgroundColor={colors.primaryBlue}
-                  //bottomRightText={'offer.expiration'}
-                  //onPress= {() => this.props.navigation.navigate('editOffer', {offerKey: item.key })}/>
+          {this.state.existOffers ?
+            this.state.offers.map(offer => {
+              return (
+                <View style={{ margin: 10 }}>
+                  <Card
+                    title={offer.title}
+                    //content={'offer.description'}
+                    iconName="local-offer"
+                    iconType="MaterialIcons"
+                    iconBackgroundColor={colors.primaryBlue}
+                    //bottomRightText={'offer.expiration'}
+                    //onPress= {() => this.props.navigation.navigate('editOffer', {offerKey: item.key })}/>
 
-                  onPress={() => { this.props.navigation.navigate('serviceProvider', { offer: offer }) }}
-                />
-              </View>
-            )
-          } 
-          ): <Text style={{alignSelf:'center', fontSize:20,color:colors.primaryGrey, marginTop:250}}> لا يوجد عروض في المفضلة</Text>}
+                    onPress={() => { this.props.navigation.navigate('serviceProvider', { offer: offer }) }}
+                  />
+                </View>
+              )
+            }
+            ) : <Text style={{ alignSelf: 'center', fontSize: 20, color: colors.primaryGrey, marginTop: 250 }}> لا يوجد عروض في المفضلة</Text>}
 
 
         </ScrollView>

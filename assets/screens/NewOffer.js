@@ -97,7 +97,7 @@ export default class NewOffer extends Component {
 
   writeOfferSP = (resp) => {
     var spName;
-    database.ref('serviceProvider/'+auth.currentUser.uid).once('value',function(data){
+    database.ref('serviceProvider/' + auth.currentUser.uid).once('value', function (data) {
       spName = data.val().nameBrand
     })
 
@@ -257,16 +257,16 @@ export default class NewOffer extends Component {
               {this.state.code == '' ? <View></View> :
                 <View style={styles.QRcontainer}>
                   <QRCode
-                  value={this.state.code}
-                  logo={require('../images/logo.png')} 
-                  size={190}
-                    />
+                    value={this.state.code}
+                    logo={require('../images/logo.png')}
+                    size={190}
+                  />
                 </View>}
-                
 
-              
 
-  
+
+
+
 
               {/* </ImageBackground> */}
             </View>

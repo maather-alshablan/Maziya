@@ -87,7 +87,7 @@ export default class Registration extends Component {
         password: '',
         confirmPassword: '',
       })
-      Alert.alert('please check email')
+      Alert.alert('لطفًا فعل حسابك عن طريق الايميل ')
     }).catch(function (error) {
       // An error happened.
       console.log('did not qritrw')
@@ -119,7 +119,7 @@ export default class Registration extends Component {
 
     if (!test1 || !test1) {
       console.log("Email is Not Correct");
-      this.setState({ errorMessage: 'يرجى ادخال البريد الالكتروني المستخدم لمنسوي الجامعة' })
+      //alert('يرجى ادخال البريد الالكتروني المستخدم لمنسوي الجامعة')
       return false;
     }
     else {

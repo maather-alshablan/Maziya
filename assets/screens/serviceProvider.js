@@ -48,8 +48,7 @@ export default class serviceProvider extends Component {
             offerDetails: props?.route?.params?.offer,
             favoriteId: '',
             used: false,
-            keyRoom:null,
-            memberName:'',
+            keyRoom: null
         }
     }
 
@@ -62,7 +61,7 @@ export default class serviceProvider extends Component {
                 })
 
             } else {
-                console.warn(favId, "favId")
+                //console.warn(favId, "favId")
                 this.setState({
                     favoriteId: favId,
                     favorite: true,
@@ -85,34 +84,35 @@ export default class serviceProvider extends Component {
             const user = snapshot.val().accountType
             console.log("this")
 
-           
+
             if (user == 'serviceProvider')
                 var sp = auth.currentUser.uid
 
             else if (self.state.offerDetails != null) {
                 var sp = self.state.offerDetails.serviceProvider
                 const chatRooms = snapshot.val().ChatRooms
-                fetchChatRoom(chatRooms,sp)
-            //     if (chatRooms)
-            //     {
-            //         Object.keys(chatRooms).map(key => {
-            //             console.log('reading room key > ')
-            //             console.log(key)
-                        
-                       
-            //             if (chatRooms[key].serviceProvider == sp)
-            //              self.setState({keyRoom: key})
-            //     })
-            // }
-        
-            }
 
-             fetchData(sp);
-            
+                if (chatRooms) {
+                    Object.keys(chatRooms).map(key => {
+                        console.log('reading room key > ')
+                        console.log(key)
+
+
+                        if (chatRooms[key].serviceProvider == sp)
+                            self.setState({ keyRoom: key })
+                    })
+                }
+
+            }
+            console.log(sp)
+
+
+            fetchData(sp);
+
 
         })
 
-        
+
         database.ref('favorites/' + auth.currentUser.uid)
             .once('value')
             .then(function (snapshot) {
@@ -136,11 +136,11 @@ export default class serviceProvider extends Component {
             .once('value')
             .then(function (snapshot) {
                 const usedOffers = snapshot.val();
-                console.warn(usedOffers)
+                // console.warn(usedOffers)
                 var usedDetails = {}
                 if (usedOffers != null)
                     Object.keys(usedOffers).map(key => {
-                        console.warn(usedOffers, self.state.offerDetails)
+                        // console.warn(usedOffers, self.state.offerDetails)
                         if (usedOffers[key].key == self.state.offerDetails?.key) {
                             //console.warn('added')
                             setUsed();
@@ -355,21 +355,24 @@ export default class serviceProvider extends Component {
                             {this.state.offerDetails ?
                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                     <Entypo name='chevron-left' size={30} color={colors.primaryBlue} onPress={() => this.props.navigation.pop()} />
-                                    <TouchableOpacity
-                                        onPress={this.toggleFavorite}>
-                                        <MaterialCommunityIcons
-                                            name={this.state.favorite ? "heart" : "heart-outline"}
-                                            color={colors.primaryBlue}
-                                            size={40}
-                                            style={{ alignSelf: 'flex-start' }}
-                                        />
-                                    </TouchableOpacity>
+
                                 </View> : <View></View>}
                             <View style={{ flexDirection: 'row-reverse', alignSelf: 'center' }}>
                                 <Text style={[styless.headers]}>{this.state.brand}</Text>
+                            </View>
+                            <View style={{ flexDirection: 'row-reverse', alignSelf: 'center' }}>
 
                                 <Image source={require('../images/logoDis.jpg')} style={{ width: 100, height: 60, alignSelf: "center" }} />
                             </View>
+                            <TouchableOpacity
+                                onPress={this.toggleFavorite}>
+                                <MaterialCommunityIcons
+                                    name={this.state.favorite ? "heart" : "heart-outline"}
+                                    color={colors.primaryBlue}
+                                    size={40}
+                                    style={{ alignSelf: 'center' }}
+                                />
+                            </TouchableOpacity>
                         </View>
 
 
@@ -395,20 +398,24 @@ export default class serviceProvider extends Component {
                                         accessibilityValue={this.state.email}
                                         onPress={() => { Linking.openURL('mailto:' + this.state.email) }} />
                                 </TouchableOpacity>
-                                {this.state.offerDetails? 
-                                <View>
-                                      <TouchableOpacity>
-                                    <Entypo
-                                        name="chat"
-                                        color={colors.primaryBlue}
-                                        size={30}
-                                        style={styles.fieldLabels}
-                                        onPress={() => this.navigateToRoom()} />
-                                </TouchableOpacity>
-                                </View>:
-                                <View></View>
-                                
-                            }
+                                {this.state.offerDetails ?
+                                    <View>
+                                        <TouchableOpacity>
+                                            <Entypo
+                                                name="chat"
+                                                color={colors.primaryBlue}
+                                                size={30}
+                                                style={styles.fieldLabels}
+                                                onPress={() => this.props.navigation.navigate('chatRoom', {
+                                                    keyRoom: this.state.keyRoom,
+                                                    member: auth.currentUser.uid,
+                                                    serviceProvider: this.state.offerDetails.serviceProvider, nameBrand: this.state.brand
+                                                })} />
+                                        </TouchableOpacity>
+                                    </View> :
+                                    <View></View>
+
+                                }
 
                                 {this.state.phone == '' ? <View></View> :
                                     <TouchableOpacity>
