@@ -34,7 +34,7 @@ export default class ChatRoom extends Component {
         // this.createRoom();
 
         if(this.state.roomKey){
-       database.ref('Rooms/'+ this.state.roomKey).once('value', snapshot=>{
+       var subscribe = database.ref('Rooms/'+ this.state.roomKey).once('value', snapshot=>{
         var memberID = snapshot.val().member
         var memberName = snapshot.val().memberName
         var spID = snapshot.val().serviceProvider
@@ -59,15 +59,9 @@ export default class ChatRoom extends Component {
       if (accountType == 'member')
       self.setState({isMember:true})
        })
-      //  database.ref('serviceProvider/'+sp).once('value', sp_ =>{
-      //    var brand = sp_.val().nameBrand
-      //    self.setState({nameBrand: brand})
-      //  })
+  
         })
-        // database.ref('Rooms/'+ this.state.roomKey).set({
-        //   brandName: this.state.nameBrand,
-        //   memberName: this.state.memberName
-        // })
+
       }
 
         //Retrieve messages 
@@ -84,53 +78,17 @@ export default class ChatRoom extends Component {
        
       }
 
-      //   //Creating room is only member side
-      // createRoom = ()=>{
-      //   console.log('creating new room.. ')
-      //   var key = database.ref().child('Rooms').push().key
 
-      //   database.ref('users/'+auth.currentUser.uid).once('value', user => {
-      //     var name = user.val().name
+      async onSend(messages = []) {
 
-      //     this.setState({
-      //       memberName: name,
-      //       roomKey: key
-      //   })})
+       // console.log(messages)
 
-      //   var room ={
-      //          member: auth.currentUser.uid,
-      //          roomKey: this.state.roomKey,
-      //          memberName:  this.state.memberName , 
-      //          serviceProvider: this.state.serviceProvider,
-      //          brandName: this.state.nameBrand
-      //   }
-      //   this.setState({
-      //   member: auth.currentUser.uid,
-      //   roomKey: this.state.roomKey,
-      //   memberName:  this.state.memberName , 
-      //   serviceProvider: this.state.serviceProvider,
-      //   brandName: this.state.nameBrand})
-
-      //   var updates = {}
-      //   updates['Rooms/'+key] = room
-      //   updates['users/'+auth.currentUser.uid+'/ChatRooms/'+key] = room
-      //   updates['serviceProvider/'+ this.state.serviceProvider+'/ChatRooms/'+key] = room
-      //   database.ref().update(updates).then(() => console.log('new room created')).catch(e => console.warn('room creation'))
-        
-          
-      //   }
-   
-
-      onSend(messages = []) {
-
-        console.log(messages)
-
-        this.setState(previousState => ({
+        await this.setState(previousState => ({
           messages: GiftedChat.append(previousState.messages, messages),
          // sentMessage: true
         }))
         console.log('   break')
-      //  console.log(this.state.messages)
+       console.log(this.state.messages)
         this.writeDatabase();
 
       }
@@ -158,12 +116,10 @@ export default class ChatRoom extends Component {
       }
       renderBubble = (props) => {
         return (
-          // Step 3: return the component
           <Bubble
             {...props}
             wrapperStyle={{
               right: {
-                // Here is the color change
                
               }
             }}
@@ -175,6 +131,8 @@ export default class ChatRoom extends Component {
           />
         );
       }
+
+     
 
 
     render(){
@@ -206,7 +164,7 @@ export default class ChatRoom extends Component {
               showUserAvatar
               renderBubble={this.renderBubble}
               onSend={newMessage => this.onSend(newMessage)}
-            placeholder='Type your message here....'
+            placeholder='اكتب رسالتك هنا..'
             alwaysShowSend
             timeFormat={'LT'}
             isTyping={true}

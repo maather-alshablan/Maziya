@@ -49,20 +49,23 @@ export default class ChatRooms extends Component {
               
 
                 Object.keys(roomList).map(key=>{
-                //var lastText= this.retrieveLastText(key)
-                    //console.log(key)
+                var lastText= this.retrieveLastText(key)
+                var time = this.retrieveTime(key)
+                    console.log(key)
+
+                    console.log(lastText, 'last text')
+
                   var obj = {
                     roomKey: key,
                     member: roomList[key].member,
                     serviceProvider:roomList[key].serviceProvider,
                     memberName:  roomList[key].memberName , 
                     brandName: roomList[key].brandName,
-                    //lastText: lastText
+                    lastText: lastText,
+                    time: time
                    }
                   
                         rooms_.push(obj)
-                       // rooms_.push(rooms)
-                    //  console.log(key)
 
                    
                 self.setState({rooms:rooms_})
@@ -72,17 +75,31 @@ export default class ChatRooms extends Component {
              
           }
 
-          // retrieveLastText = (roomKey) =>{
-          //   var lastText=''
-          //   var sub = database.ref('Rooms/'+roomKey+'/messages').limitToLast(1).on('child_added',function(data) {
+          retrieveLastText = (roomKey) =>{
+            var lastText=''
+            console.log(roomKey)
+            var sub = database.ref('Rooms/'+roomKey+'/messages').limitToFirst(1).on('child_added',function(data) {
               
-          //   lastText = data.exportVal().text
+            lastText = data.exportVal().text
+    
+            })
+            return lastText
+          }
 
+
+          retrieveTime = (roomKey) =>{
+            var time =null
+            console.log(roomKey)
+            var sub = database.ref('Rooms/'+roomKey+'/messages').limitToFirst(1).on('child_added',function(data) {
+              
+            time = data.exportVal().createdAt
             
-          //   })
-          //   return lastText
-          // }
-
+            })
+            var date = new Date(time)
+            
+       
+            return date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+          }
     render(){
        
 
@@ -131,8 +148,9 @@ export default class ChatRooms extends Component {
                     {console.log(room.roomKey)}
                 <Card 
                 iconDisable  
-               title={this.state.isServiceProvider ? room.memberName: room.brandName}
-              description={"hi"}
+                title={this.state.isServiceProvider ? room.memberName: room.brandName}
+                content={room.lastText}
+                bottomRightText={room.time}
                 styles={{ width: 200 }}
                 onPress={() => 
                 this.props.navigation.navigate('chatRoom', {keyRoom: room.roomKey,isMember: this.state.isMember })}/>

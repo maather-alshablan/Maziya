@@ -43,7 +43,6 @@ componentDidMount(){
    });
  };
 
-// console.log(this.props.navigation.getParam())
 
   var self = this;
   database.ref('serviceProvider/'+ auth.currentUser.uid+ "/offers")
